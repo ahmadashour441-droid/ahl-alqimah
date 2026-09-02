@@ -7,7 +7,6 @@ import {
   CalendarDays,
   Check,
   CheckCircle2,
-  ChevronLeft,
   CircleAlert,
   CreditCard,
   LayoutDashboard,
@@ -23,6 +22,8 @@ import {
   XCircle,
   Banknote,
   Smartphone,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
 
 const supabase = createClient(
@@ -40,18 +41,21 @@ type TopUpRequest = {
   created_at: string;
   user_name: string;
   user_phone: string;
+  receipt_path: string | null;
+  receipt_name: string | null;
+  receipt_type: string | null;
+  receipt_size: number | null;
+  receipt_url: string | null;
 };
 
 export default function AdminTopUpsPage() {
   const [requests, setRequests] = useState<TopUpRequest[]>([]);
-
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] =
     useState<string | null>(null);
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
   const [menuOpen, setMenuOpen] = useState(false);
 
   async function loadRequests() {
@@ -59,9 +63,8 @@ export default function AdminTopUpsPage() {
       setLoading(true);
       setError("");
 
-      const {
-        data: sessionData,
-      } = await supabase.auth.getSession();
+      const { data: sessionData } =
+        await supabase.auth.getSession();
 
       const token =
         sessionData.session?.access_token;
@@ -131,9 +134,8 @@ export default function AdminTopUpsPage() {
       setMessage("");
       setError("");
 
-      const {
-        data: sessionData,
-      } = await supabase.auth.getSession();
+      const { data: sessionData } =
+        await supabase.auth.getSession();
 
       const token =
         sessionData.session?.access_token;
@@ -206,6 +208,9 @@ export default function AdminTopUpsPage() {
       case "wallet":
         return "محفظة إلكترونية";
 
+      case "receipt":
+        return "وصل مرفق";
+
       default:
         return method || "-";
     }
@@ -223,6 +228,9 @@ export default function AdminTopUpsPage() {
 
       case "bank_transfer":
         return <CreditCard size={15} />;
+
+      case "receipt":
+        return <Receipt size={15} />;
 
       default:
         return <CreditCard size={15} />;
@@ -255,6 +263,39 @@ export default function AdminTopUpsPage() {
         hour: "2-digit",
         minute: "2-digit",
       }
+    );
+  }
+
+  function formatFileSize(
+    size: number | null
+  ) {
+    if (!size) return "";
+
+    if (size < 1024) {
+      return `${size} B`;
+    }
+
+    if (size < 1024 * 1024) {
+      return `${(size / 1024).toFixed(
+        1
+      )} KB`;
+    }
+
+    return `${(
+      size /
+      (1024 * 1024)
+    ).toFixed(1)} MB`;
+  }
+
+  function openReceipt(
+    url: string | null
+  ) {
+    if (!url) return;
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
     );
   }
 
@@ -344,7 +385,9 @@ export default function AdminTopUpsPage() {
       {menuOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
-          onClick={() => setMenuOpen(false)}
+          onClick={() =>
+            setMenuOpen(false)
+          }
         />
       )}
 
@@ -398,7 +441,9 @@ export default function AdminTopUpsPage() {
               icon={<Bell size={18} />}
               label="الإشعارات"
               onClick={() =>
-                goTo("/admin/notifications")
+                goTo(
+                  "/admin/notifications"
+                )
               }
             />
 
@@ -437,7 +482,9 @@ export default function AdminTopUpsPage() {
               icon={<CreditCard size={18} />}
               label="طلبات السحب"
               onClick={() =>
-                goTo("/admin/withdrawals")
+                goTo(
+                  "/admin/withdrawals"
+                )
               }
             />
 
@@ -445,7 +492,9 @@ export default function AdminTopUpsPage() {
               icon={<Receipt size={18} />}
               label="الحركات المالية"
               onClick={() =>
-                goTo("/admin/transactions")
+                goTo(
+                  "/admin/transactions"
+                )
               }
             />
 
@@ -763,6 +812,57 @@ export default function AdminTopUpsPage() {
                         </div>
                       </div>
 
+                      {/* RECEIPT MOBILE */}
+
+                      {request.receipt_url && (
+                        <div className="mt-2 rounded-xl border border-[#d6a84f]/15 bg-[#d6a84f]/5 p-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex min-w-0 items-center gap-2">
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#d6a84f]/10 text-[#d6a84f]">
+                                <FileText
+                                  size={15}
+                                />
+                              </div>
+
+                              <div className="min-w-0">
+                                <p className="text-[9px] text-white/30">
+                                  الوصل المرفق
+                                </p>
+
+                                <p className="truncate text-[10px] font-bold text-white/70">
+                                  {request.receipt_name ||
+                                    "عرض الوصل"}
+                                </p>
+
+                                {request.receipt_size && (
+                                  <p className="mt-0.5 text-[8px] text-white/25">
+                                    {formatFileSize(
+                                      request.receipt_size
+                                    )}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openReceipt(
+                                  request.receipt_url
+                                )
+                              }
+                              className="flex shrink-0 items-center gap-1 rounded-xl bg-[#d6a84f]/10 px-3 py-2 text-[10px] font-black text-[#d6a84f] transition hover:bg-[#d6a84f]/20"
+                            >
+                              <ExternalLink
+                                size={13}
+                              />
+
+                              عرض الوصل
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
                       {request.notes && (
                         <div className="mt-2 rounded-xl border border-white/10 bg-white/[0.02] p-3">
                           <p className="text-[9px] text-white/30">
@@ -843,35 +943,39 @@ export default function AdminTopUpsPage() {
 
               {/* DESKTOP */}
 
-              <div className="hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[1050px] text-right">
+              <div className="hidden md:block">
+                <table className="w-full text-right">
                   <thead>
                     <tr className="border-b border-white/10 bg-white/[0.02]">
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         المستخدم
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         الهاتف
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         المبلغ
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         طريقة الدفع
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
+                        الوصل
+                      </th>
+
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         الحالة
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         التاريخ
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                      <th className="px-3 py-4 text-[10px] font-black text-white/35">
                         الإجراء
                       </th>
                     </tr>
@@ -886,23 +990,23 @@ export default function AdminTopUpsPage() {
                           }
                           className="transition hover:bg-white/[0.02]"
                         >
-                          <td className="px-5 py-4">
-                            <div className="flex items-center gap-3">
+                          <td className="px-3 py-4">
+                            <div className="flex items-center gap-2">
                               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
                                 <Users
                                   size={15}
                                 />
                               </div>
 
-                              <div>
-                                <p className="text-xs font-black text-white">
+                              <div className="min-w-0">
+                                <p className="truncate text-xs font-black text-white">
                                   {
                                     request.user_name
                                   }
                                 </p>
 
                                 {request.notes && (
-                                  <p className="mt-1 max-w-[180px] truncate text-[9px] text-white/25">
+                                  <p className="mt-1 max-w-[150px] truncate text-[9px] text-white/25">
                                     {
                                       request.notes
                                     }
@@ -914,14 +1018,14 @@ export default function AdminTopUpsPage() {
 
                           <td
                             dir="ltr"
-                            className="px-5 py-4 text-right text-[11px] text-white/50"
+                            className="px-3 py-4 text-right text-[10px] text-white/50"
                           >
                             {
                               request.user_phone
                             }
                           </td>
 
-                          <td className="px-5 py-4">
+                          <td className="px-3 py-4">
                             <span className="text-sm font-black text-[#d6a84f]">
                               {Number(
                                 request.amount
@@ -932,8 +1036,8 @@ export default function AdminTopUpsPage() {
                             </span>
                           </td>
 
-                          <td className="px-5 py-4">
-                            <div className="flex items-center gap-2 text-[11px] font-bold text-white/55">
+                          <td className="px-3 py-4">
+                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-white/55">
                               <span className="text-[#d6a84f]">
                                 {paymentMethodIcon(
                                   request.payment_method
@@ -946,7 +1050,31 @@ export default function AdminTopUpsPage() {
                             </div>
                           </td>
 
-                          <td className="px-5 py-4">
+                          <td className="px-3 py-4">
+                            {request.receipt_url ? (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  openReceipt(
+                                    request.receipt_url
+                                  )
+                                }
+                                className="flex items-center gap-1 rounded-lg bg-[#d6a84f]/10 px-2.5 py-2 text-[9px] font-black text-[#d6a84f] transition hover:bg-[#d6a84f]/20"
+                              >
+                                <ExternalLink
+                                  size={12}
+                                />
+
+                                عرض الوصل
+                              </button>
+                            ) : (
+                              <span className="text-[9px] text-white/20">
+                                لا يوجد
+                              </span>
+                            )}
+                          </td>
+
+                          <td className="px-3 py-4">
                             <StatusBadge
                               status={
                                 request.status
@@ -957,18 +1085,18 @@ export default function AdminTopUpsPage() {
                             />
                           </td>
 
-                          <td className="px-5 py-4">
-                            <span className="text-[10px] text-white/30">
+                          <td className="px-3 py-4">
+                            <span className="text-[9px] text-white/30">
                               {formatDate(
                                 request.created_at
                               )}
                             </span>
                           </td>
 
-                          <td className="px-5 py-4">
+                          <td className="px-3 py-4">
                             {request.status ===
                             "pending" ? (
-                              <div className="flex gap-2">
+                              <div className="flex gap-1.5">
                                 <button
                                   type="button"
                                   disabled={
@@ -981,10 +1109,10 @@ export default function AdminTopUpsPage() {
                                       "approve"
                                     )
                                   }
-                                  className="flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-[10px] font-black text-emerald-400 transition hover:bg-emerald-500/20 disabled:opacity-50"
+                                  className="flex items-center gap-1 rounded-lg bg-emerald-500/10 px-2.5 py-2 text-[9px] font-black text-emerald-400 transition hover:bg-emerald-500/20 disabled:opacity-50"
                                 >
                                   <Check
-                                    size={13}
+                                    size={12}
                                   />
 
                                   {processingId ===
@@ -1005,17 +1133,17 @@ export default function AdminTopUpsPage() {
                                       "reject"
                                     )
                                   }
-                                  className="flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-[10px] font-black text-red-400 transition hover:bg-red-500/20 disabled:opacity-50"
+                                  className="flex items-center gap-1 rounded-lg bg-red-500/10 px-2.5 py-2 text-[9px] font-black text-red-400 transition hover:bg-red-500/20 disabled:opacity-50"
                                 >
                                   <XCircle
-                                    size={13}
+                                    size={12}
                                   />
 
                                   رفض
                                 </button>
                               </div>
                             ) : (
-                              <span className="text-[10px] text-white/25">
+                              <span className="text-[9px] text-white/25">
                                 تم التعامل
                               </span>
                             )}

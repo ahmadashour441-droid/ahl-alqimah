@@ -1,21 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import {
+  ChangeEvent,
+  FormEvent,
+  useState,
+} from "react";
 import {
   ArrowRight,
   Wallet,
-  Banknote,
-  Building2,
-  Smartphone,
+  Upload,
   FileText,
   Send,
   CheckCircle2,
   AlertCircle,
   Info,
   Loader2,
+  Copy,
+  Check,
 } from "lucide-react";
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,13 +28,58 @@ const supabase = createClient(
 
 export default function TopUpPage() {
   const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] =
-    useState("cash");
   const [notes, setNotes] = useState("");
+  const [receipt, setReceipt] =
+    useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState("");
+
+  function handleFileChange(
+    event: ChangeEvent<HTMLInputElement>
+  ) {
+    setError("");
+
+    const file =
+      event.target.files?.[0] || null;
+
+    if (!file) {
+      setReceipt(null);
+      return;
+    }
+
+    const maxFileSize =
+      10 * 1024 * 1024;
+
+    if (file.size > maxFileSize) {
+      setReceipt(null);
+      event.target.value = "";
+      setError(
+        "حجم الملف كبير جدًا. الحد الأقصى المسموح 10MB"
+      );
+      return;
+    }
+
+    setReceipt(file);
+  }
+
+  async function copyText(
+    text: string,
+    key: string
+  ) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(key);
+
+      setTimeout(() => {
+        setCopied("");
+      }, 1800);
+    } catch {
+      // تجاهل خطأ النسخ
+    }
+  }
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>
@@ -42,8 +91,28 @@ export default function TopUpPage() {
 
     const numericAmount = Number(amount);
 
-    if (!numericAmount || numericAmount <= 0) {
+    if (
+      !Number.isFinite(numericAmount) ||
+      numericAmount <= 0
+    ) {
       setError("أدخل مبلغ شحن صحيح");
+      return;
+    }
+
+    if (
+      Math.round(numericAmount * 100) !==
+      numericAmount * 100
+    ) {
+      setError(
+        "المبلغ يجب أن يحتوي على منزلتين عشريتين كحد أقصى"
+      );
+      return;
+    }
+
+    if (!receipt) {
+      setError(
+        "يرجى إرفاق صورة أو ملف الوصل"
+      );
       return;
     }
 
@@ -61,23 +130,36 @@ export default function TopUpPage() {
         return;
       }
 
+      const formData = new FormData();
+
+      formData.append(
+        "amount",
+        String(numericAmount)
+      );
+
+      formData.append(
+        "notes",
+        notes.trim()
+      );
+
+      formData.append(
+        "receipt",
+        receipt
+      );
+
       const response = await fetch(
         "/api/finance/topup",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({
-            amount: numericAmount,
-            payment_method: paymentMethod,
-            notes: notes.trim() || null,
-          }),
+          body: formData,
         }
       );
 
-      const result = await response.json();
+      const result =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
@@ -91,10 +173,22 @@ export default function TopUpPage() {
       );
 
       setAmount("");
-      setPaymentMethod("cash");
       setNotes("");
+      setReceipt(null);
+
+      const fileInput =
+        document.getElementById(
+          "receipt"
+        ) as HTMLInputElement | null;
+
+      if (fileInput) {
+        fileInput.value = "";
+      }
     } catch (err) {
-      console.error("TOPUP ERROR:", err);
+      console.error(
+        "TOPUP ERROR:",
+        err
+      );
 
       setError(
         err instanceof Error
@@ -105,42 +199,6 @@ export default function TopUpPage() {
       setLoading(false);
     }
   }
-
-  const paymentMethods = [
-    {
-      value: "cash",
-      title: "نقدي",
-      description: "دفع مباشر",
-      icon: (
-        <Banknote
-          size={19}
-          strokeWidth={1.7}
-        />
-      ),
-    },
-    {
-      value: "bank_transfer",
-      title: "تحويل بنكي",
-      description: "تحويل إلى الحساب",
-      icon: (
-        <Building2
-          size={19}
-          strokeWidth={1.7}
-        />
-      ),
-    },
-    {
-      value: "wallet",
-      title: "محفظة إلكترونية",
-      description: "دفع إلكتروني",
-      icon: (
-        <Smartphone
-          size={19}
-          strokeWidth={1.7}
-        />
-      ),
-    },
-  ];
 
   return (
     <main
@@ -199,7 +257,167 @@ export default function TopUpPage() {
               </h2>
 
               <p className="mt-1 text-[11px] leading-5 text-white/35">
-                أرسل طلب شحن وانتظر مراجعة الإدارة.
+                حوّل المبلغ ثم أرفق صورة أو ملف الوصل
+                لإرسال طلب الشحن.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* Transfer Information */}
+
+        <section className="mb-4 rounded-[26px] border border-[#d6a84f]/15 bg-[#12151a] p-4 sm:p-5">
+
+          <div className="mb-4 flex items-center gap-3">
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
+              <Wallet
+                size={18}
+                strokeWidth={1.7}
+              />
+            </div>
+
+            <div>
+
+              <h3 className="text-sm font-black text-white">
+                معلومات التحويل
+              </h3>
+
+              <p className="mt-1 text-[10px] text-white/30">
+                استخدم إحدى طرق التحويل التالية
+              </p>
+
+            </div>
+
+
+            {/* Orange Money */}
+
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/7 bg-[#181b20] p-3">
+
+              <div>
+
+                <p className="text-[10px] text-white/30">
+                  Orange Money
+                </p>
+
+                <p className="mt-1 text-sm font-bold text-white">
+                  0772660010
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  copyText(
+                    "0772660010",
+                    "orange"
+                  )
+                }
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.04] text-white/35 transition hover:bg-[#d6a84f]/10 hover:text-[#d6a84f]"
+              >
+                {copied === "orange" ? (
+                  <Check
+                    size={16}
+                  />
+                ) : (
+                  <Copy
+                    size={16}
+                  />
+                )}
+              </button>
+
+            </div>
+
+            {/* Bank */}
+
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/7 bg-[#181b20] p-3">
+
+              <div>
+
+                <p className="text-[10px] text-white/30">
+                  بنك الاتحاد
+                </p>
+
+                <p className="mt-1 text-sm font-bold text-white">
+                  OD3IDAD
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  copyText(
+                    "OD3IDAD",
+                    "bank"
+                  )
+                }
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.04] text-white/35 transition hover:bg-[#d6a84f]/10 hover:text-[#d6a84f]"
+              >
+                {copied === "bank" ? (
+                  <Check
+                    size={16}
+                  />
+                ) : (
+                  <Copy
+                    size={16}
+                  />
+                )}
+              </button>
+
+            </div>
+
+            {/* Name */}
+
+            <div className="rounded-2xl border border-white/7 bg-[#181b20] p-3">
+
+              <p className="text-[10px] text-white/30">
+                اسم المستفيد
+              </p>
+
+              <p className="mt-1 text-sm font-bold text-[#d6a84f]">
+                Ahmad Mohammad Alhamzat
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* Accounting Notice */}
+
+        <section className="mb-4 rounded-[22px] border border-[#d6a84f]/15 bg-[#d6a84f]/5 p-4">
+
+          <div className="flex items-start gap-3">
+
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
+              <Info
+                size={17}
+                strokeWidth={1.7}
+              />
+            </div>
+
+            <div>
+
+              <p className="text-xs font-black text-[#d6a84f]">
+                مهم قبل إرسال الطلب
+              </p>
+
+              <p className="mt-1 text-[11px] leading-5 text-white/45">
+                عند إرسال طلب شحن، يرجى إرسال الوصل
+                للمحاسبة على الرقم التالي:
+              </p>
+
+              <p
+                dir="ltr"
+                className="mt-2 text-base font-black tracking-wide text-white"
+              >
+                0776496653
               </p>
 
             </div>
@@ -216,153 +434,6 @@ export default function TopUpPage() {
             onSubmit={handleSubmit}
             className="space-y-5"
           >
-
-            {/* Amount */}
-
-            <div>
-
-              <label className="mb-2 block text-xs font-bold text-white/60">
-                مبلغ الشحن
-              </label>
-
-              <div className="relative">
-
-                <input
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  value={amount}
-                  onChange={(e) =>
-                    setAmount(e.target.value)
-                  }
-                  placeholder="مثال: 20"
-                  dir="ltr"
-                  className="w-full rounded-2xl border border-white/10 bg-[#181b20] px-4 py-4 pl-16 text-right text-lg font-bold text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
-                />
-
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-[#d6a84f]/10 px-2 py-1 text-xs font-bold text-[#d6a84f]">
-                  د.أ
-                </span>
-
-              </div>
-
-            </div>
-
-            {/* Payment Method */}
-
-            <div>
-
-              <label className="mb-2 block text-xs font-bold text-white/60">
-                طريقة الدفع
-              </label>
-
-              <div className="grid gap-2">
-
-                {paymentMethods.map(
-                  (method) => {
-                    const selected =
-                      paymentMethod ===
-                      method.value;
-
-                    return (
-                      <button
-                        key={
-                          method.value
-                        }
-                        type="button"
-                        onClick={() =>
-                          setPaymentMethod(
-                            method.value
-                          )
-                        }
-                        className={`flex items-center gap-3 rounded-2xl border p-3 text-right transition ${
-                          selected
-                            ? "border-[#d6a84f]/35 bg-[#d6a84f]/10"
-                            : "border-white/7 bg-[#181b20] hover:border-white/15"
-                        }`}
-                      >
-
-                        <span
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                            selected
-                              ? "bg-[#d6a84f]/15 text-[#d6a84f]"
-                              : "bg-white/[0.04] text-white/35"
-                          }`}
-                        >
-                          {method.icon}
-                        </span>
-
-                        <span className="min-w-0 flex-1">
-
-                          <span
-                            className={`block text-xs font-bold ${
-                              selected
-                                ? "text-[#d6a84f]"
-                                : "text-white/70"
-                            }`}
-                          >
-                            {method.title}
-                          </span>
-
-                          <span className="mt-1 block text-[10px] text-white/25">
-                            {method.description}
-                          </span>
-
-                        </span>
-
-                        <span
-                          className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                            selected
-                              ? "border-[#d6a84f] bg-[#d6a84f]"
-                              : "border-white/15"
-                          }`}
-                        >
-                          {selected && (
-                            <span className="h-2 w-2 rounded-full bg-[#0b0d10]" />
-                          )}
-                        </span>
-
-                      </button>
-                    );
-                  }
-                )}
-
-              </div>
-
-            </div>
-
-            {/* Notes */}
-
-            <div>
-
-              <label className="mb-2 block text-xs font-bold text-white/60">
-                ملاحظات
-                <span className="mr-1 text-[10px] font-normal text-white/25">
-                  اختياري
-                </span>
-              </label>
-
-              <div className="relative">
-
-                <textarea
-                  value={notes}
-                  onChange={(e) =>
-                    setNotes(e.target.value)
-                  }
-                  placeholder="أي ملاحظات إضافية..."
-                  rows={4}
-                  className="w-full resize-none rounded-2xl border border-white/10 bg-[#181b20] px-4 py-3 pr-11 text-sm text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
-                />
-
-                <FileText
-                  size={16}
-                  className="absolute right-4 top-4 text-white/20"
-                  strokeWidth={1.7}
-                />
-
-              </div>
-
-            </div>
 
             {/* Messages */}
 
@@ -397,6 +468,132 @@ export default function TopUpPage() {
 
               </div>
             )}
+
+            {/* Amount */}
+
+            <div>
+
+              <label className="mb-2 block text-xs font-bold text-white/60">
+                مبلغ الشحن
+              </label>
+
+              <div className="relative">
+
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={amount}
+                  onChange={(e) =>
+                    setAmount(
+                      e.target.value
+                    )
+                  }
+                  placeholder="مثال: 20"
+                  dir="ltr"
+                  required
+                  className="w-full rounded-2xl border border-white/10 bg-[#181b20] px-4 py-4 pl-16 text-right text-lg font-bold text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
+                />
+
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-[#d6a84f]/10 px-2 py-1 text-xs font-bold text-[#d6a84f]">
+                  د.أ
+                </span>
+
+              </div>
+
+            </div>
+
+            {/* Receipt */}
+
+            <div>
+
+              <label className="mb-2 block text-xs font-bold text-white/60">
+                إرفاق الوصل
+                <span className="mr-1 text-[10px] font-normal text-red-400">
+                  مطلوب
+                </span>
+              </label>
+
+              <label
+                htmlFor="receipt"
+                className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-[#d6a84f]/25 bg-[#181b20] px-4 py-7 text-center transition hover:border-[#d6a84f]/50 hover:bg-[#d6a84f]/5"
+              >
+
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#d6a84f]/10 text-[#d6a84f]">
+                  <Upload
+                    size={21}
+                    strokeWidth={1.7}
+                  />
+                </span>
+
+                <span className="mt-3 text-xs font-bold text-white/70">
+                  {receipt
+                    ? receipt.name
+                    : "اضغط لإرفاق الوصل"}
+                </span>
+
+                <span className="mt-1 text-[10px] text-white/25">
+                  يمكنك إرفاق صورة أو ملف الوصل
+                  — الحد الأقصى 10MB
+                </span>
+
+                {receipt && (
+                  <span className="mt-2 flex items-center gap-1 text-[10px] text-[#d6a84f]">
+                    <FileText
+                      size={13}
+                    />
+                    تم اختيار الملف بنجاح
+                  </span>
+                )}
+
+                <input
+                  id="receipt"
+                  type="file"
+                  onChange={
+                    handleFileChange
+                  }
+                  className="hidden"
+                  accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+                />
+
+              </label>
+
+            </div>
+
+            {/* Notes */}
+
+            <div>
+
+              <label className="mb-2 block text-xs font-bold text-white/60">
+                ملاحظات
+                <span className="mr-1 text-[10px] font-normal text-white/25">
+                  اختياري
+                </span>
+              </label>
+
+              <div className="relative">
+
+                <textarea
+                  value={notes}
+                  onChange={(e) =>
+                    setNotes(
+                      e.target.value
+                    )
+                  }
+                  placeholder="أي ملاحظات إضافية..."
+                  rows={4}
+                  className="w-full resize-none rounded-2xl border border-white/10 bg-[#181b20] px-4 py-3 pr-11 text-sm text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
+                />
+
+                <FileText
+                  size={16}
+                  className="absolute right-4 top-4 text-white/20"
+                  strokeWidth={1.7}
+                />
+
+              </div>
+
+            </div>
 
             {/* Submit */}
 
@@ -433,13 +630,13 @@ export default function TopUpPage() {
 
         </section>
 
-        {/* Information */}
+        {/* Bottom Note */}
 
-        <section className="mt-4 rounded-[22px] border border-[#d6a84f]/10 bg-[#d6a84f]/5 p-4">
+        <section className="mt-4 rounded-[22px] border border-white/10 bg-[#12151a] p-4">
 
           <div className="flex items-start gap-3">
 
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.04] text-white/30">
               <Info
                 size={17}
                 strokeWidth={1.7}
@@ -448,15 +645,14 @@ export default function TopUpPage() {
 
             <div>
 
-              <p className="text-xs font-bold text-[#d6a84f]">
-                ملاحظة مهمة
+              <p className="text-xs font-bold text-white/60">
+                ملاحظة
               </p>
 
-              <p className="mt-1 text-[10px] leading-5 text-white/35">
-                لن تتم إضافة المبلغ إلى رصيدك
-                مباشرة. تتم إضافة الرصيد فقط بعد
-                مراجعة الإدارة والموافقة على طلب
-                الشحن.
+              <p className="mt-1 text-[10px] leading-5 text-white/30">
+                لن تتم إضافة المبلغ إلى رصيدك مباشرة.
+                تتم إضافة الرصيد فقط بعد مراجعة الإدارة
+                والموافقة على طلب الشحن.
               </p>
 
             </div>

@@ -101,7 +101,7 @@ export async function GET(
     } = await supabaseAdmin
       .from("topup_requests")
       .select(
-        "id, user_id, amount, payment_method, notes, status, reviewed_by, reviewed_at, created_at"
+        "id, user_id, amount, payment_method, notes, status, reviewed_by, reviewed_at, created_at, receipt_path, receipt_name, receipt_type, receipt_size"
       )
       .order("created_at", {
         ascending: false,
@@ -170,39 +170,105 @@ export async function GET(
     }
 
     const result =
-      (requests || []).map(
-        (item) => {
-          const user =
-            users.find(
-              (u) =>
-                u.id ===
-                item.user_id
-            );
+      await Promise.all(
+        (requests || []).map(
+          async (item) => {
+            const user =
+              users.find(
+                (u) =>
+                  u.id ===
+                  item.user_id
+              );
 
-          return {
-            id: item.id,
-            user_id:
-              item.user_id,
-            amount: Number(
-              item.amount
-            ),
-            payment_method:
-              item.payment_method,
-            notes: item.notes,
-            status: item.status,
-            reviewed_by:
-              item.reviewed_by,
-            reviewed_at:
-              item.reviewed_at,
-            created_at:
-              item.created_at,
-            user_name:
-              user?.full_name ||
-              "غير معروف",
-            user_phone:
-              user?.phone || "-",
-          };
-        }
+            let receiptUrl =
+              null;
+
+            /*
+             * إنشاء رابط مؤقت للوصل
+             * لأن الـBucket Private
+             */
+            if (item.receipt_path) {
+              const {
+                data: signedUrlData,
+                error:
+                  signedUrlError,
+              } =
+                await supabaseAdmin.storage
+                  .from(
+                    "topup-receipts"
+                  )
+                  .createSignedUrl(
+                    item.receipt_path,
+                    60 * 60
+                  );
+
+              if (
+                signedUrlError
+              ) {
+                console.error(
+                  "RECEIPT SIGNED URL ERROR:",
+                  signedUrlError
+                );
+              } else {
+                receiptUrl =
+                  signedUrlData?.signedUrl ||
+                  null;
+              }
+            }
+
+            return {
+              id: item.id,
+              user_id:
+                item.user_id,
+
+              amount: Number(
+                item.amount
+              ),
+
+              payment_method:
+                item.payment_method,
+
+              notes: item.notes,
+
+              status: item.status,
+
+              reviewed_by:
+                item.reviewed_by,
+
+              reviewed_at:
+                item.reviewed_at,
+
+              created_at:
+                item.created_at,
+
+              user_name:
+                user?.full_name ||
+                "غير معروف",
+
+              user_phone:
+                user?.phone || "-",
+
+              receipt_path:
+                item.receipt_path ||
+                null,
+
+              receipt_name:
+                item.receipt_name ||
+                null,
+
+              receipt_type:
+                item.receipt_type ||
+                null,
+
+              receipt_size:
+                item.receipt_size ||
+                null,
+
+              receipt_url:
+                receiptUrl,
+            };
+          }
+        )
       );
 
     return NextResponse.json({

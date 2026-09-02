@@ -37,15 +37,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
+    // استقبال FormData بدل JSON
+    const formData = await request.formData();
 
-    const amount = Number(body.amount);
-    const paymentMethod = String(
-      body.payment_method || ""
-    ).trim();
-    const notes = body.notes
-      ? String(body.notes).trim()
-      : null;
+    const amountValue = formData.get("amount");
+    const notesValue = formData.get("notes");
+    const receipt = formData.get("receipt");
+
+    const amount = Number(amountValue);
+
+    const notes =
+      notesValue && String(notesValue).trim()
+        ? String(notesValue).trim()
+        : null;
 
     // التحقق من المبلغ
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -58,21 +62,38 @@ export async function POST(request: Request) {
     // منع المبالغ ذات المنازل العشرية الزائدة
     if (Math.round(amount * 100) !== amount * 100) {
       return NextResponse.json(
-        { error: "المبلغ يجب أن يحتوي على منزلتين عشريتين كحد أقصى" },
+        {
+          error:
+            "المبلغ يجب أن يحتوي على منزلتين عشريتين كحد أقصى",
+        },
         { status: 400 }
       );
     }
 
-    // طرق الدفع المسموحة
-    const allowedMethods = [
-      "cash",
-      "bank_transfer",
-      "wallet",
-    ];
-
-    if (!allowedMethods.includes(paymentMethod)) {
+    // التحقق من وجود الوصل
+    if (!receipt || !(receipt instanceof File)) {
       return NextResponse.json(
-        { error: "طريقة الدفع غير صحيحة" },
+        { error: "يرجى إرفاق صورة أو ملف الوصل" },
+        { status: 400 }
+      );
+    }
+
+    if (receipt.size <= 0) {
+      return NextResponse.json(
+        { error: "الملف المرفق فارغ" },
+        { status: 400 }
+      );
+    }
+
+    // حد أقصى 10MB للملف
+    const maxFileSize = 10 * 1024 * 1024;
+
+    if (receipt.size > maxFileSize) {
+      return NextResponse.json(
+        {
+          error:
+            "حجم الملف كبير جدًا. الحد الأقصى المسموح 10MB",
+        },
         { status: 400 }
       );
     }
@@ -96,7 +117,10 @@ export async function POST(request: Request) {
 
     if (!user.is_active) {
       return NextResponse.json(
-        { error: "الحساب موقوف ولا يمكن إرسال طلب شحن" },
+        {
+          error:
+            "الحساب موقوف ولا يمكن إرسال طلب شحن",
+        },
         { status: 403 }
       );
     }
@@ -120,7 +144,8 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         {
-          error: "تعذر التحقق من طلبات الشحن السابقة",
+          error:
+            "تعذر التحقق من طلبات الشحن السابقة",
         },
         { status: 500 }
       );
@@ -139,6 +164,48 @@ export async function POST(request: Request) {
       );
     }
 
+    // تجهيز اسم آمن للملف
+    const originalFileName = receipt.name || "receipt";
+
+    const safeFileName = originalFileName
+      .replace(/[^a-zA-Z0-9._-]/g, "_")
+      .slice(0, 120);
+
+    const fileExtension =
+      safeFileName.includes(".")
+        ? safeFileName.split(".").pop()
+        : "file";
+
+    const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
+
+    const filePath = `${authData.user.id}/${fileName}`;
+
+    // رفع الوصل إلى Supabase Storage
+    const {
+      error: uploadError,
+    } = await supabaseAdmin.storage
+      .from("topup-receipts")
+      .upload(filePath, receipt, {
+        contentType:
+          receipt.type || "application/octet-stream",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error(
+        "TOPUP RECEIPT UPLOAD ERROR:",
+        uploadError
+      );
+
+      return NextResponse.json(
+        {
+          error:
+            "تعذر رفع الوصل، يرجى المحاولة مرة أخرى",
+        },
+        { status: 500 }
+      );
+    }
+
     // إنشاء طلب الشحن
     const {
       data: requestData,
@@ -148,9 +215,14 @@ export async function POST(request: Request) {
       .insert({
         user_id: authData.user.id,
         amount,
-        payment_method: paymentMethod,
+        payment_method: "receipt",
         notes,
         status: "pending",
+        receipt_path: filePath,
+        receipt_name: originalFileName,
+        receipt_type:
+          receipt.type || "application/octet-stream",
+        receipt_size: receipt.size,
       })
       .select()
       .single();
@@ -160,6 +232,11 @@ export async function POST(request: Request) {
         "TOPUP INSERT ERROR:",
         insertError
       );
+
+      // حذف الملف إذا فشل إنشاء الطلب
+      await supabaseAdmin.storage
+        .from("topup-receipts")
+        .remove([filePath]);
 
       return NextResponse.json(
         {
@@ -181,7 +258,7 @@ export async function POST(request: Request) {
           title: "تم إرسال طلب الشحن",
           message: `تم استلام طلب شحن بقيمة ${amount.toFixed(
             2
-          )} د.أ وهو بانتظار مراجعة الإدارة.`,
+          )} د.أ مع إرفاق الوصل، وهو بانتظار مراجعة الإدارة.`,
           type: "topup",
           is_read: false,
         });
