@@ -114,23 +114,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * العمولة:
-     * راكب = 15%
-     * أوردر = 20%
-     */
     const commissionRate = orderType === "passenger" ? 0.15 : 0.20;
 
     const commission = Number(
       (numericAmount * commissionRate).toFixed(2)
     );
 
-    /*
-     * إنشاء الأوردر
-     */
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
+        created_by: producer.id,
         producer_id: producer.id,
         consumer_id: consumer.id,
         amount: numericAmount,
@@ -155,23 +148,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * المنتج يحصل على العمولة
-     */
     const producerNewBalance = Number(
       (Number(producer.balance || 0) + commission).toFixed(2)
     );
 
-    /*
-     * المستهلك يدفع العمولة
-     */
     const consumerNewBalance = Number(
       (Number(consumer.balance || 0) - commission).toFixed(2)
     );
 
-    /*
-     * تحديث رصيد المنتج
-     */
     const { error: producerBalanceError } = await supabase
       .from("users")
       .update({
@@ -181,11 +165,6 @@ export async function POST(request: NextRequest) {
       .eq("id", producer.id);
 
     if (producerBalanceError) {
-      console.error(
-        "PRODUCER BALANCE ERROR:",
-        producerBalanceError
-      );
-
       await supabase
         .from("orders")
         .delete()
@@ -200,9 +179,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * تحديث رصيد المستهلك
-     */
     const { error: consumerBalanceError } = await supabase
       .from("users")
       .update({
@@ -212,11 +188,6 @@ export async function POST(request: NextRequest) {
       .eq("id", consumer.id);
 
     if (consumerBalanceError) {
-      console.error(
-        "CONSUMER BALANCE ERROR:",
-        consumerBalanceError
-      );
-
       await supabase
         .from("users")
         .update({
@@ -239,9 +210,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * تسجيل الحركات المالية
-     */
     const { error: transactionError } = await supabase
       .from("transactions")
       .insert([
@@ -262,11 +230,6 @@ export async function POST(request: NextRequest) {
       ]);
 
     if (transactionError) {
-      console.error(
-        "TRANSACTION ERROR:",
-        transactionError
-      );
-
       await supabase
         .from("users")
         .update({
@@ -297,9 +260,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * إذا صار رصيد المستهلك سالب
-     */
     if (consumerNewBalance < 0) {
       await supabase.from("notifications").insert({
         user_id: consumer.id,
@@ -312,7 +272,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-
       order: {
         id: order.id,
         orderNumber: order.order_number,
@@ -322,7 +281,6 @@ export async function POST(request: NextRequest) {
         commission,
         status: "completed",
       },
-
       producer: {
         id: producer.id,
         name: producer.full_name,
@@ -330,7 +288,6 @@ export async function POST(request: NextRequest) {
         balanceAfter: producerNewBalance,
         commissionEarned: commission,
       },
-
       consumer: {
         id: consumer.id,
         name: consumer.full_name,
