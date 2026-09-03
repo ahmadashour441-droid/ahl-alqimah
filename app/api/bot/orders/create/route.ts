@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
       amount,
       orderType = "passenger",
       notes = null,
-      whatsappMessageId = null,
     } = body;
 
     if (!producerId || !consumerId) {
@@ -81,9 +80,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * Get producer
-     */
     const { data: producer, error: producerError } = await supabase
       .from("users")
       .select("id, full_name, phone, balance, is_active, deleted_at")
@@ -101,9 +97,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * Get consumer
-     */
     const { data: consumer, error: consumerError } = await supabase
       .from("users")
       .select("id, full_name, phone, balance, is_active, deleted_at")
@@ -122,10 +115,9 @@ export async function POST(request: NextRequest) {
     }
 
     /*
-     * Commission
-     *
-     * passenger = 15%
-     * order     = 20%
+     * العمولة:
+     * راكب = 15%
+     * أوردر = 20%
      */
     const commissionRate = orderType === "passenger" ? 0.15 : 0.20;
 
@@ -134,7 +126,7 @@ export async function POST(request: NextRequest) {
     );
 
     /*
-     * Create order first
+     * إنشاء الأوردر
      */
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -147,7 +139,6 @@ export async function POST(request: NextRequest) {
         commission_amount: commission,
         status: "completed",
         notes,
-        whatsapp_message_id: whatsappMessageId,
       })
       .select("*")
       .single();
@@ -165,21 +156,21 @@ export async function POST(request: NextRequest) {
     }
 
     /*
-     * Producer earns commission
+     * المنتج يحصل على العمولة
      */
     const producerNewBalance = Number(
       (Number(producer.balance || 0) + commission).toFixed(2)
     );
 
     /*
-     * Consumer pays commission
+     * المستهلك يدفع العمولة
      */
     const consumerNewBalance = Number(
       (Number(consumer.balance || 0) - commission).toFixed(2)
     );
 
     /*
-     * Update producer balance
+     * تحديث رصيد المنتج
      */
     const { error: producerBalanceError } = await supabase
       .from("users")
@@ -210,7 +201,7 @@ export async function POST(request: NextRequest) {
     }
 
     /*
-     * Update consumer balance
+     * تحديث رصيد المستهلك
      */
     const { error: consumerBalanceError } = await supabase
       .from("users")
@@ -226,9 +217,6 @@ export async function POST(request: NextRequest) {
         consumerBalanceError
       );
 
-      /*
-       * Roll producer back
-       */
       await supabase
         .from("users")
         .update({
@@ -252,7 +240,7 @@ export async function POST(request: NextRequest) {
     }
 
     /*
-     * Transactions
+     * تسجيل الحركات المالية
      */
     const { error: transactionError } = await supabase
       .from("transactions")
@@ -279,9 +267,6 @@ export async function POST(request: NextRequest) {
         transactionError
       );
 
-      /*
-       * Roll balances back
-       */
       await supabase
         .from("users")
         .update({
@@ -313,7 +298,7 @@ export async function POST(request: NextRequest) {
     }
 
     /*
-     * Negative balance notification
+     * إذا صار رصيد المستهلك سالب
      */
     if (consumerNewBalance < 0) {
       await supabase.from("notifications").insert({
@@ -327,6 +312,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+
       order: {
         id: order.id,
         orderNumber: order.order_number,
@@ -336,6 +322,7 @@ export async function POST(request: NextRequest) {
         commission,
         status: "completed",
       },
+
       producer: {
         id: producer.id,
         name: producer.full_name,
@@ -343,6 +330,7 @@ export async function POST(request: NextRequest) {
         balanceAfter: producerNewBalance,
         commissionEarned: commission,
       },
+
       consumer: {
         id: consumer.id,
         name: consumer.full_name,
