@@ -49,40 +49,99 @@ export default function LoginPage() {
     try {
       setLoading(true);
 
-      // تحويل رقم الهاتف الأردني من 079xxxxxxx
-      // إلى الرقم المستخدم في Supabase Auth: 962792xxxxxx
+      /*
+       * بعض الحسابات القديمة في Supabase Auth تستخدم:
+       *
+       * 079xxxxxxx@captainsystem.com
+       *
+       * وبعض الحسابات تستخدم:
+       *
+       * 96279xxxxxxx@captainsystem.com
+       *
+       * لذلك نجرب الصيغة المحلية أولاً،
+       * وإذا لم تنجح نجرب صيغة 962.
+       */
+
+      const localEmail = `${cleanPhone}@captainsystem.com`;
+
       const authPhone = cleanPhone.startsWith("0")
         ? `962${cleanPhone.slice(1)}`
         : cleanPhone;
 
-      const email = `${authPhone}@captainsystem.com`;
+      const internationalEmail =
+        `${authPhone}@captainsystem.com`;
 
       console.log("LOGIN START");
       console.log("PHONE:", cleanPhone);
-      console.log("AUTH EMAIL:", email);
+      console.log("TRY LOCAL EMAIL:", localEmail);
+      console.log(
+        "TRY INTERNATIONAL EMAIL:",
+        internationalEmail,
+      );
 
-      const {
-        data: authData,
-        error: loginError,
-      } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      let authData: any = null;
+      let loginError: any = null;
 
-      console.log("SUPABASE LOGIN:", {
+      /*
+       * المحاولة الأولى:
+       * 079xxxxxxx@captainsystem.com
+       */
+      const firstAttempt =
+        await supabase.auth.signInWithPassword({
+          email: localEmail,
+          password,
+        });
+
+      authData = firstAttempt.data;
+      loginError = firstAttempt.error;
+
+      console.log("LOCAL LOGIN:", {
         success: !!authData?.user,
         error: loginError?.message,
       });
 
-      if (loginError || !authData.user) {
-        setError("رقم الهاتف أو كلمة المرور غير صحيحة");
+      /*
+       * إذا فشلت المحاولة الأولى،
+       * نجرب صيغة 962.
+       */
+      if (loginError || !authData?.user) {
+        /*
+         * نتأكد من تسجيل الخروج قبل المحاولة الثانية
+         * حتى لا تبقى جلسة جزئية.
+         */
+        await supabase.auth.signOut();
+
+        const secondAttempt =
+          await supabase.auth.signInWithPassword({
+            email: internationalEmail,
+            password,
+          });
+
+        authData = secondAttempt.data;
+        loginError = secondAttempt.error;
+
+        console.log("INTERNATIONAL LOGIN:", {
+          success: !!authData?.user,
+          error: loginError?.message,
+        });
+      }
+
+      /*
+       * إذا فشلت الصيغتان
+       */
+      if (loginError || !authData?.user) {
+        setError(
+          "رقم الهاتف أو كلمة المرور غير صحيحة",
+        );
         return;
       }
 
-      const accessToken = authData.session?.access_token;
+      const accessToken =
+        authData.session?.access_token;
 
       if (!accessToken) {
         await supabase.auth.signOut();
+
         setError("تعذر إنشاء جلسة الدخول");
         return;
       }
@@ -110,12 +169,15 @@ export default function LoginPage() {
       } catch (fetchError) {
         clearTimeout(timeout);
 
-        console.error("AUTH ME FETCH ERROR:", fetchError);
+        console.error(
+          "AUTH ME FETCH ERROR:",
+          fetchError,
+        );
 
         await supabase.auth.signOut();
 
         setError(
-          "تعذر الاتصال بالسيرفر. تأكد أن الهاتف والكمبيوتر على نفس شبكة Wi-Fi.",
+          "تعذر الاتصال بالسيرفر. تأكد من اتصال الهاتف والكمبيوتر على نفس شبكة Wi-Fi.",
         );
 
         return;
@@ -123,18 +185,27 @@ export default function LoginPage() {
 
       clearTimeout(timeout);
 
-      console.log("AUTH ME STATUS:", response.status);
+      console.log(
+        "AUTH ME STATUS:",
+        response.status,
+      );
 
       let result: any = null;
 
       try {
         result = await response.json();
       } catch (jsonError) {
-        console.error("AUTH ME JSON ERROR:", jsonError);
+        console.error(
+          "AUTH ME JSON ERROR:",
+          jsonError,
+        );
 
         await supabase.auth.signOut();
 
-        setError("السيرفر أرسل استجابة غير صحيحة");
+        setError(
+          "السيرفر أرسل استجابة غير صحيحة",
+        );
+
         return;
       }
 
@@ -187,7 +258,9 @@ export default function LoginPage() {
           "الاتصال بالسيرفر استغرق وقتًا طويلًا. تأكد من اتصال الهاتف بالشبكة.",
         );
       } else {
-        setError("حدث خطأ أثناء تسجيل الدخول");
+        setError(
+          "حدث خطأ أثناء تسجيل الدخول",
+        );
       }
     } finally {
       setLoading(false);
@@ -203,6 +276,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(212,175,55,0.13),transparent_35%)]" />
 
         <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-[#d4af37]/10 blur-[120px]" />
+
         <div className="absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-orange-600/10 blur-[140px]" />
 
         <div className="absolute bottom-[-90px] left-[8%] opacity-30 blur-[1px]">
@@ -227,9 +301,13 @@ export default function LoginPage() {
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
         <div className="w-full max-w-md">
+
           <div className="mb-8 text-center">
+
             <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-[30px] border border-[#d4af37]/30 bg-[#111111]/90 shadow-[0_0_55px_rgba(212,175,55,0.15)] backdrop-blur-xl">
+
               <div className="relative">
+
                 <Flame
                   size={48}
                   strokeWidth={1.6}
@@ -237,13 +315,21 @@ export default function LoginPage() {
                 />
 
                 <span className="absolute inset-0 animate-pulse text-[#f5d76e] opacity-40 blur-md">
-                  <Flame size={48} strokeWidth={2} />
+                  <Flame
+                    size={48}
+                    strokeWidth={2}
+                  />
                 </span>
+
               </div>
+
             </div>
 
             <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
-              أهل <span className="text-[#d4af37]">القمة</span>
+              أهل{" "}
+              <span className="text-[#d4af37]">
+                القمة
+              </span>
             </h1>
 
             <div className="mx-auto mt-4 h-px w-20 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
@@ -251,16 +337,21 @@ export default function LoginPage() {
             <p className="mt-4 text-sm font-medium text-white/45">
               نظام إدارة الحسابات والطلبات
             </p>
+
           </div>
 
           <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[#101010]/90 p-6 shadow-[0_25px_80px_rgba(0,0,0,0.65)] backdrop-blur-2xl sm:p-8">
+
             <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
 
             <div className="pointer-events-none absolute -right-24 -top-24 h-48 w-48 rounded-full bg-[#d4af37]/8 blur-3xl" />
 
             <div className="relative">
+
               <div className="mb-7">
+
                 <div className="mb-3 flex items-center gap-2">
+
                   <ShieldCheck
                     size={19}
                     className="text-[#d4af37]"
@@ -269,6 +360,7 @@ export default function LoginPage() {
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37]/80">
                     تسجيل الدخول
                   </span>
+
                 </div>
 
                 <h2 className="text-2xl font-black text-white">
@@ -278,18 +370,22 @@ export default function LoginPage() {
                 <p className="mt-2 text-sm leading-6 text-white/40">
                   أدخل بيانات حسابك للوصول إلى النظام
                 </p>
+
               </div>
 
               <form
                 onSubmit={handleLogin}
                 className="space-y-5"
               >
+
                 <div>
+
                   <label className="mb-2.5 block text-sm font-bold text-white/75">
                     رقم الهاتف
                   </label>
 
                   <div className="relative">
+
                     <Phone
                       size={19}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-[#d4af37]/70"
@@ -307,15 +403,19 @@ export default function LoginPage() {
                       autoComplete="tel"
                       className="w-full rounded-2xl border border-white/10 bg-black/30 py-3.5 pl-4 pr-12 text-right text-white placeholder:text-white/20 outline-none transition-all duration-300 focus:border-[#d4af37]/60 focus:bg-black/45 focus:shadow-[0_0_25px_rgba(212,175,55,0.08)]"
                     />
+
                   </div>
+
                 </div>
 
                 <div>
+
                   <label className="mb-2.5 block text-sm font-bold text-white/75">
                     كلمة المرور
                   </label>
 
                   <div className="relative">
+
                     <LockKeyhole
                       size={19}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-[#d4af37]/70"
@@ -357,7 +457,9 @@ export default function LoginPage() {
                         <Eye size={18} />
                       )}
                     </button>
+
                   </div>
+
                 </div>
 
                 {error && (
@@ -371,33 +473,45 @@ export default function LoginPage() {
                   disabled={loading}
                   className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl border border-[#d4af37]/40 bg-gradient-to-r from-[#b99220] via-[#d4af37] to-[#b99220] px-5 py-4 font-black text-black shadow-[0_10px_35px_rgba(212,175,55,0.18)] transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_12px_45px_rgba(212,175,55,0.28)] disabled:cursor-not-allowed disabled:scale-100 disabled:opacity-50"
                 >
+
                   <span className="absolute inset-y-0 -left-20 w-16 -skew-x-12 bg-white/30 blur-sm transition-all duration-700 group-hover:left-[120%]" />
 
                   {loading ? (
                     <>
                       <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/30 border-t-black" />
-                      <span>جاري تسجيل الدخول...</span>
+                      <span>
+                        جاري تسجيل الدخول...
+                      </span>
                     </>
                   ) : (
                     <>
                       <LogIn size={19} />
-                      <span>تسجيل الدخول</span>
+                      <span>
+                        تسجيل الدخول
+                      </span>
                     </>
                   )}
+
                 </button>
+
               </form>
 
               <div className="mt-7 border-t border-white/7 pt-5 text-center">
+
                 <p className="text-xs text-white/25">
                   نظام آمن ومخصص لإدارة الحسابات والطلبات
                 </p>
+
               </div>
+
             </div>
+
           </div>
 
           <p className="mt-6 text-center text-[11px] font-medium text-white/20">
             © {new Date().getFullYear()} أهل القمة
           </p>
+
         </div>
       </div>
 
