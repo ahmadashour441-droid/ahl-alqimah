@@ -5,44 +5,107 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY!;
 const botKey = process.env.WHATSAPP_BOT_KEY!;
 
-const supabase = createClient(supabaseUrl, supabaseSecretKey);
+const supabase = createClient(
+  supabaseUrl,
+  supabaseSecretKey
+);
 
 function unauthorized() {
   return NextResponse.json(
-    { success: false, error: "Unauthorized" },
-    { status: 401 }
+    {
+      success: false,
+      error: "Unauthorized",
+    },
+    {
+      status: 401,
+    }
   );
+}
+
+function normalizeJordanPhone(phone: string) {
+  let value = String(phone || "").trim();
+
+  value = value.replace(/\D/g, "");
+
+  if (value.startsWith("00962")) {
+    value = value.substring(5);
+  }
+
+  if (value.startsWith("962")) {
+    value = value.substring(3);
+  }
+
+  if (!value.startsWith("0")) {
+    value = "0" + value;
+  }
+
+  return value;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const authorization = request.headers.get("authorization");
+    /* =====================================================
+       BOT AUTHENTICATION
+    ===================================================== */
 
-    if (!authorization) {
+    const botHeader = request.headers.get("x-bot-key");
+
+    if (!botHeader || botHeader !== botKey) {
       return unauthorized();
     }
 
-    const token = authorization.replace(/^Bearer\s+/i, "").trim();
-
-    if (!token || token !== botKey) {
-      return unauthorized();
-    }
+    /* =====================================================
+       READ BODY
+    ===================================================== */
 
     const body = await request.json();
 
     const {
-      producerId,
-      consumerId,
+      producerPhone,
+      captainPhone,
+      orderType,
       amount,
-      orderType = "passenger",
       notes = null,
     } = body;
 
-    if (!producerId || !consumerId) {
+    if (!producerPhone) {
       return NextResponse.json(
         {
           success: false,
-          error: "producerId and consumerId are required",
+          error: "producerPhone مطلوب",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!captainPhone) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "captainPhone مطلوب",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!orderType) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "orderType مطلوب",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (
+      orderType !== "passenger" &&
+      orderType !== "order"
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "نوع الطلب غير صحيح",
         },
         { status: 400 }
       );
@@ -50,121 +113,299 @@ export async function POST(request: NextRequest) {
 
     const numericAmount = Number(amount);
 
-    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+    if (
+      !Number.isFinite(numericAmount) ||
+      numericAmount <= 0
+    ) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid amount",
+          error: "قيمة الطلب غير صحيحة",
         },
         { status: 400 }
       );
     }
 
-    if (!["passenger", "order"].includes(orderType)) {
+    /* =====================================================
+       NORMALIZE PHONES
+    ===================================================== */
+
+    const normalizedProducerPhone =
+      normalizeJordanPhone(producerPhone);
+
+    const normalizedCaptainPhone =
+      normalizeJordanPhone(captainPhone);
+
+    if (
+      normalizedProducerPhone ===
+      normalizedCaptainPhone
+    ) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid order type",
+          error:
+            "لا يمكن أن يكون المنتج هو نفسه الكابتن",
         },
         { status: 400 }
       );
     }
 
-    if (producerId === consumerId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Producer and consumer cannot be the same user",
-        },
-        { status: 400 }
-      );
-    }
+    /* =====================================================
+       FIND PRODUCER
+    ===================================================== */
 
-    const { data: producer, error: producerError } = await supabase
+    const {
+      data: producer,
+      error: producerError,
+    } = await supabase
       .from("users")
-      .select("id, full_name, phone, balance, is_active, deleted_at")
-      .eq("id", producerId)
+      .select(
+        "id, full_name, phone, balance, is_active, role"
+      )
+      .eq("phone", normalizedProducerPhone)
       .is("deleted_at", null)
-      .single();
+      .maybeSingle();
 
-    if (producerError || !producer) {
+    if (producerError) {
+      console.error(
+        "BOT PRODUCER ERROR:",
+        producerError
+      );
+
       return NextResponse.json(
         {
           success: false,
-          error: "Producer not found",
+          error:
+            "تعذر التحقق من بيانات المنتج",
+          details:
+            producerError.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!producer) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "المنتج غير موجود في النظام",
         },
         { status: 404 }
       );
     }
 
-    const { data: consumer, error: consumerError } = await supabase
-      .from("users")
-      .select("id, full_name, phone, balance, is_active, deleted_at")
-      .eq("id", consumerId)
-      .is("deleted_at", null)
-      .single();
-
-    if (consumerError || !consumer) {
+    if (!producer.is_active) {
       return NextResponse.json(
         {
           success: false,
-          error: "Consumer not found",
+          error: "المنتج غير نشط",
+        },
+        { status: 400 }
+      );
+    }
+
+    /* =====================================================
+       FIND CAPTAIN
+    ===================================================== */
+
+    const {
+      data: captain,
+      error: captainError,
+    } = await supabase
+      .from("users")
+      .select(
+        "id, full_name, phone, balance, is_active, role"
+      )
+      .eq("phone", normalizedCaptainPhone)
+      .is("deleted_at", null)
+      .maybeSingle();
+
+    if (captainError) {
+      console.error(
+        "BOT CAPTAIN ERROR:",
+        captainError
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "تعذر التحقق من بيانات الكابتن",
+          details:
+            captainError.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!captain) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "الكابتن غير موجود في النظام",
         },
         { status: 404 }
       );
     }
 
-    const commissionRate = orderType === "passenger" ? 0.15 : 0.20;
+    if (!captain.is_active) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "الكابتن غير نشط",
+        },
+        { status: 400 }
+      );
+    }
 
-    const commission = Number(
-      (numericAmount * commissionRate).toFixed(2)
+    /* =====================================================
+       CURRENT WEEK
+    ===================================================== */
+
+    const {
+      data: weekId,
+      error: weekError,
+    } = await supabase.rpc(
+      "get_current_week"
     );
 
-    const { data: order, error: orderError } = await supabase
+    if (weekError || !weekId) {
+      console.error(
+        "BOT CURRENT WEEK ERROR:",
+        weekError
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "تعذر تحديد الأسبوع الحالي",
+          details:
+            weekError?.message ||
+            "لم يتم العثور على الأسبوع الحالي",
+        },
+        { status: 500 }
+      );
+    }
+
+    /* =====================================================
+       COMMISSION
+    ===================================================== */
+
+    const commissionRate =
+      orderType === "passenger"
+        ? 15
+        : 20;
+
+    const commissionAmount = Number(
+      (
+        numericAmount *
+        commissionRate /
+        100
+      ).toFixed(2)
+    );
+
+    /* =====================================================
+       CREATE ORDER
+       نفس طريقة لوحة الإدارة
+    ===================================================== */
+
+    const {
+      data: order,
+      error: orderError,
+    } = await supabase
       .from("orders")
       .insert({
-        created_by: producer.id,
-        producer_id: producer.id,
-        consumer_id: consumer.id,
-        amount: numericAmount,
         order_type: orderType,
+        amount: numericAmount,
         commission_rate: commissionRate,
-        commission_amount: commission,
-        status: "completed",
-        notes,
+        commission_amount:
+          commissionAmount,
+
+        producer_id:
+          producer.id,
+
+        consumer_id:
+          captain.id,
+
+        status: "assigned",
+
+        notes:
+          typeof notes === "string" &&
+          notes.trim()
+            ? notes.trim()
+            : null,
+
+        /*
+         * الطلب جاء من المنتج عن طريق
+         * WhatsApp Bot.
+         *
+         * نستخدم المنتج كـ created_by
+         * لأن الطلب ليس من صنع البوت.
+         */
+        created_by:
+          producer.id,
+
+        financially_processed:
+          false,
+
+        processed_week_id:
+          weekId,
       })
       .select("*")
       .single();
 
     if (orderError || !order) {
-      console.error("CREATE ORDER ERROR:", orderError);
+      console.error(
+        "BOT CREATE ORDER ERROR:",
+        orderError
+      );
 
       return NextResponse.json(
         {
           success: false,
-          error: orderError?.message || "Failed to create order",
+          error:
+            orderError?.message ||
+            "تعذر إنشاء الطلب",
         },
         { status: 500 }
       );
     }
 
-    const producerNewBalance = Number(
-      (Number(producer.balance || 0) + commission).toFixed(2)
+    /* =====================================================
+       PROCESS FINANCIALLY
+       نفس RPC المستخدمة في لوحة الإدارة
+    ===================================================== */
+
+    const {
+      data: financialResult,
+      error: financialError,
+    } = await supabase.rpc(
+      "process_order_financially",
+      {
+        p_order_id:
+          order.id,
+
+        p_week_id:
+          weekId,
+
+        p_created_by:
+          producer.id,
+      }
     );
 
-    const consumerNewBalance = Number(
-      (Number(consumer.balance || 0) - commission).toFixed(2)
-    );
+    if (financialError) {
+      console.error(
+        "BOT PROCESS FINANCIAL ERROR:",
+        financialError
+      );
 
-    const { error: producerBalanceError } = await supabase
-      .from("users")
-      .update({
-        balance: producerNewBalance,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", producer.id);
-
-    if (producerBalanceError) {
+      /*
+       * إذا فشلت المعالجة المالية
+       * نحذف الطلب الذي تم إنشاؤه.
+       */
       await supabase
         .from("orders")
         .delete()
@@ -173,132 +414,71 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Failed to update producer balance",
+          error:
+            "تعذر معالجة الحسابات المالية للطلب",
+
+          details:
+            financialError.message,
         },
         { status: 500 }
       );
     }
 
-    const { error: consumerBalanceError } = await supabase
-      .from("users")
-      .update({
-        balance: consumerNewBalance,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", consumer.id);
-
-    if (consumerBalanceError) {
-      await supabase
-        .from("users")
-        .update({
-          balance: Number(producer.balance || 0),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", producer.id);
-
-      await supabase
-        .from("orders")
-        .delete()
-        .eq("id", order.id);
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Failed to update consumer balance",
-        },
-        { status: 500 }
-      );
-    }
-
-    const { error: transactionError } = await supabase
-      .from("transactions")
-      .insert([
-        {
-          user_id: producer.id,
-          amount: commission,
-          type: "order_commission",
-          description: `عمولة إنتاج أوردر #${order.order_number}`,
-          reference_id: order.id,
-        },
-        {
-          user_id: consumer.id,
-          amount: -commission,
-          type: "order_commission",
-          description: `عمولة استلام أوردر #${order.order_number}`,
-          reference_id: order.id,
-        },
-      ]);
-
-    if (transactionError) {
-      await supabase
-        .from("users")
-        .update({
-          balance: Number(producer.balance || 0),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", producer.id);
-
-      await supabase
-        .from("users")
-        .update({
-          balance: Number(consumer.balance || 0),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", consumer.id);
-
-      await supabase
-        .from("orders")
-        .delete()
-        .eq("id", order.id);
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Failed to create transactions",
-        },
-        { status: 500 }
-      );
-    }
-
-    if (consumerNewBalance < 0) {
-      await supabase.from("notifications").insert({
-        user_id: consumer.id,
-        title: "تنبيه الرصيد",
-        message: "رصيدك صار سالب. يرجى تسوية الحساب مع الإدارة.",
-        type: "warning",
-        is_read: false,
-      });
-    }
+    /* =====================================================
+       SUCCESS
+    ===================================================== */
 
     return NextResponse.json({
       success: true,
+
+      message:
+        "تم إنشاء الطلب وتسجيل العمولة والأرضية بنجاح",
+
       order: {
         id: order.id,
-        orderNumber: order.order_number,
-        amount: numericAmount,
-        orderType,
-        commissionRate,
-        commission,
-        status: "completed",
+
+        orderId:
+          order.id,
+
+        orderNumber:
+          order.order_number,
+
+        orderType:
+          orderType,
+
+        amount:
+          numericAmount,
+
+        commissionRate:
+          commissionRate,
+
+        commissionAmount:
+          commissionAmount,
+
+        producerId:
+          producer.id,
+
+        producerName:
+          producer.full_name,
+
+        captainId:
+          captain.id,
+
+        captainName:
+          captain.full_name,
+
+        status:
+          "assigned",
       },
-      producer: {
-        id: producer.id,
-        name: producer.full_name,
-        balanceBefore: Number(producer.balance || 0),
-        balanceAfter: producerNewBalance,
-        commissionEarned: commission,
-      },
-      consumer: {
-        id: consumer.id,
-        name: consumer.full_name,
-        balanceBefore: Number(consumer.balance || 0),
-        balanceAfter: consumerNewBalance,
-        commissionPaid: commission,
-        negative: consumerNewBalance < 0,
-      },
+
+      financial:
+        financialResult,
     });
   } catch (error) {
-    console.error("BOT CREATE ORDER ERROR:", error);
+    console.error(
+      "BOT CREATE ORDER EXCEPTION:",
+      error
+    );
 
     return NextResponse.json(
       {
@@ -306,7 +486,7 @@ export async function POST(request: NextRequest) {
         error:
           error instanceof Error
             ? error.message
-            : "Internal server error",
+            : "حدث خطأ أثناء إنشاء الطلب",
       },
       { status: 500 }
     );
