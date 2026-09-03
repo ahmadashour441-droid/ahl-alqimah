@@ -49,10 +49,17 @@ export default function LoginPage() {
     try {
       setLoading(true);
 
-      const email = `${cleanPhone}@captainsystem.com`;
+      // تحويل رقم الهاتف الأردني من 079xxxxxxx
+      // إلى الرقم المستخدم في Supabase Auth: 962792xxxxxx
+      const authPhone = cleanPhone.startsWith("0")
+        ? `962${cleanPhone.slice(1)}`
+        : cleanPhone;
+
+      const email = `${authPhone}@captainsystem.com`;
 
       console.log("LOGIN START");
       console.log("PHONE:", cleanPhone);
+      console.log("AUTH EMAIL:", email);
 
       const {
         data: authData,
@@ -192,31 +199,24 @@ export default function LoginPage() {
       dir="rtl"
       className="relative min-h-screen overflow-hidden bg-[#050505] text-white"
     >
-      {/* =========================
-          Animated Background
-      ========================= */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(212,175,55,0.13),transparent_35%)]" />
 
         <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-[#d4af37]/10 blur-[120px]" />
         <div className="absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-orange-600/10 blur-[140px]" />
 
-        {/* Flame 1 */}
         <div className="absolute bottom-[-90px] left-[8%] opacity-30 blur-[1px]">
           <div className="flame flame-one" />
         </div>
 
-        {/* Flame 2 */}
         <div className="absolute bottom-[-110px] right-[10%] opacity-25 blur-[1px]">
           <div className="flame flame-two" />
         </div>
 
-        {/* Flame 3 */}
         <div className="absolute bottom-[-120px] left-[45%] opacity-20 blur-[2px]">
           <div className="flame flame-three" />
         </div>
 
-        {/* Floating sparks */}
         <span className="spark spark-one" />
         <span className="spark spark-two" />
         <span className="spark spark-three" />
@@ -225,14 +225,8 @@ export default function LoginPage() {
         <span className="spark spark-six" />
       </div>
 
-      {/* =========================
-          Main Content
-      ========================= */}
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
         <div className="w-full max-w-md">
-          {/* =========================
-              Logo / Brand
-          ========================= */}
           <div className="mb-8 text-center">
             <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-[30px] border border-[#d4af37]/30 bg-[#111111]/90 shadow-[0_0_55px_rgba(212,175,55,0.15)] backdrop-blur-xl">
               <div className="relative">
@@ -259,18 +253,12 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* =========================
-              Login Card
-          ========================= */}
           <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[#101010]/90 p-6 shadow-[0_25px_80px_rgba(0,0,0,0.65)] backdrop-blur-2xl sm:p-8">
-            {/* Gold top line */}
             <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
 
-            {/* Card glow */}
             <div className="pointer-events-none absolute -right-24 -top-24 h-48 w-48 rounded-full bg-[#d4af37]/8 blur-3xl" />
 
             <div className="relative">
-              {/* Header */}
               <div className="mb-7">
                 <div className="mb-3 flex items-center gap-2">
                   <ShieldCheck
@@ -296,9 +284,6 @@ export default function LoginPage() {
                 onSubmit={handleLogin}
                 className="space-y-5"
               >
-                {/* =========================
-                    Phone
-                ========================= */}
                 <div>
                   <label className="mb-2.5 block text-sm font-bold text-white/75">
                     رقم الهاتف
@@ -325,9 +310,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* =========================
-                    Password
-                ========================= */}
                 <div>
                   <label className="mb-2.5 block text-sm font-bold text-white/75">
                     كلمة المرور
@@ -378,24 +360,17 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* =========================
-                    Error
-                ========================= */}
                 {error && (
                   <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm font-medium leading-6 text-red-300">
                     {error}
                   </div>
                 )}
 
-                {/* =========================
-                    Login Button
-                ========================= */}
                 <button
                   type="submit"
                   disabled={loading}
                   className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl border border-[#d4af37]/40 bg-gradient-to-r from-[#b99220] via-[#d4af37] to-[#b99220] px-5 py-4 font-black text-black shadow-[0_10px_35px_rgba(212,175,55,0.18)] transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_12px_45px_rgba(212,175,55,0.28)] disabled:cursor-not-allowed disabled:scale-100 disabled:opacity-50"
                 >
-                  {/* Button shine */}
                   <span className="absolute inset-y-0 -left-20 w-16 -skew-x-12 bg-white/30 blur-sm transition-all duration-700 group-hover:left-[120%]" />
 
                   {loading ? (
@@ -412,7 +387,6 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              {/* Footer inside card */}
               <div className="mt-7 border-t border-white/7 pt-5 text-center">
                 <p className="text-xs text-white/25">
                   نظام آمن ومخصص لإدارة الحسابات والطلبات
@@ -421,16 +395,12 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Bottom */}
           <p className="mt-6 text-center text-[11px] font-medium text-white/20">
             © {new Date().getFullYear()} أهل القمة
           </p>
         </div>
       </div>
 
-      {/* =========================
-          CSS Animations
-      ========================= */}
       <style jsx>{`
         .flame {
           position: relative;
