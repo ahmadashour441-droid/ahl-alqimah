@@ -2,12 +2,12 @@
 
 :root {
   --background: #0b0d10;
-  --foreground: #f3f4f6;
+  --foreground: #404245;
   --panel: #101317;
   --panel-soft: #15191f;
   --border: #292d33;
   --gold: #d6a84f;
-  --muted: #a1a1aa;
+  --muted: #55555a;
 }
 
 @theme inline {
@@ -1488,37 +1488,55 @@ button { cursor: pointer; }
     flex-basis: 18px !important;
   }
 }
-/* =====================================================
-   أهل القمة — إصلاح ألوان لوحة المستخدم والقائمة السفلية
-   ===================================================== */
+/* ==========================================
+   أهل القمة — إصلاح ألوان لوحة المستخدم
+   وإصلاح شريط التنقل السفلي للموبايل
+   ========================================== */
 
-/* الخلفية الأساسية */
+/* ألوان لوحة المستخدم */
 .captain-pro {
   --captain-bg: #0b0d10;
-  --captain-panel: #101317;
-  --captain-panel-soft: #15191f;
-  --captain-border: #292d33;
-  --captain-gold: #d6a84f;
-  --captain-text: #f3f4f6;
-  --captain-muted: #a1a1aa;
+  --captain-panel: #15191f;
+  --captain-panel-soft: #1b2028;
+  --captain-border: #303640;
+  --captain-gold: #e2b75b;
+  --captain-text: #f5f6f8;
+  --captain-muted: #b5bbc5;
 
   background: var(--captain-bg) !important;
   color: var(--captain-text) !important;
+  min-width: 0;
+  width: 100%;
+  overflow-x: clip;
 }
 
-/* منع ظهور بطاقات المستخدم باللون الأبيض */
+.captain-pro .captain-pro-main,
+.captain-pro .captain-pro-content {
+  min-width: 0;
+  background-color: var(--captain-bg) !important;
+  color: var(--captain-text) !important;
+}
+
+/* توحيد خلفيات البطاقات ومنع ظهور الأبيض */
 .captain-pro .captain-hero,
 .captain-pro .captain-settlement-card,
 .captain-pro .captain-panel,
-.captain-pro .captain-metrics .captain-metric,
+.captain-pro .captain-metric,
+.captain-pro .captain-order-row,
+.captain-pro .captain-week,
 .captain-pro .captain-action {
-  background: var(--captain-panel) !important;
-  color: var(--captain-text) !important;
-  border-color: var(--captain-border) !important;
-  box-shadow: none;
+  color: var(--captain-text);
 }
 
-/* العناوين */
+.captain-pro .captain-hero,
+.captain-pro .captain-settlement-card,
+.captain-pro .captain-panel,
+.captain-pro .captain-metrics .captain-metric {
+  background: var(--captain-panel) !important;
+  border-color: var(--captain-border) !important;
+}
+
+/* العناوين والأرقام */
 .captain-pro .captain-hero h1,
 .captain-pro .captain-hero h2,
 .captain-pro .captain-hero h3,
@@ -1526,26 +1544,29 @@ button { cursor: pointer; }
 .captain-pro .captain-settlement-card h3,
 .captain-pro .captain-panel h2,
 .captain-pro .captain-panel h3,
-.captain-pro .captain-action b {
+.captain-pro .captain-order-row b,
+.captain-pro .captain-metric b,
+.captain-pro .captain-metric strong,
+.captain-pro .captain-week h3 {
   color: var(--captain-text) !important;
 }
 
 /* النصوص الثانوية */
 .captain-pro .captain-hero p,
-.captain-pro .captain-settlement-card p,
-.captain-pro .captain-settlement-card small,
-.captain-pro .captain-panel p,
+.captain-pro .captain-settlement-head span,
+.captain-pro .captain-settlement-note,
 .captain-pro .captain-panel small,
-.captain-pro .captain-action small {
+.captain-pro .captain-order-row small,
+.captain-pro .captain-metric small,
+.captain-pro .captain-week p {
   color: var(--captain-muted) !important;
 }
 
-/* =====================================================
-   بطاقات الإحصائيات
-   مكوّن Metric يستخدم span للأيقونة و b للقيمة
-   ===================================================== */
-
+/* بطاقات الإحصائيات: الأيقونة span والقيمة داخل div */
 .captain-pro .captain-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
   min-width: 0;
 }
 
@@ -1556,26 +1577,28 @@ button { cursor: pointer; }
   gap: 12px !important;
   min-width: 0 !important;
   min-height: 100px;
-  padding: 16px !important;
+  padding: 14px !important;
   border: 1px solid var(--captain-border) !important;
-  border-radius: 17px !important;
+  border-radius: 15px;
+  box-shadow: none !important;
 }
 
 .captain-pro .captain-metrics .captain-metric > span {
   display: grid !important;
   place-items: center !important;
-  flex: 0 0 43px !important;
-  width: 43px !important;
-  height: 43px !important;
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  height: 42px !important;
   margin: 0 !important;
-  border-radius: 13px !important;
-  background: #d6a84f19 !important;
+  border-radius: 12px;
+  background: #e2b75b1c !important;
   color: var(--captain-gold) !important;
 }
 
 .captain-pro .captain-metrics .captain-metric > span svg {
-  width: 21px !important;
-  height: 21px !important;
+  display: block;
+  width: 21px;
+  height: 21px;
   color: currentColor !important;
 }
 
@@ -1584,66 +1607,107 @@ button { cursor: pointer; }
   min-width: 0 !important;
   width: auto !important;
   background: transparent !important;
-}
-
-.captain-pro .captain-metrics .captain-metric small {
-  display: block !important;
-  margin-bottom: 5px !important;
-  color: var(--captain-muted) !important;
-  font-size: 11px !important;
-  line-height: 1.6 !important;
-}
-
-.captain-pro .captain-metrics .captain-metric b {
-  display: block !important;
   color: var(--captain-text) !important;
-  font-size: clamp(16px, 1.6vw, 22px) !important;
-  font-weight: 900 !important;
-  line-height: 1.4 !important;
-  overflow-wrap: anywhere !important;
 }
 
-/* ألوان دلالية للأيقونات */
-.captain-pro .captain-metrics .captain-metric.negative > span,
-.captain-pro .captain-metrics .captain-metric.red > span {
-  color: #f87171 !important;
-  background: #f8717118 !important;
+.captain-pro .captain-metrics .captain-metric > div small {
+  display: block;
+  margin: 0 0 5px;
+  color: var(--captain-muted) !important;
+  font-size: 11px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
-.captain-pro .captain-metrics .captain-metric.teal > span {
-  color: #45b7a1 !important;
-  background: #45b7a118 !important;
+.captain-pro .captain-metrics .captain-metric > div b {
+  display: block;
+  color: var(--captain-text) !important;
+  font-size: clamp(15px, 1.5vw, 22px);
+  font-weight: 900;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
-.captain-pro .captain-metrics .captain-metric.blue > span {
-  color: #7da7ff !important;
-  background: #7da7ff18 !important;
+/* تمييز ألوان الأيقونات */
+.captain-pro .captain-metric.negative > span,
+.captain-pro .captain-metric.red > span {
+  color: #ff8585 !important;
+  background: #ff85851a !important;
 }
 
-/* =====================================================
-   إصلاح القائمة السفلية
-   ملاحظة: captain-pro-bottom خارج عنصر captain-pro
-   لذلك نستهدفه مباشرة دون .captain-pro قبله
-   ===================================================== */
+.captain-pro .captain-metric.teal > span {
+  color: #5dd6bd !important;
+  background: #5dd6bd1a !important;
+}
 
-.captain-pro-bottom {
+.captain-pro .captain-metric.blue > span {
+  color: #8db4ff !important;
+  background: #8db4ff1a !important;
+}
+
+/* القائمة السفلية مخفية على الشاشات الكبيرة */
+.captain-pro .captain-pro-bottom {
   display: none;
 }
 
+/* الموبايل والتابلت */
 @media (max-width: 800px) {
-  /* مساحة أسفل الصفحة حتى لا تغطي القائمة المحتوى */
+  .captain-pro {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 100dvh;
+  }
+
   .captain-pro .captain-pro-main {
-    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
   }
 
   .captain-pro .captain-pro-content {
-    padding-bottom: 20px !important;
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    padding-bottom: 20px;
   }
 
-  /* القائمة ثابتة أسفل الشاشة */
-  .captain-pro-bottom {
+  .captain-pro .captain-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+
+  .captain-pro .captain-metrics .captain-metric {
+    min-height: 84px !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+
+  .captain-pro .captain-metrics .captain-metric > span {
+    flex-basis: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .captain-pro .captain-metrics .captain-metric > span svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .captain-pro .captain-metrics .captain-metric > div small {
+    font-size: 10px;
+  }
+
+  .captain-pro .captain-metrics .captain-metric > div b {
+    font-size: 16px;
+  }
+
+  /* شريط التنقل — خمسة أقسام بعرض متساوٍ */
+  .captain-pro .captain-pro-bottom {
     position: fixed !important;
-    z-index: 1200 !important;
+    z-index: 9999 !important;
     right: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
@@ -1654,54 +1718,48 @@ button { cursor: pointer; }
     gap: 0 !important;
 
     width: 100% !important;
-    min-height: 66px !important;
+    min-width: 0 !important;
+    min-height: 64px !important;
     margin: 0 !important;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom)) !important;
 
-    padding:
-      7px
-      4px
-      calc(7px + env(safe-area-inset-bottom)) !important;
-
-    border-top: 1px solid #292d33 !important;
-    background: #101317 !important;
-    box-shadow: 0 -8px 24px #0003 !important;
     direction: rtl !important;
+    background: #11151b !important;
+    border-top: 1px solid #303640 !important;
+    box-shadow: 0 -5px 20px rgb(0 0 0 / 30%) !important;
+    backdrop-filter: blur(12px);
   }
 
-  /* كل زر يأخذ خمس المساحة بالتساوي */
-  .captain-pro-bottom > button {
+  .captain-pro .captain-pro-bottom > button {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-
     gap: 4px !important;
+
     width: 100% !important;
     min-width: 0 !important;
-    min-height: 50px !important;
-
+    min-height: 48px !important;
     margin: 0 !important;
-    padding: 2px 1px !important;
-    overflow: hidden !important;
+    padding: 3px 1px !important;
 
     border: 0 !important;
     border-radius: 8px !important;
     background: transparent !important;
-    color: #a1a1aa !important;
+    color: #b5bbc5 !important;
 
     text-align: center !important;
     font-size: 10px !important;
-    line-height: 1.25 !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
   }
 
-  /* القسم الحالي */
-  .captain-pro-bottom > button.active {
-    background: #d6a84f12 !important;
-    color: #d6a84f !important;
+  .captain-pro .captain-pro-bottom > button.active {
+    background: #e2b75b14 !important;
+    color: #e2b75b !important;
   }
 
-  /* الأيقونات */
-  .captain-pro-bottom > button > svg {
+  .captain-pro .captain-pro-bottom > button > svg {
     display: block !important;
     flex: 0 0 20px !important;
     width: 20px !important;
@@ -1710,23 +1768,19 @@ button { cursor: pointer; }
     color: currentColor !important;
   }
 
-  /* أسماء الأقسام: سطر واحد دون تداخل */
-  .captain-pro-bottom > button > span {
+  .captain-pro .captain-pro-bottom > button > span {
     display: block !important;
     flex: 0 1 auto !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important;
-
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden !important;
 
+    overflow: hidden !important;
     color: currentColor !important;
     text-align: center !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-
     font-size: 10px !important;
     line-height: 1.25 !important;
   }
@@ -1734,17 +1788,17 @@ button { cursor: pointer; }
 
 /* الهواتف الصغيرة */
 @media (max-width: 380px) {
-  .captain-pro-bottom > button {
+  .captain-pro .captain-pro-bottom > button {
     gap: 3px !important;
   }
 
-  .captain-pro-bottom > button > svg {
+  .captain-pro .captain-pro-bottom > button > svg {
+    flex-basis: 18px !important;
     width: 18px !important;
     height: 18px !important;
-    flex-basis: 18px !important;
   }
 
-  .captain-pro-bottom > button > span {
+  .captain-pro .captain-pro-bottom > button > span {
     font-size: 9px !important;
   }
 }
