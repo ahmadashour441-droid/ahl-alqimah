@@ -1288,3 +1288,203 @@ button { cursor: pointer; }
     transition: none;
   }
 }
+/* =====================================================
+   FIX FINAL — لوحة المستخدم على الهاتف
+   ألوان موحدة + قائمة سفلية لمكوّن captain-pro-bottom
+   مشروع أهل القمة
+   ===================================================== */
+
+.captain-pro {
+  background: #0b0d10 !important;
+  color: #f3f4f6 !important;
+  padding-bottom: 0;
+}
+
+.captain-pro .captain-pro-main,
+.captain-pro .captain-pro-content {
+  background: #0b0d10 !important;
+  color: #f3f4f6 !important;
+  min-width: 0;
+}
+
+/* توحيد خلفيات البطاقات */
+.captain-pro .captain-hero,
+.captain-pro .captain-settlement-card,
+.captain-pro .captain-panel,
+.captain-pro .captain-metrics > div,
+.captain-pro .captain-action {
+  background-color: #101317 !important;
+  color: #f3f4f6 !important;
+  border-color: #292d33;
+}
+
+/* وضوح العناوين والأرقام */
+.captain-pro .captain-hero h1,
+.captain-pro .captain-hero h2,
+.captain-pro .captain-hero h3,
+.captain-pro .captain-settlement-card h2,
+.captain-pro .captain-settlement-card h3,
+.captain-pro .captain-panel h2,
+.captain-pro .captain-panel h3,
+.captain-pro .captain-action b,
+.captain-pro .captain-metrics strong,
+.captain-pro .captain-metrics b {
+  color: #f3f4f6 !important;
+}
+
+/* النصوص الثانوية */
+.captain-pro .captain-hero p,
+.captain-pro .captain-settlement-card p,
+.captain-pro .captain-settlement-note,
+.captain-pro .captain-panel small,
+.captain-pro .captain-action small,
+.captain-pro .captain-metrics small,
+.captain-pro .captain-metrics span {
+  color: #a1a1aa !important;
+}
+
+/* إبراز القيم المهمة بالذهبي */
+.captain-pro .captain-hero strong,
+.captain-pro .captain-order-row strong {
+  color: #d6a84f !important;
+}
+
+/* إخفاء القائمة السفلية خارج الموبايل */
+.captain-pro .captain-pro-bottom {
+  display: none;
+}
+
+/* =====================================================
+   القائمة السفلية — الموبايل والآيفون
+   ===================================================== */
+
+@media (max-width: 800px) {
+  .captain-pro .captain-pro-main {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .captain-pro .captain-pro-content {
+    padding-bottom: 24px !important;
+  }
+
+  .captain-pro .captain-pro-bottom {
+    position: fixed !important;
+    z-index: 120 !important;
+
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+
+    width: 100% !important;
+    min-height: 66px !important;
+
+    padding:
+      8px
+      4px
+      calc(8px + env(safe-area-inset-bottom)) !important;
+
+    margin: 0 !important;
+
+    border-top: 1px solid #292d33 !important;
+
+    background: rgba(16, 19, 23, 0.98) !important;
+
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.24) !important;
+
+    backdrop-filter: blur(14px);
+
+    direction: rtl !important;
+  }
+
+  /* كل عنصر في القائمة */
+  .captain-pro .captain-pro-bottom > button {
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 5px !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+
+    padding: 2px 1px !important;
+    margin: 0 !important;
+
+    border: 0 !important;
+    border-radius: 8px !important;
+
+    background: transparent !important;
+    color: #a1a1aa !important;
+
+    text-align: center !important;
+    white-space: nowrap !important;
+
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* القسم المحدد */
+  .captain-pro .captain-pro-bottom > button.active {
+    background: #d6a84f12 !important;
+    color: #d6a84f !important;
+  }
+
+  /* الأيقونات */
+  .captain-pro .captain-pro-bottom > button svg {
+    display: block !important;
+
+    width: 20px !important;
+    height: 20px !important;
+
+    flex: 0 0 20px !important;
+
+    color: currentColor !important;
+  }
+
+  /* أسماء الأقسام ومنع التداخل */
+  .captain-pro .captain-pro-bottom > button span {
+    display: block !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    overflow: hidden !important;
+
+    color: currentColor !important;
+
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+}
+
+/* =====================================================
+   الهواتف الصغيرة جدًا
+   ===================================================== */
+
+@media (max-width: 380px) {
+  .captain-pro .captain-pro-bottom > button {
+    font-size: 9px !important;
+    gap: 4px !important;
+  }
+
+  .captain-pro .captain-pro-bottom > button span {
+    font-size: 9px !important;
+  }
+
+  .captain-pro .captain-pro-bottom > button svg {
+    width: 18px !important;
+    height: 18px !important;
+    flex-basis: 18px !important;
+  }
+}
