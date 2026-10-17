@@ -240,12 +240,12 @@ export default function WeeksPage() {
         dir="rtl"
         className="flex min-h-screen items-center justify-center bg-[#0b0d10] px-4"
       >
-        <div className="w-full max-w-sm rounded-[28px] border border-white/10 bg-[#12151a] p-8 text-center shadow-2xl">
+        <div className="w-full max-w-sm rounded-[28px] border border-[#292d33] bg-white p-8 text-center shadow-2xl">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d6a84f]/10 text-[#d6a84f]">
             <CalendarDays size={30} />
           </div>
 
-          <p className="mt-5 font-bold text-white">
+          <p className="mt-5 font-bold text-[#f3f4f6]">
             جاري تحميل الأسابيع...
           </p>
 
@@ -260,13 +260,13 @@ export default function WeeksPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       <div className="mx-auto w-full max-w-[1500px] px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
 
         {/* HEADER */}
 
-        <header className="mb-6 overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+        <header className="mb-6 overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
           <div className="relative p-5 sm:p-7">
             <div className="absolute -left-16 -top-16 h-40 w-40 rounded-full bg-[#d6a84f]/10 blur-3xl" />
 
@@ -283,11 +283,11 @@ export default function WeeksPage() {
                     السجل الأسبوعي
                   </p>
 
-                  <h1 className="mt-1 text-2xl font-black text-white sm:text-3xl">
+                  <h1 className="mt-1 text-2xl font-black text-[#f3f4f6] sm:text-3xl">
                     الأسابيع
                   </h1>
 
-                  <p className="mt-1 text-sm text-white/45">
+                  <p className="mt-1 text-sm text-[#73777e]/45">
                     تابع إنتاجك واستهلاكك ونشاطك في كل أسبوع.
                   </p>
                 </div>
@@ -296,7 +296,7 @@ export default function WeeksPage() {
 
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#181b20] px-5 py-3 text-sm font-bold text-white transition hover:border-[#d6a84f]/40 hover:bg-[#d6a84f]/10"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#292d33] bg-[#11151a] px-5 py-3 text-sm font-bold text-[#f3f4f6] transition hover:border-[#d6a84f]/40 hover:bg-[#d6a84f]/10"
               >
                 <ArrowRight size={17} />
                 العودة للوحة التحكم
@@ -327,17 +327,17 @@ export default function WeeksPage() {
         {/* NO WEEKS */}
 
         {weeks.length === 0 ? (
-          <div className="rounded-[28px] border border-white/10 bg-[#12151a] p-10 text-center shadow-2xl">
+          <div className="rounded-[28px] border border-[#292d33] bg-white p-10 text-center shadow-2xl">
 
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-[#d6a84f]/10 text-[#d6a84f]">
               <CalendarDays size={36} />
             </div>
 
-            <h2 className="mt-5 text-xl font-black text-white">
+            <h2 className="mt-5 text-xl font-black text-[#f3f4f6]">
               لا توجد أسابيع
             </h2>
 
-            <p className="mt-2 text-sm text-white/40">
+            <p className="mt-2 text-sm text-[#73777e]/40">
               لم يتم تسجيل أي أسبوع في النظام حتى الآن.
             </p>
 
@@ -347,7 +347,7 @@ export default function WeeksPage() {
 
             {/* WEEKS LIST */}
 
-            <aside className="h-fit rounded-[28px] border border-white/10 bg-[#12151a] p-4 shadow-2xl xl:sticky xl:top-6">
+            <aside className="h-fit rounded-[28px] border border-[#292d33] bg-white p-4 shadow-2xl xl:sticky xl:top-6">
 
               <div className="mb-4 flex items-center justify-between px-1">
 
@@ -357,12 +357,12 @@ export default function WeeksPage() {
                     className="text-[#d6a84f]"
                   />
 
-                  <h2 className="font-black text-white">
+                  <h2 className="font-black text-[#f3f4f6]">
                     سجل الأسابيع
                   </h2>
                 </div>
 
-                <span className="rounded-full border border-white/10 bg-[#181b20] px-3 py-1 text-xs font-bold text-white/50">
+                <span className="rounded-full border border-[#292d33] bg-[#11151a] px-3 py-1 text-xs font-bold text-[#73777e]/50">
                   {weeks.length}
                 </span>
 
@@ -387,7 +387,7 @@ export default function WeeksPage() {
                       className={`group w-full rounded-2xl border p-4 text-right transition ${
                         selected
                           ? "border-[#d6a84f]/50 bg-[#d6a84f]/10 shadow-lg shadow-[#d6a84f]/5"
-                          : "border-white/5 bg-[#181b20] hover:border-white/10 hover:bg-[#1d2025]"
+                          : "border-[#eeeae4] bg-[#11151a] hover:border-[#292d33] hover:bg-[#15191f]"
                       }`}
                     >
 
@@ -397,7 +397,7 @@ export default function WeeksPage() {
                           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
                             selected
                               ? "bg-[#d6a84f] text-[#0b0d10]"
-                              : "bg-white/5 text-white/40"
+                              : "bg-[#15191f] text-[#73777e]/40"
                           }`}
                         >
                           <CalendarDays size={18} />
@@ -409,7 +409,7 @@ export default function WeeksPage() {
                             className={`truncate text-sm font-black ${
                               selected
                                 ? "text-[#d6a84f]"
-                                : "text-white"
+                                : "text-[#f3f4f6]"
                             }`}
                           >
                             {getWeekLabel(week)}
@@ -446,7 +446,7 @@ export default function WeeksPage() {
                           className={`shrink-0 transition ${
                             selected
                               ? "text-[#d6a84f]"
-                              : "text-white/20 group-hover:text-white/50"
+                              : "text-[#73777e]/20 group-hover:text-[#73777e]/50"
                           }`}
                         />
 
@@ -465,7 +465,7 @@ export default function WeeksPage() {
             <section className="min-w-0">
 
               {loadingDetails ? (
-                <div className="flex min-h-[450px] items-center justify-center rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+                <div className="flex min-h-[450px] items-center justify-center rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
                   <div className="text-center">
 
@@ -476,7 +476,7 @@ export default function WeeksPage() {
                       />
                     </div>
 
-                    <p className="mt-5 font-bold text-white/70">
+                    <p className="mt-5 font-bold text-[#73777e]/70">
                       جاري تحميل تفاصيل الأسبوع...
                     </p>
 
@@ -484,13 +484,13 @@ export default function WeeksPage() {
 
                 </div>
               ) : !weekData ? (
-                <div className="rounded-[28px] border border-white/10 bg-[#12151a] p-10 text-center shadow-2xl">
+                <div className="rounded-[28px] border border-[#292d33] bg-white p-10 text-center shadow-2xl">
 
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 text-white/30">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#15191f] text-[#73777e]/30">
                     <CalendarDays size={30} />
                   </div>
 
-                  <p className="mt-4 text-sm text-white/40">
+                  <p className="mt-4 text-sm text-[#73777e]/40">
                     اختر أسبوعًا لعرض تفاصيله.
                   </p>
 
@@ -500,7 +500,7 @@ export default function WeeksPage() {
 
                   {/* WEEK HERO */}
 
-                  <div className="relative overflow-hidden rounded-[28px] border border-[#d6a84f]/20 bg-[#12151a] shadow-2xl">
+                  <div className="relative overflow-hidden rounded-[28px] border border-[#d6a84f]/20 bg-white shadow-2xl">
 
                     <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#d6a84f]/10 blur-3xl" />
 
@@ -514,14 +514,14 @@ export default function WeeksPage() {
                             الفترة الأسبوعية
                           </p>
 
-                          <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">
+                          <h2 className="mt-2 text-xl font-black text-[#f3f4f6] sm:text-2xl">
                             {getWeekLabel(
                               weekData.week
                             )}
                           </h2>
 
                           {weekData.week.closed_at && (
-                            <div className="mt-3 flex items-center gap-2 text-xs text-white/35">
+                            <div className="mt-3 flex items-center gap-2 text-xs text-[#73777e]/35">
                               <Clock3 size={14} />
                               تم الإغلاق:{" "}
                               {formatDateTime(
@@ -654,21 +654,21 @@ function StatCard({
   subtitle: string;
 }) {
   return (
-    <div className="rounded-[24px] border border-white/10 bg-[#12151a] p-4 shadow-xl sm:p-5">
+    <div className="rounded-[24px] border border-[#292d33] bg-white p-4 shadow-xl sm:p-5">
 
       <div className="flex items-start justify-between gap-3">
 
         <div className="min-w-0">
 
-          <p className="text-xs font-bold text-white/40">
+          <p className="text-xs font-bold text-[#73777e]/40">
             {title}
           </p>
 
-          <p className="mt-2 truncate text-lg font-black text-white sm:text-2xl">
+          <p className="mt-2 truncate text-lg font-black text-[#f3f4f6] sm:text-2xl">
             {value}
           </p>
 
-          <p className="mt-1 truncate text-[11px] text-white/30">
+          <p className="mt-1 truncate text-[11px] text-[#73777e]/30">
             {subtitle}
           </p>
 
@@ -696,9 +696,9 @@ function OrderSection({
   type: "produced" | "consumed";
 }) {
   return (
-    <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+    <section className="overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
-      <div className="border-b border-white/5 p-5 sm:p-6">
+      <div className="border-b border-[#eeeae4] p-5 sm:p-6">
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
@@ -720,11 +720,11 @@ function OrderSection({
 
             <div>
 
-              <h3 className="text-base font-black text-white sm:text-lg">
+              <h3 className="text-base font-black text-[#f3f4f6] sm:text-lg">
                 {title}
               </h3>
 
-              <p className="mt-1 text-xs text-white/35">
+              <p className="mt-1 text-xs text-[#73777e]/35">
                 {subtitle}
               </p>
 
@@ -732,7 +732,7 @@ function OrderSection({
 
           </div>
 
-          <span className="w-fit rounded-full border border-white/10 bg-[#181b20] px-3 py-1.5 text-xs font-black text-white/45">
+          <span className="w-fit rounded-full border border-[#292d33] bg-[#11151a] px-3 py-1.5 text-xs font-black text-[#73777e]/45">
             {orders.length} طلب
           </span>
 
@@ -743,11 +743,11 @@ function OrderSection({
       {orders.length === 0 ? (
         <div className="p-10 text-center">
 
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-white/20">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#15191f] text-[#73777e]/20">
             <Package size={25} />
           </div>
 
-          <p className="mt-4 text-sm text-white/30">
+          <p className="mt-4 text-sm text-[#73777e]/30">
             {type === "produced"
               ? "لم تنتج أي أوردر في هذا الأسبوع."
               : "لم تستهلك أي أوردر في هذا الأسبوع."}
@@ -787,11 +787,11 @@ function OrderSection({
 
                     <div className="flex flex-wrap items-center gap-2">
 
-                      <span className="font-black text-white">
+                      <span className="font-black text-[#f3f4f6]">
                         #{order.order_number}
                       </span>
 
-                      <span className="rounded-full border border-white/10 bg-[#181b20] px-2.5 py-1 text-[11px] font-bold text-white/50">
+                      <span className="rounded-full border border-[#292d33] bg-[#11151a] px-2.5 py-1 text-[11px] font-bold text-[#73777e]/50">
                         {order.order_type === "passenger"
                           ? "راكب"
                           : "أوردر"}
@@ -805,7 +805,7 @@ function OrderSection({
 
                     </div>
 
-                    <div className="mt-2 flex items-center gap-2 text-[11px] text-white/25">
+                    <div className="mt-2 flex items-center gap-2 text-[11px] text-[#73777e]/25">
                       <Clock3 size={13} />
                       {formatOrderDateTime(
                         order.created_at
@@ -813,7 +813,7 @@ function OrderSection({
                     </div>
 
                     {order.notes && (
-                      <div className="mt-3 flex items-start gap-2 rounded-2xl border border-white/5 bg-[#181b20] p-3 text-xs text-white/45">
+                      <div className="mt-3 flex items-start gap-2 rounded-2xl border border-[#eeeae4] bg-[#11151a] p-3 text-xs text-[#73777e]/45">
                         <FileText
                           size={15}
                           className="mt-0.5 shrink-0 text-[#d6a84f]"
@@ -825,14 +825,14 @@ function OrderSection({
 
                   </div>
 
-                  <div className="flex items-center justify-between gap-5 border-t border-white/5 pt-4 lg:min-w-[190px] lg:border-t-0 lg:pt-0">
+                  <div className="flex items-center justify-between gap-5 border-t border-[#eeeae4] pt-4 lg:min-w-[190px] lg:border-t-0 lg:pt-0">
 
                     <div>
-                      <p className="text-[11px] font-bold text-white/30">
+                      <p className="text-[11px] font-bold text-[#73777e]/30">
                         قيمة الأوردر
                       </p>
 
-                      <p className="mt-1 text-lg font-black text-white">
+                      <p className="mt-1 text-lg font-black text-[#f3f4f6]">
                         {formatOrderMoney(
                           order.amount
                         )}
@@ -841,7 +841,7 @@ function OrderSection({
 
                     <div className="text-left">
 
-                      <p className="text-[11px] font-bold text-white/30">
+                      <p className="text-[11px] font-bold text-[#73777e]/30">
                         العمولة
                       </p>
 

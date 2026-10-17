@@ -33,17 +33,16 @@ async function getAdminUser(request: NextRequest) {
     return null;
   }
 
-  const { data: admin, error: adminError } =
-    await supabaseAdmin
-      .from("users")
-      .select(
-        "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at"
-      )
-      .eq("id", user.id)
-      .eq("role", "admin")
-      .eq("is_active", true)
-      .is("deleted_at", null)
-      .single();
+  const { data: admin, error: adminError } = await supabaseAdmin
+    .from("users")
+    .select(
+      "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at"
+    )
+    .eq("id", user.id)
+    .eq("role", "admin")
+    .eq("is_active", true)
+    .is("deleted_at", null)
+    .single();
 
   if (adminError || !admin) {
     return null;
@@ -106,10 +105,7 @@ export async function GET(request: NextRequest) {
       users: data ?? [],
     });
   } catch (error) {
-    console.error(
-      "ADMIN USERS GET SERVER ERROR:",
-      error
-    );
+    console.error("ADMIN USERS GET SERVER ERROR:", error);
 
     return NextResponse.json(
       {
@@ -141,22 +137,13 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    const fullName = String(
-      body?.full_name || ""
-    ).trim();
+    const fullName = String(body?.full_name || "").trim();
 
-    const phone = normalizePhone(
-      String(body?.phone || "")
-    );
+    const phone = normalizePhone(String(body?.phone || ""));
 
-    const password = String(
-      body?.password || ""
-    );
+    const password = String(body?.password || "");
 
-    const role =
-      body?.role === "admin"
-        ? "admin"
-        : "user";
+    const role = body?.role === "admin" ? "admin" : "user";
 
     if (!fullName) {
       return NextResponse.json(
@@ -172,8 +159,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "رقم الهاتف يجب أن يكون بصيغة 07XXXXXXXX",
+          message: "رقم الهاتف يجب أن يكون بصيغة 07XXXXXXXX",
         },
         { status: 400 }
       );
@@ -183,8 +169,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+          message: "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
         },
         { status: 400 }
       );
@@ -197,21 +182,20 @@ export async function POST(request: NextRequest) {
      * لأن الـ Auth email التقني قد يكون
      * مستخدمًا أيضًا.
      */
-    const { data: existingPhone } =
-      await supabaseAdmin
-        .from("users")
-        .select("id, deleted_at")
-        .eq("phone", phone)
-        .maybeSingle();
+
+    const { data: existingPhone } = await supabaseAdmin
+      .from("users")
+      .select("id, deleted_at")
+      .eq("phone", phone)
+      .maybeSingle();
 
     if (existingPhone) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            existingPhone.deleted_at
-              ? "رقم الهاتف مرتبط بحساب محذوف سابقًا. استخدم رقمًا آخر."
-              : "رقم الهاتف مستخدم مسبقًا",
+          message: existingPhone.deleted_at
+            ? "رقم الهاتف مرتبط بحساب محذوف سابقًا. استخدم رقمًا آخر."
+            : "رقم الهاتف مستخدم مسبقًا",
         },
         { status: 400 }
       );
@@ -222,25 +206,20 @@ export async function POST(request: NextRequest) {
     const {
       data: authData,
       error: authError,
-    } =
-      await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: true,
-      });
+    } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
 
     if (authError || !authData.user) {
-      console.error(
-        "CREATE AUTH USER ERROR:",
-        authError
-      );
+      console.error("CREATE AUTH USER ERROR:", authError);
 
       return NextResponse.json(
         {
           success: false,
           message:
-            authError?.message ||
-            "فشل إنشاء حساب تسجيل الدخول",
+            authError?.message || "فشل إنشاء حساب تسجيل الدخول",
         },
         { status: 500 }
       );
@@ -251,41 +230,33 @@ export async function POST(request: NextRequest) {
     const {
       data: newUser,
       error: userError,
-    } =
-      await supabaseAdmin
-        .from("users")
-        .insert({
-          id: userId,
-          full_name: fullName,
-          phone,
-          email,
-          role,
-          balance: 0,
-          is_active: true,
-          login_password: password,
-          deleted_at: null,
-        })
-        .select(
-          "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at, created_at, updated_at"
-        )
-        .single();
+    } = await supabaseAdmin
+      .from("users")
+      .insert({
+        id: userId,
+        full_name: fullName,
+        phone,
+        email,
+        role,
+        balance: 0,
+        is_active: true,
+        login_password: password,
+        deleted_at: null,
+      })
+      .select(
+        "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at, created_at, updated_at"
+      )
+      .single();
 
     if (userError) {
-      console.error(
-        "CREATE PUBLIC USER ERROR:",
-        userError
-      );
+      console.error("CREATE PUBLIC USER ERROR:", userError);
 
-      await supabaseAdmin.auth.admin.deleteUser(
-        userId
-      );
+      await supabaseAdmin.auth.admin.deleteUser(userId);
 
       return NextResponse.json(
         {
           success: false,
-          message:
-            userError.message ||
-            "فشل إنشاء المستخدم",
+          message: userError.message || "فشل إنشاء المستخدم",
         },
         { status: 500 }
       );
@@ -297,10 +268,7 @@ export async function POST(request: NextRequest) {
       user: newUser,
     });
   } catch (error) {
-    console.error(
-      "ADMIN USERS POST SERVER ERROR:",
-      error
-    );
+    console.error("ADMIN USERS POST SERVER ERROR:", error);
 
     return NextResponse.json(
       {
@@ -332,30 +300,42 @@ export async function PATCH(request: NextRequest) {
 
     const body = await request.json();
 
-    const userId = String(
-      body?.id || ""
-    ).trim();
+    const userId = String(body?.id || "").trim();
 
-    const fullName = String(
-      body?.full_name || ""
-    ).trim();
+    const fullName = String(body?.full_name || "").trim();
 
-    const phone = normalizePhone(
-      String(body?.phone || "")
-    );
+    const phone = normalizePhone(String(body?.phone || ""));
 
     const password =
       body?.password !== undefined
         ? String(body.password)
         : "";
 
-    const role =
-      body?.role === "admin"
-        ? "admin"
-        : "user";
+    const role = body?.role === "admin" ? "admin" : "user";
 
-    const isActive =
-      body?.is_active === true;
+    const isActive = body?.is_active === true;
+
+    const hasBalanceUpdate =
+      body?.balance !== undefined &&
+      body?.balance !== null &&
+      body?.balance !== "";
+
+    const requestedBalance = hasBalanceUpdate
+      ? Number(body.balance)
+      : null;
+
+    if (
+      hasBalanceUpdate &&
+      !Number.isFinite(requestedBalance)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "الرصيد غير صحيح",
+        },
+        { status: 400 }
+      );
+    }
 
     if (!userId) {
       return NextResponse.json(
@@ -381,22 +361,17 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "رقم الهاتف يجب أن يكون بصيغة 07XXXXXXXX",
+          message: "رقم الهاتف يجب أن يكون بصيغة 07XXXXXXXX",
         },
         { status: 400 }
       );
     }
 
-    if (
-      password &&
-      password.length < 6
-    ) {
+    if (password && password.length < 6) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+          message: "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
         },
         { status: 400 }
       );
@@ -429,20 +404,16 @@ export async function PATCH(request: NextRequest) {
     const {
       data: existingUser,
       error: existingUserError,
-    } =
-      await supabaseAdmin
-        .from("users")
-        .select(
-          "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at"
-        )
-        .eq("id", userId)
-        .is("deleted_at", null)
-        .single();
+    } = await supabaseAdmin
+      .from("users")
+      .select(
+        "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at"
+      )
+      .eq("id", userId)
+      .is("deleted_at", null)
+      .single();
 
-    if (
-      existingUserError ||
-      !existingUser
-    ) {
+    if (existingUserError || !existingUser) {
       return NextResponse.json(
         {
           success: false,
@@ -452,9 +423,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const {
-      data: duplicatePhone,
-    } = await supabaseAdmin
+    const { data: duplicatePhone } = await supabaseAdmin
       .from("users")
       .select("id")
       .eq("phone", phone)
@@ -466,22 +435,20 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "رقم الهاتف مستخدم من حساب آخر",
+          message: "رقم الهاتف مستخدم من حساب آخر",
         },
         { status: 400 }
       );
     }
 
-    const oldPhone =
-      existingUser.phone;
+    const oldPhone = existingUser.phone;
 
-    const newEmail =
-      technicalEmail(phone);
+    const newEmail = technicalEmail(phone);
 
     /*
      * تغيير رقم الهاتف
      */
+
     if (oldPhone !== phone) {
       const {
         error: authEmailError,
@@ -505,8 +472,7 @@ export async function PATCH(request: NextRequest) {
             success: false,
             message:
               "فشل تحديث رقم الهاتف في نظام تسجيل الدخول",
-            error:
-              authEmailError.message,
+            error: authEmailError.message,
           },
           { status: 500 }
         );
@@ -516,6 +482,7 @@ export async function PATCH(request: NextRequest) {
     /*
      * تغيير كلمة المرور
      */
+
     if (password) {
       const {
         error: passwordError,
@@ -536,10 +503,8 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message:
-              "فشل تحديث كلمة المرور",
-            error:
-              passwordError.message,
+            message: "فشل تحديث كلمة المرور",
+            error: passwordError.message,
           },
           { status: 500 }
         );
@@ -552,28 +517,29 @@ export async function PATCH(request: NextRequest) {
       email: newEmail,
       role,
       is_active: isActive,
-      updated_at:
-        new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
+    if (hasBalanceUpdate) {
+      updateData.balance = requestedBalance;
+    }
+
     if (password) {
-      updateData.login_password =
-        password;
+      updateData.login_password = password;
     }
 
     const {
       data: updatedUser,
       error: updateError,
-    } =
-      await supabaseAdmin
-        .from("users")
-        .update(updateData)
-        .eq("id", userId)
-        .is("deleted_at", null)
-        .select(
-          "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at, created_at, updated_at"
-        )
-        .single();
+    } = await supabaseAdmin
+      .from("users")
+      .update(updateData)
+      .eq("id", userId)
+      .is("deleted_at", null)
+      .select(
+        "id, full_name, phone, email, role, balance, is_active, login_password, deleted_at, created_at, updated_at"
+      )
+      .single();
 
     if (updateError) {
       console.error(
@@ -584,18 +550,76 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "فشل تحديث بيانات المستخدم",
+          message: "فشل تحديث بيانات المستخدم",
           error: updateError.message,
         },
         { status: 500 }
       );
     }
 
+    /*
+     * تسجيل حركة تعديل الرصيد فقط.
+     *
+     * مهم:
+     * هذا التعديل يخص الرصيد الحالي فقط.
+     * لا علاقة له بتسوية الأسبوع السابق.
+     */
+
+    if (hasBalanceUpdate) {
+      const oldBalance = Number(existingUser.balance || 0);
+      const newBalance = Number(requestedBalance);
+
+      const difference = Number(
+        (newBalance - oldBalance).toFixed(2)
+      );
+
+      if (difference !== 0) {
+        const { error: transactionError } =
+          await supabaseAdmin
+            .from("transactions")
+            .insert({
+              user_id: userId,
+              transaction_type: "admin_balance",
+              amount: difference,
+              balance_before: oldBalance,
+              balance_after: newBalance,
+              order_id: null,
+              week_id: null,
+              description:
+                difference > 0
+                  ? `تعديل رصيد من الإدارة: إضافة ${difference.toFixed(
+                      2
+                    )} د.أ`
+                  : `تعديل رصيد من الإدارة: خصم ${Math.abs(
+                      difference
+                    ).toFixed(2)} د.أ`,
+              created_by: admin.id,
+            });
+
+        if (transactionError) {
+          console.error(
+            "ADMIN BALANCE TRANSACTION ERROR:",
+            transactionError
+          );
+
+          return NextResponse.json(
+            {
+              success: false,
+              message:
+                "تم تعديل الرصيد لكن فشل تسجيل الحركة المالية",
+              error: transactionError.message,
+            },
+            { status: 500 }
+          );
+        }
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message:
-        "تم تحديث بيانات المستخدم بنجاح",
+      message: hasBalanceUpdate
+        ? "تم تحديث بيانات المستخدم والرصيد بنجاح"
+        : "تم تحديث بيانات المستخدم بنجاح",
       user: updatedUser,
     });
   } catch (error) {
@@ -634,9 +658,7 @@ export async function DELETE(request: NextRequest) {
 
     const body = await request.json();
 
-    const userId = String(
-      body?.id || ""
-    ).trim();
+    const userId = String(body?.id || "").trim();
 
     if (!userId) {
       return NextResponse.json(
@@ -662,15 +684,14 @@ export async function DELETE(request: NextRequest) {
     const {
       data: targetUser,
       error: targetError,
-    } =
-      await supabaseAdmin
-        .from("users")
-        .select(
-          "id, full_name, phone, role, balance, is_active, deleted_at"
-        )
-        .eq("id", userId)
-        .is("deleted_at", null)
-        .single();
+    } = await supabaseAdmin
+      .from("users")
+      .select(
+        "id, full_name, phone, role, balance, is_active, deleted_at"
+      )
+      .eq("id", userId)
+      .is("deleted_at", null)
+      .single();
 
     if (targetError || !targetUser) {
       return NextResponse.json(
@@ -690,9 +711,8 @@ export async function DELETE(request: NextRequest) {
      * لكن حتى لو كان الرصيد صفرًا،
      * لن نحذف السجل.
      */
-    if (
-      Number(targetUser.balance || 0) !== 0
-    ) {
+
+    if (Number(targetUser.balance || 0) !== 0) {
       return NextResponse.json(
         {
           success: false,
@@ -708,10 +728,10 @@ export async function DELETE(request: NextRequest) {
      * SOFT DELETE
      *
      * لا نحذف:
+     *
      * users
      * transactions
      * orders
-     * topup_requests
      * withdrawal_requests
      * weekly_user_activity
      * notifications
@@ -723,22 +743,19 @@ export async function DELETE(request: NextRequest) {
     const {
       data: deletedUser,
       error: softDeleteError,
-    } =
-      await supabaseAdmin
-        .from("users")
-        .update({
-          is_active: false,
-          deleted_at:
-            new Date().toISOString(),
-          updated_at:
-            new Date().toISOString(),
-        })
-        .eq("id", userId)
-        .is("deleted_at", null)
-        .select(
-          "id, full_name, phone, role, balance, is_active, deleted_at"
-        )
-        .single();
+    } = await supabaseAdmin
+      .from("users")
+      .update({
+        is_active: false,
+        deleted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", userId)
+      .is("deleted_at", null)
+      .select(
+        "id, full_name, phone, role, balance, is_active, deleted_at"
+      )
+      .single();
 
     if (softDeleteError) {
       console.error(
@@ -749,10 +766,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "فشل حذف المستخدم من النظام",
-          error:
-            softDeleteError.message,
+          message: "فشل حذف المستخدم من النظام",
+          error: softDeleteError.message,
         },
         { status: 500 }
       );
@@ -764,6 +779,7 @@ export async function DELETE(request: NextRequest) {
      * لا نحذف Auth user حتى يبقى ارتباط
      * السجل التاريخي سليمًا.
      */
+
     const {
       error: authDisableError,
     } =
@@ -781,15 +797,15 @@ export async function DELETE(request: NextRequest) {
       );
 
       /*
-       * نرجع الحساب فعال إذا فشل تعطيل Auth
+       * نرجع الحساب فعالًا إذا فشل تعطيل Auth
        */
+
       await supabaseAdmin
         .from("users")
         .update({
           is_active: targetUser.is_active,
           deleted_at: null,
-          updated_at:
-            new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
         .eq("id", userId);
 
@@ -798,8 +814,7 @@ export async function DELETE(request: NextRequest) {
           success: false,
           message:
             "فشل تعطيل تسجيل دخول المستخدم",
-          error:
-            authDisableError.message,
+          error: authDisableError.message,
         },
         { status: 500 }
       );

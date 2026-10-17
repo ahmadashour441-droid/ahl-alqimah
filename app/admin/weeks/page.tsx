@@ -106,7 +106,6 @@ function getTransactionLabel(type: string) {
     production: "إنتاج",
     consumption: "استهلاك",
     floor: "أرضية",
-    topup: "شحن",
     withdrawal: "سحب",
     withdrawal_reversal: "إرجاع سحب",
     adjustment: "تعديل",
@@ -348,7 +347,7 @@ export default function AdminWeeksPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#050505] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       {/* =========================
           OVERLAY
@@ -356,7 +355,7 @@ export default function AdminWeeksPage() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm"
           onClick={() =>
             setMenuOpen(false)
           }
@@ -368,20 +367,20 @@ export default function AdminWeeksPage() {
       ========================== */}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-white/10 bg-[#090909] shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-[#292d33] bg-[#11151a] shadow-2xl transition-transform duration-300 ${
           menuOpen
             ? "translate-x-0"
             : "translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
+          <div className="flex items-center justify-between border-b border-[#292d33] px-5 py-5">
             <div>
               <h2 className="text-lg font-black text-[#d6a84f]">
                 أهل القمة
               </h2>
 
-              <p className="mt-1 text-[11px] text-white/40">
+              <p className="mt-1 text-[11px] text-[#a1a1aa]/40">
                 لوحة تحكم الإدارة
               </p>
             </div>
@@ -390,14 +389,14 @@ export default function AdminWeeksPage() {
               onClick={() =>
                 setMenuOpen(false)
               }
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition hover:bg-white/10 hover:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/60 transition hover:bg-white/10 hover:text-[#f3f4f6]"
             >
               <X size={18} />
             </button>
           </div>
 
           <nav className="flex-1 overflow-y-auto p-4">
-            <p className="mb-2 px-3 text-[10px] font-bold text-white/30">
+            <p className="mb-2 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
               الرئيسية
             </p>
 
@@ -421,7 +420,7 @@ export default function AdminWeeksPage() {
               }
             />
 
-            <p className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
+            <p className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
               الإدارة
             </p>
 
@@ -440,14 +439,6 @@ export default function AdminWeeksPage() {
               label="الطلبات"
               onClick={() =>
                 goTo("/admin/orders")
-              }
-            />
-
-            <MenuItem
-              icon={<Wallet size={18} />}
-              label="طلبات الشحن"
-              onClick={() =>
-                goTo("/admin/topups")
               }
             />
 
@@ -482,7 +473,7 @@ export default function AdminWeeksPage() {
               }
             />
 
-            <p className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
+            <p className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
               الحساب
             </p>
 
@@ -495,7 +486,7 @@ export default function AdminWeeksPage() {
             />
           </nav>
 
-          <div className="border-t border-white/10 p-4">
+          <div className="border-t border-[#292d33] p-4">
             <button
               onClick={logout}
               className="flex w-full items-center gap-3 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3 text-right text-sm font-bold text-red-300 transition hover:bg-red-500/10"
@@ -519,7 +510,7 @@ export default function AdminWeeksPage() {
             onClick={() =>
               setMenuOpen(true)
             }
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#0d0d0d] text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#292d33] bg-[#0b1015] text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <Menu size={20} />
           </button>
@@ -529,7 +520,7 @@ export default function AdminWeeksPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-white/40">
+            <p className="mt-0.5 text-[11px] text-[#a1a1aa]/40">
               إدارة الأسابيع
             </p>
           </div>
@@ -551,7 +542,7 @@ export default function AdminWeeksPage() {
                 إدارة الأسابيع
               </h2>
 
-              <p className="mt-1 text-xs text-white/40">
+              <p className="mt-1 text-xs text-[#a1a1aa]/40">
                 الأسبوع الحالي والأرشيف السابق
               </p>
             </div>
@@ -561,7 +552,7 @@ export default function AdminWeeksPage() {
               disabled={
                 closing || !currentWeek
               }
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#d6a84f] px-5 text-xs font-black text-black transition hover:bg-[#e2b862] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#d6a84f] text-white px-5 text-xs font-black text-[#650016] transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-40"
             >
               {closing ? (
                 <>
@@ -628,7 +619,7 @@ export default function AdminWeeksPage() {
                 الأسبوع الحالي
               </h3>
 
-              <p className="text-[10px] text-white/30">
+              <p className="text-[10px] text-[#a1a1aa]/30">
                 الفترة المفتوحة حاليًا
               </p>
             </div>
@@ -637,7 +628,7 @@ export default function AdminWeeksPage() {
           {loading ? (
             <LoadingCard text="جاري تحميل بيانات الأسبوع..." />
           ) : currentWeek ? (
-            <div className="rounded-3xl border border-white/10 bg-[#0a0a0a] p-4 shadow-2xl sm:p-5">
+            <div className="rounded-3xl border border-[#292d33] bg-[#11151a] p-4 shadow-2xl sm:p-5">
               <div className="grid gap-3 sm:grid-cols-3">
                 <InfoBox
                   label="بداية الأسبوع"
@@ -695,7 +686,7 @@ export default function AdminWeeksPage() {
                     تنبيه
                   </p>
 
-                  <p className="mt-1 text-[10px] leading-6 text-white/40">
+                  <p className="mt-1 text-[10px] leading-6 text-[#a1a1aa]/40">
                     عند إغلاق الأسبوع يتم حفظ
                     بياناته في الأرشيف وإنشاء أسبوع
                     جديد. أرصدة المستخدمين لا يتم
@@ -705,7 +696,7 @@ export default function AdminWeeksPage() {
               </div>
             </div>
           ) : (
-            <div className="rounded-3xl border border-red-500/20 bg-[#0a0a0a] p-8 text-center">
+            <div className="rounded-3xl border border-red-500/20 bg-[#11151a] p-8 text-center">
               <AlertTriangle
                 size={24}
                 className="mx-auto text-red-400"
@@ -729,12 +720,12 @@ export default function AdminWeeksPage() {
                 أرشيف الأسابيع
               </h3>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 اضغط على الأسبوع لعرض تفاصيله
               </p>
             </div>
 
-            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[9px] font-black text-white/40">
+            <div className="rounded-full border border-[#292d33] bg-[#15191f] px-3 py-1.5 text-[9px] font-black text-[#a1a1aa]/40">
               {closedWeeks.length} أسبوع
             </div>
           </div>
@@ -742,17 +733,17 @@ export default function AdminWeeksPage() {
           {loading ? (
             <LoadingCard text="جاري تحميل الأرشيف..." />
           ) : closedWeeks.length === 0 ? (
-            <div className="rounded-3xl border border-white/10 bg-[#0a0a0a] p-10 text-center">
+            <div className="rounded-3xl border border-[#292d33] bg-[#11151a] p-10 text-center">
               <Archive
                 size={28}
-                className="mx-auto text-white/20"
+                className="mx-auto text-[#a1a1aa]/20"
               />
 
-              <h3 className="mt-4 text-sm font-black text-white/60">
+              <h3 className="mt-4 text-sm font-black text-[#a1a1aa]/60">
                 لا يوجد أرشيف حتى الآن
               </h3>
 
-              <p className="mt-1 text-[10px] text-white/25">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/25">
                 سيظهر الأسبوع هنا بعد إغلاقه.
               </p>
             </div>
@@ -767,10 +758,10 @@ export default function AdminWeeksPage() {
                         week.id
                       )
                     }
-                    className="group w-full rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 text-right transition hover:border-[#d6a84f]/25 hover:bg-[#0d0d0d] sm:p-5"
+                    className="group w-full rounded-2xl border border-[#292d33] bg-[#11151a] p-4 text-right transition hover:border-[#d6a84f]/25 hover:bg-[#0b1015] sm:p-5"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#d6a84f]">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#15191f] text-[#d6a84f]">
                         <Archive
                           size={18}
                         />
@@ -778,18 +769,18 @@ export default function AdminWeeksPage() {
 
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-xs font-black text-white">
+                          <span className="text-xs font-black text-[#f3f4f6]">
                             أسبوع #
                             {closedWeeks.length -
                               index}
                           </span>
 
-                          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-bold text-white/35">
+                          <span className="rounded-full border border-[#292d33] bg-[#15191f] px-2 py-0.5 text-[8px] font-bold text-[#a1a1aa]/35">
                             مغلق
                           </span>
                         </div>
 
-                        <p className="mt-2 truncate text-[10px] text-white/35">
+                        <p className="mt-2 truncate text-[10px] text-[#a1a1aa]/35">
                           {formatDate(
                             week.start_at
                           )}{" "}
@@ -802,7 +793,7 @@ export default function AdminWeeksPage() {
 
                       <ChevronLeft
                         size={17}
-                        className="shrink-0 text-white/20 transition group-hover:-translate-x-1 group-hover:text-[#d6a84f]"
+                        className="shrink-0 text-[#a1a1aa]/20 transition group-hover:-translate-x-1 group-hover:text-[#d6a84f]"
                       />
                     </div>
                   </button>
@@ -814,7 +805,7 @@ export default function AdminWeeksPage() {
 
         {/* FOOTER */}
 
-        <div className="mt-8 flex items-center justify-center gap-2 text-[9px] text-white/15">
+        <div className="mt-8 flex items-center justify-center gap-2 text-[9px] text-[#a1a1aa]/15">
           <CalendarDays size={11} />
 
           أهل القمة • إدارة الأسابيع
@@ -830,7 +821,7 @@ export default function AdminWeeksPage() {
         detailsError) && (
         <>
           <div
-            className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-black/45 backdrop-blur-sm"
             onClick={() => {
               if (!detailsLoading) {
                 setSelectedWeek(null);
@@ -839,18 +830,18 @@ export default function AdminWeeksPage() {
             }}
           />
 
-          <section className="fixed bottom-0 right-0 top-0 z-[70] flex w-full flex-col border-l border-white/10 bg-[#090909] shadow-2xl sm:max-w-4xl">
+          <section className="fixed bottom-0 right-0 top-0 z-[70] flex w-full flex-col border-l border-[#292d33] bg-[#11151a] shadow-2xl sm:max-w-4xl">
             {/* DRAWER HEADER */}
 
-            <div className="shrink-0 border-b border-white/10 bg-[#090909] px-4 py-4 sm:px-6">
+            <div className="shrink-0 border-b border-[#292d33] bg-[#11151a] px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
-                  <h2 className="text-base font-black text-white">
+                  <h2 className="text-base font-black text-[#f3f4f6]">
                     أرشيف الأسبوع
                   </h2>
 
                   {selectedWeek && (
-                    <p className="mt-1 truncate text-[10px] text-white/30">
+                    <p className="mt-1 truncate text-[10px] text-[#a1a1aa]/30">
                       {formatDate(
                         selectedWeek.week
                           .start_at
@@ -869,7 +860,7 @@ export default function AdminWeeksPage() {
                     setDetailsError("");
                   }}
                   disabled={detailsLoading}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/50 transition hover:text-white disabled:opacity-40"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/50 transition hover:text-[#f3f4f6] disabled:opacity-40"
                 >
                   <X size={17} />
                 </button>
@@ -887,7 +878,7 @@ export default function AdminWeeksPage() {
                   />
                 </div>
 
-                <p className="mt-4 text-xs font-bold text-white/40">
+                <p className="mt-4 text-xs font-bold text-[#a1a1aa]/40">
                   جاري تحميل أرشيف الأسبوع...
                 </p>
               </div>
@@ -913,7 +904,7 @@ export default function AdminWeeksPage() {
                       setDetailsError("");
                       setSelectedWeek(null);
                     }}
-                    className="mt-5 rounded-xl bg-white/5 px-5 py-2.5 text-xs font-bold text-white/60 transition hover:bg-white/10 hover:text-white"
+                    className="mt-5 rounded-xl bg-[#15191f] px-5 py-2.5 text-xs font-bold text-[#a1a1aa]/60 transition hover:bg-white/10 hover:text-[#f3f4f6]"
                   >
                     إغلاق
                   </button>
@@ -928,7 +919,7 @@ export default function AdminWeeksPage() {
                 <div className="flex min-h-0 flex-1 flex-col">
                   {/* STATS */}
 
-                  <div className="shrink-0 border-b border-white/10 px-4 py-4 sm:px-6">
+                  <div className="shrink-0 border-b border-[#292d33] px-4 py-4 sm:px-6">
                     <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                       <MiniStat
                         label="النشطون"
@@ -984,7 +975,7 @@ export default function AdminWeeksPage() {
 
                   {/* TABS */}
 
-                  <div className="shrink-0 border-b border-white/10 px-4 sm:px-6">
+                  <div className="shrink-0 border-b border-[#292d33] px-4 sm:px-6">
                     <div className="flex gap-2 overflow-x-auto py-3">
                       <TabButton
                         active={
@@ -1101,14 +1092,14 @@ function MenuItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-right transition ${
         active
           ? "border border-[#d6a84f]/15 bg-[#d6a84f]/10 text-[#d6a84f]"
-          : "border border-transparent text-white/55 hover:bg-white/5 hover:text-white"
+          : "border border-transparent text-[#a1a1aa]/55 hover:bg-[#15191f] hover:text-[#f3f4f6]"
       }`}
     >
       <span
         className={
           active
             ? "text-[#d6a84f]"
-            : "text-white/45"
+            : "text-[#a1a1aa]/45"
         }
       >
         {icon}
@@ -1135,8 +1126,8 @@ function InfoBox({
   icon: ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
-      <div className="flex items-center gap-2 text-white/35">
+    <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
+      <div className="flex items-center gap-2 text-[#a1a1aa]/35">
         {icon}
 
         <span className="text-[10px] font-bold">
@@ -1144,7 +1135,7 @@ function InfoBox({
         </span>
       </div>
 
-      <p className="mt-2 text-xs font-black text-white">
+      <p className="mt-2 text-xs font-black text-[#f3f4f6]">
         {value}
       </p>
     </div>
@@ -1165,16 +1156,16 @@ function MiniStat({
   icon: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.025] p-3">
+    <div className="rounded-xl border border-[#292d33] bg-white/[0.025] p-3">
       <div className="flex items-center gap-2 text-[#d6a84f]">
         {icon}
 
-        <span className="text-[9px] font-bold text-white/35">
+        <span className="text-[9px] font-bold text-[#a1a1aa]/35">
           {label}
         </span>
       </div>
 
-      <p className="mt-2 truncate text-sm font-black text-white">
+      <p className="mt-2 truncate text-sm font-black text-[#f3f4f6]">
         {value}
       </p>
     </div>
@@ -1201,8 +1192,8 @@ function TabButton({
       onClick={onClick}
       className={`flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-[10px] font-black transition ${
         active
-          ? "bg-[#d6a84f] text-black"
-          : "border border-white/10 bg-white/5 text-white/40 hover:text-white"
+          ? "bg-[#d6a84f] text-[#650016]"
+          : "border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/40 hover:text-[#f3f4f6]"
       }`}
     >
       {icon}
@@ -1265,17 +1256,17 @@ function UsersTab({
           users.map((item) => (
             <div
               key={item.id}
-              className="rounded-2xl border border-white/10 bg-white/[0.025] p-4"
+              className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-black text-white">
+                  <p className="truncate text-xs font-black text-[#f3f4f6]">
                     {item.user
                       ?.full_name ||
                       "مستخدم"}
                   </p>
 
-                  <p className="mt-1 text-[9px] text-white/30">
+                  <p className="mt-1 text-[9px] text-[#a1a1aa]/30">
                     {item.user?.phone ||
                       "—"}
                   </p>
@@ -1285,7 +1276,7 @@ function UsersTab({
                   className={`shrink-0 rounded-full px-2 py-1 text-[8px] font-black ${
                     item.is_active
                       ? "bg-emerald-500/10 text-emerald-400"
-                      : "bg-white/5 text-white/30"
+                      : "bg-[#15191f] text-[#a1a1aa]/30"
                   }`}
                 >
                   {item.is_active
@@ -1347,7 +1338,7 @@ function UsersTab({
 
       {/* DESKTOP */}
 
-      <div className="hidden overflow-x-auto rounded-2xl border border-white/10 md:block">
+      <div className="hidden overflow-x-auto rounded-2xl border border-[#292d33] md:block">
         {users.length === 0 ? (
           <div className="p-10">
             <EmptyState text="لا توجد بيانات مستخدمين لهذا الأسبوع." />
@@ -1355,28 +1346,28 @@ function UsersTab({
         ) : (
           <table className="w-full min-w-[850px] text-right">
             <thead className="bg-white/[0.025]">
-              <tr className="border-b border-white/10">
-                <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <tr className="border-b border-[#292d33]">
+                <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                   المستخدم
                 </th>
 
-                <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                   الحالة
                 </th>
 
-                <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                   الإنتاج
                 </th>
 
-                <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                   الاستهلاك
                 </th>
 
-                <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                   الأرضية
                 </th>
 
-                <th className="px-5 py-4 text-[10px] font-black text-white/35">
+                <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                   الرصيد
                 </th>
               </tr>
@@ -1389,13 +1380,13 @@ function UsersTab({
                   className="transition hover:bg-white/[0.02]"
                 >
                   <td className="px-5 py-4">
-                    <p className="text-xs font-black text-white">
+                    <p className="text-xs font-black text-[#f3f4f6]">
                       {item.user
                         ?.full_name ||
                         "مستخدم"}
                     </p>
 
-                    <p className="mt-1 text-[9px] text-white/30">
+                    <p className="mt-1 text-[9px] text-[#a1a1aa]/30">
                       {item.user?.phone ||
                         "—"}
                     </p>
@@ -1406,7 +1397,7 @@ function UsersTab({
                       className={`rounded-full px-2.5 py-1 text-[9px] font-black ${
                         item.is_active
                           ? "bg-emerald-500/10 text-emerald-400"
-                          : "bg-white/5 text-white/30"
+                          : "bg-[#15191f] text-[#a1a1aa]/30"
                       }`}
                     >
                       {item.is_active
@@ -1416,7 +1407,7 @@ function UsersTab({
                   </td>
 
                   <td className="px-5 py-4">
-                    <p className="text-xs font-black text-white">
+                    <p className="text-xs font-black text-[#f3f4f6]">
                       {formatMoney(
                         Number(
                           item.produced_total
@@ -1424,14 +1415,14 @@ function UsersTab({
                       )}
                     </p>
 
-                    <p className="mt-1 text-[9px] text-white/25">
+                    <p className="mt-1 text-[9px] text-[#a1a1aa]/25">
                       {item.produced_count}{" "}
                       عملية
                     </p>
                   </td>
 
                   <td className="px-5 py-4">
-                    <p className="text-xs font-black text-white">
+                    <p className="text-xs font-black text-[#f3f4f6]">
                       {formatMoney(
                         Number(
                           item.consumed_total
@@ -1439,7 +1430,7 @@ function UsersTab({
                       )}
                     </p>
 
-                    <p className="mt-1 text-[9px] text-white/25">
+                    <p className="mt-1 text-[9px] text-[#a1a1aa]/25">
                       {item.consumed_count}{" "}
                       عملية
                     </p>
@@ -1451,13 +1442,13 @@ function UsersTab({
                         1 د.أ
                       </span>
                     ) : (
-                      <span className="text-[9px] text-white/25">
+                      <span className="text-[9px] text-[#a1a1aa]/25">
                         غير محتسبة
                       </span>
                     )}
                   </td>
 
-                  <td className="px-5 py-4 text-xs font-black text-white">
+                  <td className="px-5 py-4 text-xs font-black text-[#f3f4f6]">
                     {formatMoney(
                       Number(
                         item.user?.balance ||
@@ -1498,14 +1489,14 @@ function OrdersTab({
         {orders.map((order) => (
           <div
             key={order.id}
-            className="rounded-2xl border border-white/10 bg-white/[0.025] p-4"
+            className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4"
           >
             <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-black text-white">
+              <p className="text-xs font-black text-[#f3f4f6]">
                 #{order.order_number}
               </p>
 
-              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[8px] font-black text-white/40">
+              <span className="rounded-full border border-[#292d33] bg-[#15191f] px-2 py-1 text-[8px] font-black text-[#a1a1aa]/40">
                 {getOrderStatusLabel(
                   order.status
                 )}
@@ -1559,31 +1550,31 @@ function OrdersTab({
 
       {/* DESKTOP */}
 
-      <div className="hidden overflow-x-auto rounded-2xl border border-white/10 md:block">
+      <div className="hidden overflow-x-auto rounded-2xl border border-[#292d33] md:block">
         <table className="w-full min-w-[850px] text-right">
           <thead className="bg-white/[0.025]">
-            <tr className="border-b border-white/10">
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+            <tr className="border-b border-[#292d33]">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 رقم الطلب
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 النوع
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 المبلغ
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 العمولة
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 الحالة
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 التاريخ
               </th>
             </tr>
@@ -1595,17 +1586,17 @@ function OrdersTab({
                 key={order.id}
                 className="transition hover:bg-white/[0.02]"
               >
-                <td className="px-5 py-4 text-xs font-black text-white">
+                <td className="px-5 py-4 text-xs font-black text-[#f3f4f6]">
                   #{order.order_number}
                 </td>
 
-                <td className="px-5 py-4 text-xs text-white/50">
+                <td className="px-5 py-4 text-xs text-[#a1a1aa]/50">
                   {getOrderTypeLabel(
                     order.order_type
                   )}
                 </td>
 
-                <td className="px-5 py-4 text-xs font-black text-white">
+                <td className="px-5 py-4 text-xs font-black text-[#f3f4f6]">
                   {formatMoney(
                     Number(
                       order.amount || 0
@@ -1614,7 +1605,7 @@ function OrdersTab({
                 </td>
 
                 <td className="px-5 py-4">
-                  <p className="text-xs font-black text-white">
+                  <p className="text-xs font-black text-[#f3f4f6]">
                     {formatMoney(
                       Number(
                         order.commission_amount ||
@@ -1623,7 +1614,7 @@ function OrdersTab({
                     )}
                   </p>
 
-                  <p className="mt-1 text-[9px] text-white/25">
+                  <p className="mt-1 text-[9px] text-[#a1a1aa]/25">
                     {Number(
                       order.commission_rate ||
                         0
@@ -1633,14 +1624,14 @@ function OrdersTab({
                 </td>
 
                 <td className="px-5 py-4">
-                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] font-black text-white/40">
+                  <span className="rounded-full border border-[#292d33] bg-[#15191f] px-2.5 py-1 text-[9px] font-black text-[#a1a1aa]/40">
                     {getOrderStatusLabel(
                       order.status
                     )}
                   </span>
                 </td>
 
-                <td className="px-5 py-4 text-[10px] text-white/30">
+                <td className="px-5 py-4 text-[10px] text-[#a1a1aa]/30">
                   {formatDate(
                     order.created_at
                   )}
@@ -1683,17 +1674,17 @@ function TransactionsTab({
             return (
               <div
                 key={transaction.id}
-                className="rounded-2xl border border-white/10 bg-white/[0.025] p-4"
+                className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[8px] font-black text-white/40">
+                    <span className="rounded-full border border-[#292d33] bg-[#15191f] px-2 py-1 text-[8px] font-black text-[#a1a1aa]/40">
                       {getTransactionLabel(
                         transaction.transaction_type
                       )}
                     </span>
 
-                    <p className="mt-3 text-[10px] text-white/35">
+                    <p className="mt-3 text-[10px] text-[#a1a1aa]/35">
                       {transaction.description ||
                         "بدون وصف"}
                     </p>
@@ -1739,7 +1730,7 @@ function TransactionsTab({
                   />
                 </div>
 
-                <p className="mt-3 text-[9px] text-white/20">
+                <p className="mt-3 text-[9px] text-[#a1a1aa]/20">
                   {formatDate(
                     transaction.created_at
                   )}
@@ -1752,31 +1743,31 @@ function TransactionsTab({
 
       {/* DESKTOP */}
 
-      <div className="hidden overflow-x-auto rounded-2xl border border-white/10 md:block">
+      <div className="hidden overflow-x-auto rounded-2xl border border-[#292d33] md:block">
         <table className="w-full min-w-[850px] text-right">
           <thead className="bg-white/[0.025]">
-            <tr className="border-b border-white/10">
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+            <tr className="border-b border-[#292d33]">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 النوع
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 المبلغ
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 قبل
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 بعد
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 الوصف
               </th>
 
-              <th className="px-5 py-4 text-[10px] font-black text-white/35">
+              <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
                 التاريخ
               </th>
             </tr>
@@ -1795,7 +1786,7 @@ function TransactionsTab({
                     className="transition hover:bg-white/[0.02]"
                   >
                     <td className="px-5 py-4">
-                      <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] font-black text-white/40">
+                      <span className="rounded-full border border-[#292d33] bg-[#15191f] px-2.5 py-1 text-[9px] font-black text-[#a1a1aa]/40">
                         {getTransactionLabel(
                           transaction.transaction_type
                         )}
@@ -1817,7 +1808,7 @@ function TransactionsTab({
                       )}
                     </td>
 
-                    <td className="px-5 py-4 text-xs text-white/35">
+                    <td className="px-5 py-4 text-xs text-[#a1a1aa]/35">
                       {formatMoney(
                         Number(
                           transaction.balance_before ||
@@ -1826,7 +1817,7 @@ function TransactionsTab({
                       )}
                     </td>
 
-                    <td className="px-5 py-4 text-xs font-black text-white">
+                    <td className="px-5 py-4 text-xs font-black text-[#f3f4f6]">
                       {formatMoney(
                         Number(
                           transaction.balance_after ||
@@ -1835,14 +1826,14 @@ function TransactionsTab({
                       )}
                     </td>
 
-                    <td className="max-w-[300px] px-5 py-4 text-[10px] text-white/35">
+                    <td className="max-w-[300px] px-5 py-4 text-[10px] text-[#a1a1aa]/35">
                       <div className="truncate">
                         {transaction.description ||
                           "—"}
                       </div>
                     </td>
 
-                    <td className="px-5 py-4 text-[10px] text-white/25">
+                    <td className="px-5 py-4 text-[10px] text-[#a1a1aa]/25">
                       {formatDate(
                         transaction.created_at
                       )}
@@ -1872,17 +1863,17 @@ function SmallValue({
   sub: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.07] bg-black/20 p-3">
-      <p className="text-[8px] font-bold text-white/25">
+    <div className="rounded-xl border border-[#292d33] bg-[#f7f4ef] p-3">
+      <p className="text-[8px] font-bold text-[#a1a1aa]/25">
         {label}
       </p>
 
-      <p className="mt-1 truncate text-[10px] font-black text-white/70">
+      <p className="mt-1 truncate text-[10px] font-black text-[#a1a1aa]/70">
         {value}
       </p>
 
       {sub && (
-        <p className="mt-1 truncate text-[8px] text-white/20">
+        <p className="mt-1 truncate text-[8px] text-[#a1a1aa]/20">
           {sub}
         </p>
       )}
@@ -1900,13 +1891,13 @@ function EmptyState({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-10 text-center">
+    <div className="rounded-2xl border border-[#292d33] bg-white/[0.02] p-10 text-center">
       <FileText
         size={24}
-        className="mx-auto text-white/15"
+        className="mx-auto text-[#a1a1aa]/15"
       />
 
-      <p className="mt-3 text-xs font-bold text-white/35">
+      <p className="mt-3 text-xs font-bold text-[#a1a1aa]/35">
         {text}
       </p>
     </div>
@@ -1923,13 +1914,13 @@ function LoadingCard({
   text: string;
 }) {
   return (
-    <div className="flex min-h-[180px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-[#0a0a0a]">
+    <div className="flex min-h-[180px] flex-col items-center justify-center rounded-3xl border border-[#292d33] bg-[#11151a]">
       <RefreshCw
         size={21}
         className="animate-spin text-[#d6a84f]"
       />
 
-      <p className="mt-3 text-xs font-bold text-white/30">
+      <p className="mt-3 text-xs font-bold text-[#a1a1aa]/30">
         {text}
       </p>
     </div>

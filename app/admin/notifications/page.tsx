@@ -318,13 +318,13 @@ export default function AdminNotificationsPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#050505] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       {/* OVERLAY */}
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -332,7 +332,7 @@ export default function AdminNotificationsPage() {
       {/* SIDE MENU */}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-white/10 bg-[#090909] shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-[#292d33] bg-[#11151a] shadow-2xl transition-transform duration-300 ${
           menuOpen
             ? "translate-x-0"
             : "translate-x-full"
@@ -341,20 +341,20 @@ export default function AdminNotificationsPage() {
         <div className="flex h-full flex-col">
           {/* MENU HEADER */}
 
-          <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
+          <div className="flex items-center justify-between border-b border-[#292d33] px-5 py-5">
             <div>
               <h2 className="text-lg font-black text-[#d6a84f]">
                 أهل القمة
               </h2>
 
-              <p className="mt-1 text-[11px] text-white/40">
+              <p className="mt-1 text-[11px] text-[#a1a1aa]/40">
                 لوحة تحكم الإدارة
               </p>
             </div>
 
             <button
               onClick={() => setMenuOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition hover:bg-white/10 hover:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/60 transition hover:bg-white/10 hover:text-[#f3f4f6]"
             >
               <X size={18} />
             </button>
@@ -363,7 +363,7 @@ export default function AdminNotificationsPage() {
           {/* MENU */}
 
           <nav className="flex-1 overflow-y-auto p-4">
-            <div className="mb-2 px-3 text-[10px] font-bold text-white/30">
+            <div className="mb-2 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
               الرئيسية
             </div>
 
@@ -387,7 +387,7 @@ export default function AdminNotificationsPage() {
               }
             />
 
-            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
+            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
               الإدارة
             </div>
 
@@ -407,15 +407,13 @@ export default function AdminNotificationsPage() {
               }
             />
 
-            <MenuItem
-              icon={<Wallet size={18} />}
-              label="طلبات الشحن"
-              onClick={() =>
-                goTo("/admin/topups")
-              }
-            />
+            
 
             <MenuItem
+              icon={<Wallet size={18} strokeWidth={1.8} />}
+              label="الأرصدة"
+              onClick={() => goTo("/admin/balances")}
+            /><MenuItem
               icon={<CreditCard size={18} />}
               label="طلبات السحب"
               onClick={() =>
@@ -439,7 +437,7 @@ export default function AdminNotificationsPage() {
               }
             />
 
-            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
+            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
               الحساب
             </div>
 
@@ -454,7 +452,7 @@ export default function AdminNotificationsPage() {
 
           {/* LOGOUT */}
 
-          <div className="border-t border-white/10 p-4">
+          <div className="border-t border-[#292d33] p-4">
             <button
               onClick={logout}
               className="flex w-full items-center gap-3 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3 text-right text-sm font-bold text-red-300 transition hover:bg-red-500/10"
@@ -474,7 +472,7 @@ export default function AdminNotificationsPage() {
         <header className="mb-6 flex items-center justify-between">
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#0d0d0d] text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#292d33] bg-[#0b1015] text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
             aria-label="فتح القائمة"
           >
             <Menu size={20} />
@@ -485,7 +483,7 @@ export default function AdminNotificationsPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-white/40">
+            <p className="mt-0.5 text-[11px] text-[#a1a1aa]/40">
               الإشعارات
             </p>
           </div>
@@ -497,7 +495,7 @@ export default function AdminNotificationsPage() {
             />
 
             {unreadCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-black text-white">
+              <span className="absolute -right-1 -top-1 flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-black text-[#f3f4f6]">
                 {unreadCount > 99
                   ? "99+"
                   : unreadCount}
@@ -511,11 +509,11 @@ export default function AdminNotificationsPage() {
         <section className="mb-5">
           <div className="flex items-end justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-white">
+              <h2 className="text-2xl font-black tracking-tight text-[#f3f4f6]">
                 الإشعارات
               </h2>
 
-              <p className="mt-1 text-xs text-white/40">
+              <p className="mt-1 text-xs text-[#a1a1aa]/40">
                 جميع التنبيهات الخاصة بالنظام
               </p>
             </div>
@@ -523,7 +521,7 @@ export default function AdminNotificationsPage() {
             <button
               onClick={loadNotifications}
               disabled={loading}
-              className="flex h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 text-xs font-bold text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f] disabled:opacity-50"
+              className="flex h-10 items-center gap-2 rounded-xl border border-[#292d33] bg-[#15191f] px-3 text-xs font-bold text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f] disabled:opacity-50"
             >
               <RefreshCw
                 size={15}
@@ -573,11 +571,11 @@ export default function AdminNotificationsPage() {
               </div>
 
               <div>
-                <p className="text-xs font-bold text-white">
+                <p className="text-xs font-bold text-[#f3f4f6]">
                   لديك {unreadCount} إشعار غير مقروء
                 </p>
 
-                <p className="mt-0.5 text-[10px] text-white/40">
+                <p className="mt-0.5 text-[10px] text-[#a1a1aa]/40">
                   يمكنك تحديدها كمقروءة دفعة واحدة
                 </p>
               </div>
@@ -586,7 +584,7 @@ export default function AdminNotificationsPage() {
             <button
               onClick={markAllAsRead}
               disabled={markingAll}
-              className="flex items-center gap-1.5 rounded-xl bg-[#d6a84f] px-3 py-2 text-[10px] font-black text-black transition hover:bg-[#e3bb68] disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-xl bg-[#d6a84f] text-white px-3 py-2 text-[10px] font-black text-[#650016] transition hover:bg-[#d6a84f] disabled:opacity-50"
             >
               <CheckCheck size={14} />
 
@@ -629,15 +627,15 @@ export default function AdminNotificationsPage() {
 
         {/* NOTIFICATIONS */}
 
-        <section className="overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0a] shadow-2xl shadow-black/20">
-          <div className="border-b border-white/10 px-4 py-4 sm:px-5">
+        <section className="overflow-hidden rounded-3xl border border-[#292d33] bg-[#11151a] shadow-2xl shadow-black/20">
+          <div className="border-b border-[#292d33] px-4 py-4 sm:px-5">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-black text-white">
+                <h3 className="text-sm font-black text-[#f3f4f6]">
                   آخر التنبيهات
                 </h3>
 
-                <p className="mt-1 text-[10px] text-white/35">
+                <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
                   سجل الإشعارات الواردة للنظام
                 </p>
               </div>
@@ -657,25 +655,25 @@ export default function AdminNotificationsPage() {
                 />
               </div>
 
-              <p className="text-xs font-bold text-white/40">
+              <p className="text-xs font-bold text-[#a1a1aa]/40">
                 جاري تحميل الإشعارات...
               </p>
             </div>
           ) : notifications.length ===
             0 ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center px-5 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/5">
+              <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[#292d33] bg-[#15191f]">
                 <Bell
                   size={25}
-                  className="text-white/25"
+                  className="text-[#a1a1aa]/25"
                 />
               </div>
 
-              <h3 className="mt-4 text-sm font-black text-white/60">
+              <h3 className="mt-4 text-sm font-black text-[#a1a1aa]/60">
                 لا توجد إشعارات حاليًا
               </h3>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 ستظهر هنا التنبيهات الجديدة عند وصولها
               </p>
             </div>
@@ -712,7 +710,7 @@ export default function AdminNotificationsPage() {
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <div className="flex flex-wrap items-center gap-2">
-                                <h4 className="text-sm font-black text-white">
+                                <h4 className="text-sm font-black text-[#f3f4f6]">
                                   {
                                     notification.title
                                   }
@@ -725,7 +723,7 @@ export default function AdminNotificationsPage() {
                                 )}
                               </div>
 
-                              <p className="mt-1.5 text-xs leading-6 text-white/55">
+                              <p className="mt-1.5 text-xs leading-6 text-[#a1a1aa]/55">
                                 {
                                   notification.message
                                 }
@@ -734,7 +732,7 @@ export default function AdminNotificationsPage() {
                           </div>
 
                           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                            <div className="flex items-center gap-1.5 text-[10px] text-white/30">
+                            <div className="flex items-center gap-1.5 text-[10px] text-[#a1a1aa]/30">
                               <ChevronLeft
                                 size={12}
                                 className="rotate-180"
@@ -752,7 +750,7 @@ export default function AdminNotificationsPage() {
                                     notification.id
                                   )
                                 }
-                                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] font-bold text-white/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+                                className="flex items-center gap-1.5 rounded-lg border border-[#292d33] bg-[#15191f] px-2.5 py-1.5 text-[10px] font-bold text-[#a1a1aa]/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
                               >
                                 <Check
                                   size={13}
@@ -774,7 +772,7 @@ export default function AdminNotificationsPage() {
 
         {/* FOOTER */}
 
-        <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/20">
+        <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-[#a1a1aa]/20">
           <Home size={11} />
           <span>أهل القمة • لوحة الإدارة</span>
         </div>
@@ -806,14 +804,14 @@ function MenuItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-right transition ${
         active
           ? "border border-[#d6a84f]/15 bg-[#d6a84f]/10 text-[#d6a84f]"
-          : "border border-transparent text-white/55 hover:bg-white/5 hover:text-white"
+          : "border border-transparent text-[#a1a1aa]/55 hover:bg-[#15191f] hover:text-[#f3f4f6]"
       }`}
     >
       <span
         className={
           active
             ? "text-[#d6a84f]"
-            : "text-white/45"
+            : "text-[#a1a1aa]/45"
         }
       >
         {icon}
@@ -824,7 +822,7 @@ function MenuItem({
       </span>
 
       {badge !== undefined && (
-        <span className="flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-black text-white">
+        <span className="flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-black text-[#f3f4f6]">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -846,7 +844,7 @@ function StatCard({
   success?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0b0b0b] p-3 shadow-xl shadow-black/10 sm:p-4">
+    <div className="rounded-2xl border border-[#292d33] bg-[#11151a] p-3 shadow-xl shadow-black/10 sm:p-4">
       <div
         className={`flex h-8 w-8 items-center justify-center rounded-lg ${
           danger
@@ -859,7 +857,7 @@ function StatCard({
         {icon}
       </div>
 
-      <p className="mt-3 text-[10px] font-bold text-white/35">
+      <p className="mt-3 text-[10px] font-bold text-[#a1a1aa]/35">
         {label}
       </p>
 
@@ -869,7 +867,7 @@ function StatCard({
             ? "text-red-400"
             : success
             ? "text-emerald-400"
-            : "text-white"
+            : "text-[#f3f4f6]"
         }`}
       >
         {value}

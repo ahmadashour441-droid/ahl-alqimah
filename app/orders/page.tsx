@@ -217,7 +217,7 @@ export default function OrdersPage() {
           label: "منشور",
           icon: <Clock3 size={13} />,
           className:
-            "border-[#d6a84f]/20 bg-[#d6a84f]/10 text-[#d6a84f]",
+            "border-[#e8b63e]/35 bg-[#e8b63e]/10 text-[#d6a84f]",
         };
 
       case "assigned":
@@ -227,7 +227,7 @@ export default function OrdersPage() {
           label: "مكتمل",
           icon: <CheckCircle2 size={13} />,
           className:
-            "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
+            "border-[#bfe8d2] bg-[#ecf8f1] text-[#16845a]",
         };
 
       case "cancelled":
@@ -235,7 +235,7 @@ export default function OrdersPage() {
           label: "ملغي",
           icon: <XCircle size={13} />,
           className:
-            "border-red-500/20 bg-red-500/10 text-red-400",
+            "border-red-500/20 bg-red-500/10 text-[#b4233f]",
         };
 
       default:
@@ -244,7 +244,7 @@ export default function OrdersPage() {
             status || "غير محدد",
           icon: <AlertTriangle size={13} />,
           className:
-            "border-white/10 bg-white/5 text-white/40",
+            "border-[#292d33] bg-[#f7f4ef] text-[#73777e]",
         };
     }
   }
@@ -396,23 +396,23 @@ export default function OrdersPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="vip-legacy-page min-h-screen"
     >
       <div className="mx-auto w-full max-w-[1450px] px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
 
         {/* HEADER */}
 
-        <header className="mb-6 overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+        <header className="mb-6 overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
           <div className="relative p-5 sm:p-7">
 
-            <div className="absolute -left-20 -top-20 h-52 w-52 rounded-full bg-[#d6a84f]/10 blur-3xl" />
+            <div className="absolute -left-20 -top-20 h-52 w-52 rounded-full bg-[#e8b63e]/10 blur-3xl" />
 
             <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
               <div className="flex items-center gap-4">
 
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#d6a84f]/20 bg-[#d6a84f]/10 text-[#d6a84f]">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#e8b63e]/35 bg-[#e8b63e]/10 text-[#d6a84f]">
                   <Package size={27} />
                 </div>
 
@@ -422,11 +422,11 @@ export default function OrdersPage() {
                     سجل العمليات
                   </p>
 
-                  <h1 className="mt-1 text-2xl font-black text-white sm:text-3xl">
+                  <h1 className="mt-1 text-2xl font-black text-[#f3f4f6] sm:text-3xl">
                     الطلبات
                   </h1>
 
-                  <p className="mt-1 text-sm text-white/40">
+                  <p className="mt-1 text-sm text-[#73777e]">
                     جميع الطلبات التي أنتجتها أو استهلكتها حسب الأسبوع
                   </p>
 
@@ -438,7 +438,7 @@ export default function OrdersPage() {
                 type="button"
                 onClick={loadOrders}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#181b20] px-5 py-3 text-sm font-bold text-white/60 transition hover:border-[#d6a84f]/30 hover:text-white disabled:opacity-50"
+                className="flex items-center justify-center gap-2 rounded-2xl border border-[#292d33] bg-[#15191f] px-5 py-3 text-sm font-bold text-[#5f6368] transition hover:border-[#e8b63e]/45 hover:text-[#f3f4f6] disabled:opacity-50"
               >
                 <RefreshCw
                   size={17}
@@ -464,17 +464,17 @@ export default function OrdersPage() {
 
             <div className="flex items-start gap-3">
 
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-400">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-[#b4233f]">
                 <XCircle size={19} />
               </div>
 
               <div>
 
-                <p className="font-bold text-red-400">
+                <p className="font-bold text-[#b4233f]">
                   حدث خطأ
                 </p>
 
-                <p className="mt-1 text-sm text-red-400/70">
+                <p className="mt-1 text-sm text-[#b4233f]/70">
                   {error}
                 </p>
 
@@ -485,7 +485,7 @@ export default function OrdersPage() {
             <button
               type="button"
               onClick={loadOrders}
-              className="rounded-xl bg-red-500/10 px-4 py-2.5 text-sm font-bold text-red-400 transition hover:bg-red-500/20"
+              className="rounded-xl bg-red-500/10 px-4 py-2.5 text-sm font-bold text-[#b4233f] transition hover:bg-red-500/20"
             >
               إعادة المحاولة
             </button>
@@ -495,23 +495,23 @@ export default function OrdersPage() {
 
         {/* WEEK SELECTOR */}
 
-        <section className="mb-6 rounded-[28px] border border-white/10 bg-[#12151a] p-5 shadow-2xl sm:p-6">
+        <section className="mb-6 rounded-[28px] border border-[#292d33] bg-white p-5 shadow-2xl sm:p-6">
 
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
             <div className="flex items-start gap-3">
 
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#e8b63e]/10 text-[#d6a84f]">
                 <CalendarDays size={21} />
               </div>
 
               <div>
 
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-lg font-black text-[#f3f4f6]">
                   اختر الأسبوع
                 </h2>
 
-                <p className="mt-1 text-xs text-white/35">
+                <p className="mt-1 text-xs text-[#85878d]">
                   الطلبات محفوظة حسب الأسبوع الذي تمت فيه العملية.
                 </p>
 
@@ -523,10 +523,10 @@ export default function OrdersPage() {
               <div
                 className={`w-fit rounded-full border px-3 py-1.5 text-xs font-black ${
                   isCurrentWeek
-                    ? "border-[#d6a84f]/20 bg-[#d6a84f]/10 text-[#d6a84f]"
+                    ? "border-[#e8b63e]/35 bg-[#e8b63e]/10 text-[#d6a84f]"
                     : selectedWeek.is_closed
-                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                    : "border-white/10 bg-white/5 text-white/40"
+                    ? "border-[#bfe8d2] bg-[#ecf8f1] text-[#16845a]"
+                    : "border-[#292d33] bg-[#f7f4ef] text-[#73777e]"
                 }`}
               >
                 {isCurrentWeek
@@ -540,7 +540,7 @@ export default function OrdersPage() {
           </div>
 
           {weeks.length === 0 ? (
-            <div className="rounded-2xl border border-white/5 bg-[#181b20] p-6 text-center text-sm text-white/35">
+            <div className="rounded-2xl border border-[#eeeae4] bg-[#15191f] p-6 text-center text-sm text-[#85878d]">
               لا توجد أسابيع مسجلة.
             </div>
           ) : (
@@ -571,8 +571,8 @@ export default function OrdersPage() {
                       }}
                       className={`group rounded-2xl border p-4 text-right transition ${
                         selected
-                          ? "border-[#d6a84f]/50 bg-[#d6a84f]/10 shadow-lg shadow-[#d6a84f]/5"
-                          : "border-white/5 bg-[#181b20] hover:border-white/10 hover:bg-[#1d2025]"
+                          ? "border-[#e8b63e]/70 bg-[#e8b63e]/10 shadow-lg shadow-[#e8b63e]/10"
+                          : "border-[#eeeae4] bg-[#15191f] hover:border-[#292d33] hover:bg-[#f5f0e8]"
                       }`}
                     >
 
@@ -581,8 +581,8 @@ export default function OrdersPage() {
                         <div
                           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
                             selected
-                              ? "bg-[#d6a84f] text-[#0b0d10]"
-                              : "bg-white/5 text-white/35"
+                              ? "bg-[#e8b63e] text-[#650016]"
+                              : "bg-[#f7f4ef] text-[#85878d]"
                           }`}
                         >
                           <CalendarDays size={18} />
@@ -594,7 +594,7 @@ export default function OrdersPage() {
                             className={`truncate text-sm font-black ${
                               selected
                                 ? "text-[#d6a84f]"
-                                : "text-white"
+                                : "text-[#f3f4f6]"
                             }`}
                           >
                             {getWeekLabel(
@@ -605,13 +605,13 @@ export default function OrdersPage() {
                           <div className="mt-2 flex flex-wrap gap-1.5">
 
                             {current && (
-                              <span className="rounded-full bg-[#d6a84f]/10 px-2 py-1 text-[10px] font-black text-[#d6a84f]">
+                              <span className="rounded-full bg-[#e8b63e]/10 px-2 py-1 text-[10px] font-black text-[#d6a84f]">
                                 الحالي
                               </span>
                             )}
 
                             {week.is_closed && (
-                              <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-black text-emerald-400">
+                              <span className="rounded-full bg-[#ecf8f1] px-2 py-1 text-[10px] font-black text-[#16845a]">
                                 مغلق
                               </span>
                             )}
@@ -625,7 +625,7 @@ export default function OrdersPage() {
                           className={`shrink-0 ${
                             selected
                               ? "text-[#d6a84f]"
-                              : "text-white/15 group-hover:text-white/40"
+                              : "text-[#f3f4f6]/15 group-hover:text-[#73777e]"
                           }`}
                         />
 
@@ -644,9 +644,9 @@ export default function OrdersPage() {
         {/* SELECTED WEEK */}
 
         {selectedWeek && (
-          <section className="relative mb-6 overflow-hidden rounded-[28px] border border-[#d6a84f]/20 bg-[#12151a] shadow-2xl">
+          <section className="relative mb-6 overflow-hidden rounded-[28px] border border-[#e8b63e]/35 bg-white shadow-2xl">
 
-            <div className="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#d6a84f]/10 blur-3xl" />
+            <div className="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#e8b63e]/10 blur-3xl" />
 
             <div className="relative p-5 sm:p-6">
 
@@ -658,7 +658,7 @@ export default function OrdersPage() {
                     الطلبات الخاصة بـ
                   </p>
 
-                  <h2 className="mt-2 text-xl font-black text-white">
+                  <h2 className="mt-2 text-xl font-black text-[#f3f4f6]">
                     {getWeekLabel(
                       selectedWeek
                     )}
@@ -666,9 +666,9 @@ export default function OrdersPage() {
 
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#181b20] px-5 py-4 text-center">
+                <div className="rounded-2xl border border-[#292d33] bg-[#15191f] px-5 py-4 text-center">
 
-                  <p className="text-[11px] font-bold text-white/30">
+                  <p className="text-[11px] font-bold text-[#85878d]">
                     إجمالي طلبات الأسبوع
                   </p>
 
@@ -687,7 +687,7 @@ export default function OrdersPage() {
 
         {/* FILTERS */}
 
-        <section className="mb-6 rounded-[24px] border border-white/10 bg-[#12151a] p-3 shadow-xl">
+        <section className="mb-6 rounded-[24px] border border-[#292d33] bg-white p-3 shadow-xl">
 
           <div className="flex flex-wrap gap-2">
 
@@ -777,25 +777,25 @@ export default function OrdersPage() {
 
         {/* ORDERS */}
 
-        <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+        <section className="overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
-          <div className="border-b border-white/5 p-5 sm:p-6">
+          <div className="border-b border-[#eeeae4] p-5 sm:p-6">
 
             <div className="flex items-center justify-between gap-4">
 
               <div>
 
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-lg font-black text-[#f3f4f6]">
                   سجل الطلبات
                 </h2>
 
-                <p className="mt-1 text-xs text-white/30">
+                <p className="mt-1 text-xs text-[#85878d]">
                   الطلبات المرتبطة بالأسبوع المحدد
                 </p>
 
               </div>
 
-              <span className="rounded-full border border-white/10 bg-[#181b20] px-3 py-1.5 text-[11px] font-black text-white/40">
+              <span className="rounded-full border border-[#292d33] bg-[#15191f] px-3 py-1.5 text-[11px] font-black text-[#73777e]">
                 {filteredOrders.length} طلب
               </span>
 
@@ -806,14 +806,14 @@ export default function OrdersPage() {
           {loading ? (
             <div className="p-12 text-center">
 
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d6a84f]/10 text-[#d6a84f]">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#e8b63e]/10 text-[#d6a84f]">
                 <Package
                   size={29}
                   className="animate-pulse"
                 />
               </div>
 
-              <p className="mt-5 font-bold text-white/50">
+              <p className="mt-5 font-bold text-[#73777e]">
                 جاري تحميل الطلبات...
               </p>
 
@@ -821,15 +821,15 @@ export default function OrdersPage() {
           ) : filteredOrders.length === 0 ? (
             <div className="p-12 text-center">
 
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-white/5 text-white/20">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-[#f7f4ef] text-[#f3f4f6]/20">
                 <Package size={36} />
               </div>
 
-              <p className="mt-5 font-black text-white">
+              <p className="mt-5 font-black text-[#f3f4f6]">
                 لا توجد طلبات في هذا الأسبوع
               </p>
 
-              <p className="mt-2 text-sm text-white/30">
+              <p className="mt-2 text-sm text-[#85878d]">
                 جرّب اختيار أسبوع آخر أو فلتر آخر.
               </p>
 
@@ -875,7 +875,7 @@ export default function OrdersPage() {
 
                             <div className="flex flex-wrap items-center gap-2">
 
-                              <span className="font-black text-white">
+                              <span className="font-black text-[#f3f4f6]">
                                 #
                                 {order.order_number ||
                                   order.id.slice(
@@ -893,7 +893,7 @@ export default function OrdersPage() {
 
                             </div>
 
-                            <div className="mt-2 flex items-center gap-1.5 text-[10px] text-white/25">
+                            <div className="mt-2 flex items-center gap-1.5 text-[10px] text-[#f3f4f6]/25">
                               <Clock3
                                 size={12}
                               />
@@ -915,29 +915,29 @@ export default function OrdersPage() {
 
                         <div className="mt-4 grid grid-cols-2 gap-2">
 
-                          <div className="rounded-2xl border border-white/5 bg-[#181b20] p-3">
+                          <div className="rounded-2xl border border-[#eeeae4] bg-[#15191f] p-3">
 
-                            <p className="text-[10px] text-white/25">
+                            <p className="text-[10px] text-[#f3f4f6]/25">
                               قيمة الأوردر
                             </p>
 
-                            <p className="mt-1 font-black text-white">
+                            <p className="mt-1 font-black text-[#f3f4f6]">
                               {Number(
                                 order.amount ||
                                   0
                               ).toFixed(
                                 2
                               )}{" "}
-                              <span className="text-[10px] text-white/30">
+                              <span className="text-[10px] text-[#85878d]">
                                 د.أ
                               </span>
                             </p>
 
                           </div>
 
-                          <div className="rounded-2xl border border-white/5 bg-[#181b20] p-3">
+                          <div className="rounded-2xl border border-[#eeeae4] bg-[#15191f] p-3">
 
-                            <p className="text-[10px] text-white/25">
+                            <p className="text-[10px] text-[#f3f4f6]/25">
                               العمولة
                             </p>
 
@@ -948,12 +948,12 @@ export default function OrdersPage() {
                               ).toFixed(
                                 2
                               )}{" "}
-                              <span className="text-[10px] text-white/30">
+                              <span className="text-[10px] text-[#85878d]">
                                 د.أ
                               </span>
                             </p>
 
-                            <p className="mt-0.5 text-[9px] text-white/20">
+                            <p className="mt-0.5 text-[9px] text-[#f3f4f6]/20">
                               {Number(
                                 order.commission_rate ||
                                   0
@@ -967,13 +967,13 @@ export default function OrdersPage() {
 
                         <div className="mt-3 space-y-2">
 
-                          <div className="flex items-center justify-between rounded-xl bg-white/[0.025] px-3 py-2.5">
+                          <div className="flex items-center justify-between rounded-xl bg-[#15191f] px-3 py-2.5">
 
-                            <span className="text-[11px] text-white/30">
+                            <span className="text-[11px] text-[#85878d]">
                               المنتج
                             </span>
 
-                            <span className="text-xs font-bold text-white/70">
+                            <span className="text-xs font-bold text-[#4b4f55]">
                               {getUserName(
                                 order.producer_id
                               )}
@@ -987,13 +987,13 @@ export default function OrdersPage() {
 
                           </div>
 
-                          <div className="flex items-center justify-between rounded-xl bg-white/[0.025] px-3 py-2.5">
+                          <div className="flex items-center justify-between rounded-xl bg-[#15191f] px-3 py-2.5">
 
-                            <span className="text-[11px] text-white/30">
+                            <span className="text-[11px] text-[#85878d]">
                               المستهلك
                             </span>
 
-                            <span className="text-xs font-bold text-white/70">
+                            <span className="text-xs font-bold text-[#4b4f55]">
                               {getUserName(
                                 order.consumer_id
                               )}
@@ -1022,39 +1022,39 @@ export default function OrdersPage() {
 
                 <table className="w-full min-w-[1000px] text-right">
 
-                  <thead className="bg-[#181b20]">
+                  <thead className="bg-[#15191f]">
 
                     <tr>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         رقم الطلب
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         النوع
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         المبلغ
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         العمولة
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         المنتج
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         المستهلك
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         الحالة
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-black text-white/35">
+                      <th className="px-5 py-4 text-xs font-black text-[#85878d]">
                         التاريخ
                       </th>
 
@@ -1090,12 +1090,12 @@ export default function OrdersPage() {
                             key={
                               order.id
                             }
-                            className="transition hover:bg-white/[0.015]"
+                            className="transition hover:bg-[#fbfaf8]"
                           >
 
                             <td
                               dir="ltr"
-                              className="whitespace-nowrap px-5 py-4 text-right font-mono text-sm font-black text-white"
+                              className="whitespace-nowrap px-5 py-4 text-right font-mono text-sm font-black text-[#f3f4f6]"
                             >
                               {order.order_number ||
                                 order.id.slice(
@@ -1115,7 +1115,7 @@ export default function OrdersPage() {
 
                             </td>
 
-                            <td className="whitespace-nowrap px-5 py-4 font-black text-white">
+                            <td className="whitespace-nowrap px-5 py-4 font-black text-[#f3f4f6]">
 
                               {Number(
                                 order.amount ||
@@ -1123,7 +1123,7 @@ export default function OrdersPage() {
                               ).toFixed(
                                 2
                               )}{" "}
-                              <span className="text-xs text-white/30">
+                              <span className="text-xs text-[#85878d]">
                                 د.أ
                               </span>
 
@@ -1141,7 +1141,7 @@ export default function OrdersPage() {
                                 د.أ
                               </div>
 
-                              <div className="mt-0.5 text-[10px] text-white/25">
+                              <div className="mt-0.5 text-[10px] text-[#f3f4f6]/25">
                                 {Number(
                                   order.commission_rate ||
                                     0
@@ -1151,7 +1151,7 @@ export default function OrdersPage() {
 
                             </td>
 
-                            <td className="whitespace-nowrap px-5 py-4 text-sm font-bold text-white/65">
+                            <td className="whitespace-nowrap px-5 py-4 text-sm font-bold text-[#f3f4f6]/65">
 
                               {getUserName(
                                 order.producer_id
@@ -1165,7 +1165,7 @@ export default function OrdersPage() {
 
                             </td>
 
-                            <td className="whitespace-nowrap px-5 py-4 text-sm font-bold text-white/65">
+                            <td className="whitespace-nowrap px-5 py-4 text-sm font-bold text-[#f3f4f6]/65">
 
                               {getUserName(
                                 order.consumer_id
@@ -1190,7 +1190,7 @@ export default function OrdersPage() {
 
                             </td>
 
-                            <td className="whitespace-nowrap px-5 py-4 text-xs text-white/30">
+                            <td className="whitespace-nowrap px-5 py-4 text-xs text-[#85878d]">
                               {formatDate(
                                 order.created_at
                               )}
@@ -1217,7 +1217,7 @@ export default function OrdersPage() {
 
           <a
             href="/dashboard"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#12151a] py-4 text-sm font-bold text-white/45 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#292d33] bg-white py-4 text-sm font-bold text-[#73777e] transition hover:border-[#e8b63e]/45 hover:text-[#d6a84f]"
           >
             <ArrowLeft size={17} />
             العودة إلى لوحة التحكم
@@ -1247,8 +1247,8 @@ function FilterButton({
       onClick={onClick}
       className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-black transition ${
         active
-          ? "bg-[#d6a84f] text-[#0b0d10] shadow-lg shadow-[#d6a84f]/10"
-          : "bg-[#181b20] text-white/45 hover:bg-[#1d2025] hover:text-white"
+          ? "bg-[#e8b63e] text-[#650016] shadow-lg shadow-[#d6a84f]/10"
+          : "bg-[#15191f] text-[#73777e] hover:bg-[#f5f0e8] hover:text-[#f3f4f6]"
       }`}
     >
       {icon}
@@ -1270,26 +1270,26 @@ function SummaryCard({
 }) {
   const accentClass =
     accent === "green"
-      ? "bg-emerald-500/10 text-emerald-400"
+      ? "bg-[#ecf8f1] text-[#16845a]"
       : accent === "red"
-      ? "bg-red-500/10 text-red-400"
-      : "bg-[#d6a84f]/10 text-[#d6a84f]";
+      ? "bg-red-500/10 text-[#b4233f]"
+      : "bg-[#e8b63e]/10 text-[#d6a84f]";
 
   const valueClass =
     accent === "green"
-      ? "text-emerald-400"
+      ? "text-[#16845a]"
       : accent === "red"
-      ? "text-red-400"
+      ? "text-[#b4233f]"
       : "text-[#d6a84f]";
 
   return (
-    <div className="rounded-[24px] border border-white/10 bg-[#12151a] p-4 shadow-xl sm:p-5">
+    <div className="rounded-[24px] border border-[#292d33] bg-white p-4 shadow-xl sm:p-5">
 
       <div className="flex items-start justify-between gap-3">
 
         <div>
 
-          <p className="text-xs font-bold text-white/35">
+          <p className="text-xs font-bold text-[#85878d]">
             {title}
           </p>
 

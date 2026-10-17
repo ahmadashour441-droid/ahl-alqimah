@@ -19,6 +19,11 @@ import {
   Building2,
   Smartphone,
   ChevronLeft,
+  ChevronDown,
+  CarFront,
+  UserRound,
+  CalendarDays,
+  ReceiptText,
 } from "lucide-react";
 
 const supabase = createClient(
@@ -34,15 +39,44 @@ type Transaction = {
   balance_after: number;
   description: string | null;
   created_at: string;
+  order_id: string | null;
 };
 
-type TopupRequest = {
+type UserReference = {
   id: string;
+  full_name: string | null;
+  phone: string | null;
+};
+
+type OrderDetails = {
+  id: string;
+  order_number: string | null;
+  order_type: string | null;
   amount: number;
-  payment_method: string;
+  commission_rate: number | null;
+  commission_amount: number | null;
+  status: string | null;
   notes: string | null;
-  status: "pending" | "approved" | "rejected";
   created_at: string;
+  updated_at: string | null;
+  financially_processed: boolean | null;
+  processed_week_id: string | null;
+  producer_id: string;
+  consumer_id: string;
+  producer?: UserReference | null;
+  consumer?: UserReference | null;
+};
+
+/*
+ * Supabase may return foreign-key relations as arrays.
+ * We normalize them before storing them in state.
+ */
+type OrderDetailsRow = Omit<
+  OrderDetails,
+  "producer" | "consumer"
+> & {
+  producer: UserReference[] | null;
+  consumer: UserReference[] | null;
 };
 
 type WithdrawalRequest = {
@@ -67,8 +101,11 @@ export default function FinancePage() {
   const [transactions, setTransactions] =
     useState<Transaction[]>([]);
 
-  const [topups, setTopups] =
-    useState<TopupRequest[]>([]);
+  const [orderDetails, setOrderDetails] =
+    useState<Record<string, OrderDetails>>({});
+
+  const [expandedOrders, setExpandedOrders] =
+    useState<Record<string, boolean>>({});
 
   const [withdrawals, setWithdrawals] =
     useState<WithdrawalRequest[]>([]);
@@ -124,13 +161,12 @@ export default function FinancePage() {
 
       const [
         transactionsResponse,
-        topupsResponse,
         withdrawalsResponse,
       ] = await Promise.all([
         supabase
           .from("transactions")
           .select(
-            "id, transaction_type, amount, balance_before, balance_after, description, created_at"
+            "id, transaction_type, amount, balance_before, balance_after, description, created_at, order_id"
           )
           .eq(
             "user_id",
@@ -139,20 +175,6 @@ export default function FinancePage() {
           .order("created_at", {
             ascending: false,
           }),
-
-        supabase
-          .from("topup_requests")
-          .select(
-            "id, amount, payment_method, notes, status, created_at"
-          )
-          .eq(
-            "user_id",
-            meResult.user.id
-          )
-          .order("created_at", {
-            ascending: false,
-          }),
-
         supabase
           .from("withdrawal_requests")
           .select(
@@ -174,13 +196,6 @@ export default function FinancePage() {
         );
       }
 
-      if (topupsResponse.error) {
-        console.error(
-          "TOPUPS ERROR:",
-          topupsResponse.error
-        );
-      }
-
       if (withdrawalsResponse.error) {
         console.error(
           "WITHDRAWALS ERROR:",
@@ -188,13 +203,62 @@ export default function FinancePage() {
         );
       }
 
-      setTransactions(
-        transactionsResponse.data || []
+      const loadedTransactions = (transactionsResponse.data || []) as Transaction[];
+      setTransactions(loadedTransactions);
+
+      const orderIds = Array.from(
+        new Set(
+          loadedTransactions
+            .map((transaction) => transaction.order_id)
+            .filter((id): id is string => Boolean(id))
+        )
       );
 
-      setTopups(
-        topupsResponse.data || []
-      );
+      if (orderIds.length > 0) {
+        const { data: linkedOrders, error: linkedOrdersError } = await supabase
+          .from("orders")
+          .select(`
+            id,
+            order_number,
+            order_type,
+            amount,
+            commission_rate,
+            commission_amount,
+            status,
+            notes,
+            created_at,
+            updated_at,
+            financially_processed,
+            processed_week_id,
+            producer_id,
+            consumer_id,
+            producer:users!orders_producer_id_fkey (id, full_name, phone),
+            consumer:users!orders_consumer_id_fkey (id, full_name, phone)
+          `)
+          .in("id", orderIds);
+
+        if (linkedOrdersError) {
+          console.error("LINKED ORDERS ERROR:", linkedOrdersError);
+        } else {
+          const rows = (linkedOrders || []) as unknown as OrderDetailsRow[];
+
+const mappedOrders = Object.fromEntries(
+  rows.map((order) => {
+    const normalizedOrder: OrderDetails = {
+      ...order,
+      producer: order.producer?.[0] ?? null,
+      consumer: order.consumer?.[0] ?? null,
+    };
+
+    return [order.id, normalizedOrder];
+  })
+);
+
+setOrderDetails(mappedOrders);
+        }
+      } else {
+        setOrderDetails({});
+      }
 
       setWithdrawals(
         withdrawalsResponse.data || []
@@ -241,7 +305,7 @@ export default function FinancePage() {
       return {
         text: "قيد المراجعة",
         className:
-          "border-[#d6a84f]/20 bg-[#d6a84f]/10 text-[#d6a84f]",
+          "border-[#e8b63e]/35 bg-[#e8b63e]/10 text-[#d6a84f]",
         icon: (
           <Clock3
             size={13}
@@ -255,7 +319,7 @@ export default function FinancePage() {
       return {
         text: "مقبول",
         className:
-          "border-emerald-400/15 bg-emerald-400/10 text-emerald-400",
+          "border-emerald-400/15 bg-emerald-400/10 text-[#16845a]",
         icon: (
           <CircleCheck
             size={13}
@@ -268,7 +332,7 @@ export default function FinancePage() {
     return {
       text: "مرفوض",
       className:
-        "border-red-400/15 bg-red-400/10 text-red-400",
+        "border-red-400/15 bg-red-400/10 text-[#b4233f]",
       icon: (
         <CircleX
           size={13}
@@ -328,9 +392,6 @@ export default function FinancePage() {
   function getTransactionType(
     type: string
   ) {
-    if (type === "topup")
-      return "شحن رصيد";
-
     if (type === "withdrawal")
       return "سحب رصيد";
 
@@ -349,74 +410,46 @@ export default function FinancePage() {
     return type;
   }
 
-  const pendingTopups =
-    topups.filter(
-      (item) =>
-        item.status === "pending"
-    ).length;
-
-  const approvedTopups =
-    topups.filter(
-      (item) =>
-        item.status === "approved"
-    ).length;
-
-  const rejectedTopups =
-    topups.filter(
-      (item) =>
-        item.status === "rejected"
-    ).length;
-
-  const pendingWithdrawals =
-    withdrawals.filter(
-      (item) =>
-        item.status === "pending"
-    ).length;
-
-  const approvedWithdrawals =
-    withdrawals.filter(
-      (item) =>
-        item.status === "approved"
-    ).length;
-
-  const rejectedWithdrawals =
-    withdrawals.filter(
-      (item) =>
-        item.status === "rejected"
-    ).length;
-
-  const balance =
-    Number(user?.balance || 0);
-
-  if (loading) {
-    return (
-      <main
-        dir="rtl"
-        className="flex min-h-screen items-center justify-center bg-[#0b0d10] text-white"
-      >
-        <div className="flex flex-col items-center text-center">
-
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#d6a84f]/20 bg-[#d6a84f]/10 text-[#d6a84f]">
-            <RefreshCw
-              size={24}
-              className="animate-spin"
-              strokeWidth={1.7}
-            />
-          </div>
-
-          <p className="text-sm text-white/40">
-            جاري تحميل البيانات المالية...
-          </p>
-
-        </div>
-      </main>
-    );
+  function getOrderTypeLabel(type: string | null | undefined) {
+    if (type === "passenger") return "راكب";
+    if (type === "product") return "منتج";
+    return type || "غير محدد";
   }
+
+  function getOrderStatusLabel(status: string | null | undefined) {
+    if (status === "completed") return "مكتمل";
+    if (status === "assigned") return "مسند";
+    if (status === "pending") return "قيد الانتظار";
+    if (status === "processing") return "قيد التنفيذ";
+    if (status === "cancelled" || status === "canceled") return "ملغى";
+    return status || "غير محدد";
+  }
+
+  function toggleOrderDetails(orderId: string) {
+    setExpandedOrders((current) => ({
+      ...current,
+      [orderId]: !current[orderId],
+    }));
+  }
+
+  const pendingWithdrawals = withdrawals.filter(
+    (item) => item.status === "pending"
+  ).length;
+
+  const approvedWithdrawals = withdrawals.filter(
+    (item) => item.status === "approved"
+  ).length;
+
+  const rejectedWithdrawals = withdrawals.filter(
+    (item) => item.status === "rejected"
+  ).length;
+
+  const balance = Number(user?.balance || 0);
 
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="vip-legacy-page min-h-screen"
     >
       <div className="mx-auto w-full max-w-5xl px-4 pb-10 pt-5 sm:px-6">
 
@@ -426,7 +459,7 @@ export default function FinancePage() {
 
           <Link
             href="/dashboard"
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/55 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#73777e] transition hover:border-[#e8b63e]/45 hover:text-[#d6a84f]"
           >
             <ArrowRight
               size={19}
@@ -440,7 +473,7 @@ export default function FinancePage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-white/35">
+            <p className="mt-0.5 text-[11px] text-[#85878d]">
               المالية
             </p>
 
@@ -449,7 +482,7 @@ export default function FinancePage() {
           <button
             onClick={loadFinance}
             disabled={loading}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/55 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#73777e] transition hover:border-[#e8b63e]/45 hover:text-[#d6a84f]"
           >
             <RefreshCw
               size={18}
@@ -467,7 +500,7 @@ export default function FinancePage() {
         {/* Error */}
 
         {error && (
-          <div className="mb-5 flex items-start gap-3 rounded-2xl border border-red-400/15 bg-red-400/5 p-4 text-xs leading-5 text-red-400">
+          <div className="mb-5 flex items-start gap-3 rounded-2xl border border-red-400/15 bg-red-400/5 p-4 text-xs leading-5 text-[#b4233f]">
 
             <AlertCircle
               size={18}
@@ -486,17 +519,17 @@ export default function FinancePage() {
           className={`relative mb-4 overflow-hidden rounded-[28px] border p-5 sm:p-7 ${
             balance < 0
               ? "border-red-400/20 bg-gradient-to-br from-[#1d1517] to-[#121317]"
-              : "border-[#d6a84f]/20 bg-gradient-to-br from-[#191817] to-[#121317]"
+              : "border-[#e8b63e]/35 bg-gradient-to-br from-[#191817] to-[#121317]"
           }`}
         >
 
-          <div className="absolute -left-10 -top-10 h-36 w-36 rounded-full bg-[#d6a84f]/5 blur-3xl" />
+          <div className="absolute -left-10 -top-10 h-36 w-36 rounded-full bg-[#e8b63e]/5 blur-3xl" />
 
           <div className="relative">
 
             <div className="flex items-center gap-3">
 
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#d6a84f]/20 bg-[#d6a84f]/10 text-[#d6a84f]">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#e8b63e]/35 bg-[#e8b63e]/10 text-[#d6a84f]">
                 <Wallet
                   size={21}
                   strokeWidth={1.7}
@@ -505,11 +538,11 @@ export default function FinancePage() {
 
               <div>
 
-                <p className="text-xs text-white/40">
+                <p className="text-xs text-[#73777e]">
                   الرصيد الحالي
                 </p>
 
-                <p className="mt-0.5 text-[10px] text-white/20">
+                <p className="mt-0.5 text-[10px] text-[#f3f4f6]/20">
                   {user?.full_name || ""}
                 </p>
 
@@ -523,8 +556,8 @@ export default function FinancePage() {
                 dir="ltr"
                 className={`text-4xl font-black tracking-tight sm:text-5xl ${
                   balance < 0
-                    ? "text-red-400"
-                    : "text-white"
+                    ? "text-[#b4233f]"
+                    : "text-[#f3f4f6]"
                 }`}
               >
                 {balance.toFixed(2)}
@@ -537,14 +570,14 @@ export default function FinancePage() {
             </div>
 
             {balance < 0 && (
-              <div className="mt-4 flex items-center gap-2 rounded-2xl border border-red-400/15 bg-red-400/10 px-4 py-3 text-xs font-bold text-red-400">
+              <div className="mt-4 flex items-center gap-2 rounded-2xl border border-red-400/15 bg-red-400/10 px-4 py-3 text-xs font-bold text-[#b4233f]">
 
                 <AlertCircle
                   size={16}
                   strokeWidth={1.8}
                 />
 
-                رصيدك صار سالب. يرجى شحن الرصيد.
+                رصيدك صار سالب. يرجى تسوية المبلغ المستحق.
 
               </div>
             )}
@@ -558,44 +591,13 @@ export default function FinancePage() {
         <section className="mb-5 grid grid-cols-2 gap-3">
 
           <Link
-            href="/finance/topup"
-            className="group rounded-[22px] border border-white/8 bg-[#12151a] p-4 transition hover:border-[#d6a84f]/25 hover:bg-[#15181d]"
-          >
-
-            <div className="flex items-center justify-between">
-
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
-                <ArrowUpCircle
-                  size={19}
-                  strokeWidth={1.7}
-                />
-              </span>
-
-              <ChevronLeft
-                size={15}
-                className="text-white/20 transition group-hover:text-[#d6a84f]"
-              />
-
-            </div>
-
-            <p className="mt-4 text-sm font-bold">
-              شحن الرصيد
-            </p>
-
-            <p className="mt-1 text-[10px] text-white/30">
-              إرسال طلب شحن جديد
-            </p>
-
-          </Link>
-
-          <Link
             href="/finance/withdraw"
-            className="group rounded-[22px] border border-white/8 bg-[#12151a] p-4 transition hover:border-[#d6a84f]/25 hover:bg-[#15181d]"
+            className="group rounded-[22px] border border-[#eeeae4] bg-white p-4 transition hover:border-[#d6a84f]/25 hover:bg-[#15191f]"
           >
 
             <div className="flex items-center justify-between">
 
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.04] text-white/55">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f7f4ef] text-[#73777e]">
                 <ArrowDownCircle
                   size={19}
                   strokeWidth={1.7}
@@ -604,7 +606,7 @@ export default function FinancePage() {
 
               <ChevronLeft
                 size={15}
-                className="text-white/20 transition group-hover:text-[#d6a84f]"
+                className="text-[#f3f4f6]/20 transition group-hover:text-[#d6a84f]"
               />
 
             </div>
@@ -613,7 +615,7 @@ export default function FinancePage() {
               سحب الرصيد
             </p>
 
-            <p className="mt-1 text-[10px] text-white/30">
+            <p className="mt-1 text-[10px] text-[#85878d]">
               إرسال طلب سحب جديد
             </p>
 
@@ -631,49 +633,13 @@ export default function FinancePage() {
               ملخص الطلبات
             </h2>
 
-            <p className="mt-1 text-[10px] text-white/25">
+            <p className="mt-1 text-[10px] text-[#f3f4f6]/25">
               حالة طلباتك المالية
             </p>
 
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-
-            <SummaryCard
-              title="شحن معلق"
-              value={pendingTopups}
-              icon={
-                <Clock3
-                  size={17}
-                  strokeWidth={1.8}
-                />
-              }
-              highlight={
-                pendingTopups > 0
-              }
-            />
-
-            <SummaryCard
-              title="شحن مقبول"
-              value={approvedTopups}
-              icon={
-                <CircleCheck
-                  size={17}
-                  strokeWidth={1.8}
-                />
-              }
-            />
-
-            <SummaryCard
-              title="شحن مرفوض"
-              value={rejectedTopups}
-              icon={
-                <CircleX
-                  size={17}
-                  strokeWidth={1.8}
-                />
-              }
-            />
 
             <SummaryCard
               title="سحب معلق"
@@ -744,14 +710,14 @@ export default function FinancePage() {
                   return (
                     <div
                       key={withdrawal.id}
-                      className="rounded-2xl border border-white/6 bg-[#181b20] p-4"
+                      className="rounded-2xl border border-[#eeeae4] bg-[#15191f] p-4"
                     >
 
                       <div className="flex items-start justify-between gap-3">
 
                         <div>
 
-                          <p className="text-lg font-black text-white">
+                          <p className="text-lg font-black text-[#f3f4f6]">
                             {Number(
                               withdrawal.amount
                             ).toFixed(2)}{" "}
@@ -760,7 +726,7 @@ export default function FinancePage() {
                             </span>
                           </p>
 
-                          <p className="mt-1 text-[10px] text-white/25">
+                          <p className="mt-1 text-[10px] text-[#f3f4f6]/25">
                             {formatDate(
                               withdrawal.created_at
                             )}
@@ -780,15 +746,15 @@ export default function FinancePage() {
                       </div>
 
                       {withdrawal.notes && (
-                        <div className="mt-3 flex items-start gap-2 border-t border-white/5 pt-3">
+                        <div className="mt-3 flex items-start gap-2 border-t border-[#eeeae4] pt-3">
 
                           <FileText
                             size={14}
-                            className="mt-0.5 shrink-0 text-white/20"
+                            className="mt-0.5 shrink-0 text-[#f3f4f6]/20"
                             strokeWidth={1.7}
                           />
 
-                          <p className="text-[10px] leading-5 text-white/35">
+                          <p className="text-[10px] leading-5 text-[#85878d]">
                             {withdrawal.notes}
                           </p>
 
@@ -805,112 +771,6 @@ export default function FinancePage() {
 
         </FinanceSection>
 
-        {/* Topup Requests */}
-
-        <FinanceSection
-          title="طلبات الشحن"
-          subtitle="حالة جميع طلبات شحن الرصيد"
-          icon={
-            <ArrowUpCircle
-              size={19}
-              strokeWidth={1.7}
-            />
-          }
-          count={topups.length}
-        >
-
-          {topups.length === 0 ? (
-            <EmptyState text="لا توجد طلبات شحن حتى الآن." />
-          ) : (
-            <div className="space-y-2">
-
-              {topups.map((topup) => {
-                const status =
-                  getStatus(
-                    topup.status
-                  );
-
-                const method =
-                  getPaymentMethod(
-                    topup.payment_method
-                  );
-
-                return (
-                  <div
-                    key={topup.id}
-                    className="rounded-2xl border border-white/6 bg-[#181b20] p-4"
-                  >
-
-                    <div className="flex items-start justify-between gap-3">
-
-                      <div>
-
-                        <p className="text-lg font-black text-white">
-                          {Number(
-                            topup.amount
-                          ).toFixed(2)}{" "}
-                          <span className="text-xs text-[#d6a84f]">
-                            د.أ
-                          </span>
-                        </p>
-
-                        <div className="mt-2 flex items-center gap-1.5 text-[10px] text-white/30">
-
-                          {method.icon}
-
-                          <span>
-                            {method.text}
-                          </span>
-
-                          <span className="text-white/10">
-                            •
-                          </span>
-
-                          <span>
-                            {formatDate(
-                              topup.created_at
-                            )}
-                          </span>
-
-                        </div>
-
-                      </div>
-
-                      <StatusBadge
-                        status={
-                          topup.status
-                        }
-                        getStatus={
-                          getStatus
-                        }
-                      />
-
-                    </div>
-
-                    {topup.notes && (
-                      <div className="mt-3 flex items-start gap-2 border-t border-white/5 pt-3">
-
-                        <FileText
-                          size={14}
-                          className="mt-0.5 shrink-0 text-white/20"
-                          strokeWidth={1.7}
-                        />
-
-                        <p className="text-[10px] leading-5 text-white/35">
-                          {topup.notes}
-                        </p>
-
-                      </div>
-                    )}
-
-                  </div>
-                );
-              })}
-
-            </div>
-          )}
-
-        </FinanceSection>
 
         {/* Transactions */}
 
@@ -933,106 +793,142 @@ export default function FinancePage() {
 
               {transactions.map(
                 (transaction) => {
-                  const positive =
-                    Number(
-                      transaction.amount
-                    ) > 0;
+                  const positive = Number(transaction.amount) > 0;
+                  const order = transaction.order_id
+                    ? orderDetails[transaction.order_id]
+                    : undefined;
+                  const isExpanded = order
+                    ? Boolean(expandedOrders[order.id])
+                    : false;
 
                   return (
                     <div
                       key={transaction.id}
-                      className="rounded-2xl border border-white/6 bg-[#181b20] p-4"
+                      className="rounded-2xl border border-[#eeeae4] bg-[#15191f] p-4"
                     >
-
                       <div className="flex items-center gap-3">
-
                         <div
                           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
                             positive
-                              ? "bg-emerald-400/10 text-emerald-400"
-                              : "bg-red-400/10 text-red-400"
+                              ? "bg-emerald-400/10 text-[#16845a]"
+                              : "bg-red-400/10 text-[#b4233f]"
                           }`}
                         >
                           {positive ? (
-                            <ArrowUpCircle
-                              size={18}
-                              strokeWidth={1.7}
-                            />
+                            <ArrowUpCircle size={18} strokeWidth={1.7} />
                           ) : (
-                            <ArrowDownCircle
-                              size={18}
-                              strokeWidth={1.7}
-                            />
+                            <ArrowDownCircle size={18} strokeWidth={1.7} />
                           )}
                         </div>
-
                         <div className="min-w-0 flex-1">
-
-                          <p className="text-xs font-bold text-white/75">
-                            {getTransactionType(
-                              transaction.transaction_type
-                            )}
+                          <p className="text-xs font-bold text-[#f3f4f6]/75">
+                            {getTransactionType(transaction.transaction_type)}
                           </p>
-
-                          <p className="mt-1 truncate text-[10px] text-white/25">
-                            {transaction.description ||
-                              "-"}
+                          <p className="mt-1 truncate text-[10px] text-[#f3f4f6]/25">
+                            {transaction.description || "-"}
                           </p>
-
                         </div>
-
                         <div className="text-left">
-
                           <p
                             dir="ltr"
                             className={`text-sm font-black ${
-                              positive
-                                ? "text-emerald-400"
-                                : "text-red-400"
+                              positive ? "text-[#16845a]" : "text-[#b4233f]"
                             }`}
                           >
-                            {positive
-                              ? "+"
-                              : ""}
-                            {Number(
-                              transaction.amount
-                            ).toFixed(2)}
+                            {positive ? "+" : ""}{Number(transaction.amount).toFixed(2)}
                           </p>
-
-                          <p className="mt-1 text-[9px] text-white/20">
-                            {formatDate(
-                              transaction.created_at
-                            )}
+                          <p className="mt-1 text-[9px] text-[#f3f4f6]/20">
+                            {formatDate(transaction.created_at)}
                           </p>
+                        </div>
+                      </div>
 
+                      <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#eeeae4] pt-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[9px] text-[#f3f4f6]/20">الرصيد بعد الحركة</span>
+                          <span
+                            dir="ltr"
+                            className={`text-[11px] font-bold ${
+                              Number(transaction.balance_after) < 0
+                                ? "text-[#b4233f]"
+                                : "text-[#73777e]"
+                            }`}
+                          >
+                            {Number(transaction.balance_after).toFixed(2)} د.أ
+                          </span>
                         </div>
 
+                        {order && (
+                          <button
+                            type="button"
+                            onClick={() => toggleOrderDetails(order.id)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-[#e8b63e]/30 bg-[#e8b63e]/5 px-2.5 py-1.5 text-[9px] font-black text-[#d6a84f] transition hover:bg-[#e8b63e]/10"
+                          >
+                            <ReceiptText size={13} strokeWidth={1.8} />
+                            تفاصيل الطلب
+                            <ChevronDown
+                              size={13}
+                              strokeWidth={1.8}
+                              className={isExpanded ? "rotate-180 transition" : "transition"}
+                            />
+                          </button>
+                        )}
                       </div>
 
-                      <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-3">
+                      {order && isExpanded && (
+                        <div className="mt-4 rounded-2xl border border-[#d6a84f]/10 bg-[#15191f] p-3.5">
+                          <div className="mb-3 flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e8b63e]/10 text-[#d6a84f]">
+                                <CarFront size={15} strokeWidth={1.8} />
+                              </span>
+                              <div>
+                                <p className="text-[11px] font-black text-[#303238]">تفاصيل الطلب كاملة</p>
+                                <p className="mt-0.5 text-[9px] text-[#f3f4f6]/25">#{order.order_number || order.id.slice(0, 8)}</p>
+                              </div>
+                            </div>
+                            <span className="rounded-full border border-[#292d33] bg-[#f7f4ef] px-2 py-1 text-[9px] font-bold text-[#73777e]">
+                              {getOrderStatusLabel(order.status)}
+                            </span>
+                          </div>
 
-                        <span className="text-[9px] text-white/20">
-                          الرصيد بعد الحركة
-                        </span>
+                          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                            <OrderDetailItem label="رقم الطلب" value={`#${order.order_number || order.id.slice(0, 8)}`} />
+                            <OrderDetailItem label="نوع الطلب" value={getOrderTypeLabel(order.order_type)} />
+                            <OrderDetailItem label="قيمة الطلب" value={formatMoney(order.amount)} />
+                            <OrderDetailItem label="نسبة العمولة" value={order.commission_rate != null ? `${Number(order.commission_rate).toFixed(0)}%` : "-"} />
+                            <OrderDetailItem label="قيمة العمولة" value={order.commission_amount != null ? formatMoney(order.commission_amount) : "-"} />
+                            <OrderDetailItem label="تاريخ الطلب" value={formatDate(order.created_at)} />
+                            <OrderDetailItem label="حالة المعالجة" value={order.financially_processed ? "تمت المعالجة المالية" : "غير معالجة"} />
+                            <OrderDetailItem label="رقم الأسبوع" value={order.processed_week_id ? order.processed_week_id.slice(0, 8) : "-"} />
+                          </div>
 
-                        <span
-                          dir="ltr"
-                          className={`text-[11px] font-bold ${
-                            Number(
-                              transaction.balance_after
-                            ) < 0
-                              ? "text-red-400"
-                              : "text-white/50"
-                          }`}
-                        >
-                          {Number(
-                            transaction.balance_after
-                          ).toFixed(2)}{" "}
-                          د.أ
-                        </span>
+                          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                            <div className="rounded-xl border border-[#eeeae4] bg-[#15191f] p-3">
+                              <div className="mb-2 flex items-center gap-2 text-[9px] font-bold text-[#d6a84f]">
+                                <UserRound size={13} className="text-[#e8b63e]" /> اسم المنتج
+                              </div>
+                              <p className="text-[13px] font-black text-[#650016]">{order.producer?.full_name || "غير محدد"}</p>
+                              <p dir="ltr" className="mt-1 text-[10px] font-semibold text-[#73777e]">{order.producer?.phone || "لا يوجد رقم"}</p>
+                            </div>
+                            <div className="rounded-xl border border-[#eeeae4] bg-[#15191f] p-3">
+                              <div className="mb-2 flex items-center gap-2 text-[9px] font-bold text-[#d6a84f]">
+                                <UserRound size={13} className="text-[#e8b63e]" /> اسم المستهلك
+                              </div>
+                              <p className="text-[13px] font-black text-[#650016]">{order.consumer?.full_name || "غير محدد"}</p>
+                              <p dir="ltr" className="mt-1 text-[10px] font-semibold text-[#73777e]">{order.consumer?.phone || "لا يوجد رقم"}</p>
+                            </div>
+                          </div>
 
-                      </div>
-
+                          <div className="mt-2 flex items-start gap-2 rounded-xl border border-[#eeeae4] bg-[#15191f] p-3">
+                            <CalendarDays size={14} className="mt-0.5 shrink-0 text-[#d6a84f]" />
+                            <div className="min-w-0">
+                              <p className="text-[9px] font-bold text-[#85878d]">ملاحظات الطلب</p>
+                              <p className="mt-1 whitespace-pre-wrap break-words text-[10px] leading-5 text-[#5f6368]">{order.notes || "لا توجد ملاحظات على الطلب."}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 }
@@ -1045,6 +941,15 @@ export default function FinancePage() {
 
       </div>
     </main>
+  );
+}
+
+function OrderDetailItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-[#eeeae4] bg-[#15191f] p-2.5">
+      <p className="text-[8px] font-bold text-[#f3f4f6]/25">{label}</p>
+      <p className="mt-1 break-words text-[10px] font-black text-[#4b4f55]">{value}</p>
+    </div>
   );
 }
 
@@ -1066,13 +971,13 @@ function FinanceSection({
   children: ReactNode;
 }) {
   return (
-    <section className="mb-4 rounded-[26px] border border-white/10 bg-[#12151a] p-4 sm:p-5">
+    <section className="mb-4 rounded-[26px] border border-[#292d33] bg-white p-4 sm:p-5">
 
       <div className="mb-4 flex items-center justify-between gap-3">
 
         <div className="flex items-center gap-3">
 
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8b63e]/10 text-[#d6a84f]">
             {icon}
           </div>
 
@@ -1082,7 +987,7 @@ function FinanceSection({
               {title}
             </h2>
 
-            <p className="mt-1 text-[10px] text-white/25">
+            <p className="mt-1 text-[10px] text-[#f3f4f6]/25">
               {subtitle}
             </p>
 
@@ -1090,7 +995,7 @@ function FinanceSection({
 
         </div>
 
-        <span className="flex h-7 min-w-7 items-center justify-center rounded-lg bg-white/5 px-2 text-[9px] font-bold text-white/30">
+        <span className="flex h-7 min-w-7 items-center justify-center rounded-lg bg-[#f7f4ef] px-2 text-[9px] font-bold text-[#85878d]">
           {count}
         </span>
 
@@ -1119,10 +1024,10 @@ function SummaryCard({
 }) {
   return (
     <div
-      className={`rounded-2xl border bg-[#12151a] p-3 ${
+      className={`rounded-2xl border bg-white p-3 ${
         highlight
-          ? "border-[#d6a84f]/20"
-          : "border-white/7"
+          ? "border-[#e8b63e]/35"
+          : "border-[#eeeae4]"
       }`}
     >
 
@@ -1131,8 +1036,8 @@ function SummaryCard({
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-lg ${
             highlight
-              ? "bg-[#d6a84f]/10 text-[#d6a84f]"
-              : "bg-white/[0.04] text-white/35"
+              ? "bg-[#e8b63e]/10 text-[#d6a84f]"
+              : "bg-[#f7f4ef] text-[#85878d]"
           }`}
         >
           {icon}
@@ -1144,7 +1049,7 @@ function SummaryCard({
 
       </div>
 
-      <p className="mt-2 text-[10px] text-white/30">
+      <p className="mt-2 text-[10px] text-[#85878d]">
         {title}
       </p>
 
@@ -1191,16 +1096,16 @@ function EmptyState({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/7 bg-white/[0.015] py-8 text-center">
+    <div className="rounded-2xl border border-dashed border-[#eeeae4] bg-[#fbfaf8] py-8 text-center">
 
-      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.03] text-white/20">
+      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#15191f] text-[#f3f4f6]/20">
         <History
           size={18}
           strokeWidth={1.6}
         />
       </div>
 
-      <p className="text-[10px] text-white/25">
+      <p className="text-[10px] text-[#f3f4f6]/25">
         {text}
       </p>
 

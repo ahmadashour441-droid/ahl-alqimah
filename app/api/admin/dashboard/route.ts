@@ -221,6 +221,53 @@ export async function GET(request: NextRequest) {
           head: true,
         });
 
+    // Real last-7-days order activity, grouped by Jordan calendar day.
+    const now = new Date();
+    const since = new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000);
+    const { data: recentOrderRows, error: recentOrdersError } =
+      await supabaseAdmin
+        .from("orders")
+        .select("created_at")
+        .gte("created_at", since.toISOString())
+        .order("created_at", { ascending: true });
+
+    if (recentOrdersError) {
+      console.error("ADMIN DASHBOARD WEEKLY ORDERS ERROR:", recentOrdersError);
+    }
+
+    const jordanDateKey = (value: Date) =>
+      new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Amman",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(value);
+
+    const jordanLabel = (value: Date) =>
+      new Intl.DateTimeFormat("ar-JO", {
+        timeZone: "Asia/Amman",
+        weekday: "short",
+      }).format(value);
+
+    const todayKey = jordanDateKey(now);
+    const dailyMap = new Map<string, number>();
+    for (let i = 6; i >= 0; i--) {
+      const day = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      dailyMap.set(jordanDateKey(day), 0);
+    }
+
+    for (const row of recentOrderRows ?? []) {
+      const key = jordanDateKey(new Date(row.created_at));
+      if (dailyMap.has(key)) dailyMap.set(key, (dailyMap.get(key) || 0) + 1);
+    }
+
+    const weeklyOrders = Array.from(dailyMap.entries()).map(([key, count]) => {
+      const date = new Date(`${key}T12:00:00+03:00`);
+      return { date: key, label: jordanLabel(date), count };
+    });
+
+    const totalOrdersToday = dailyMap.get(todayKey) || 0;
+
     const { count: activeOrders } =
       await supabaseAdmin
         .from("orders")
@@ -229,21 +276,6 @@ export async function GET(request: NextRequest) {
           head: true,
         })
         .neq("status", "cancelled");
-
-    /*
-     * =====================================================
-     * طلبات الشحن المعلقة
-     * =====================================================
-     */
-
-    const { count: pendingTopups } =
-      await supabaseAdmin
-        .from("topup_requests")
-        .select("*", {
-          count: "exact",
-          head: true,
-        })
-        .eq("status", "pending");
 
     /*
      * =====================================================
@@ -343,13 +375,14 @@ export async function GET(request: NextRequest) {
           zeroUsers.length,
 
         totalOrders:
+          totalOrdersToday,
+
+        totalOrdersAllTime:
           totalOrders || 0,
 
         activeOrders:
           activeOrders || 0,
 
-        pendingTopups:
-          pendingTopups || 0,
 
         pendingWithdrawals:
           pendingWithdrawals || 0,
@@ -375,6 +408,7 @@ export async function GET(request: NextRequest) {
       users: normalUsers,
 
       currentWeek,
+      weeklyOrders,
     });
   } catch (error) {
     console.error(

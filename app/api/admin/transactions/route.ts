@@ -206,15 +206,15 @@ export async function GET(request: Request) {
     let transactionsQuery = supabaseAdmin
       .from("transactions")
       .select("*")
+      .neq("transaction_type", "topup")
       .order("created_at", {
         ascending: false,
       })
       .limit(limit);
 
     if (!showAll && selectedWeek) {
-      // نعتمد على تاريخ الحركة حتى تظهر
-      // حركات الشحن والسحب أيضًا حتى لو week_id
-      // الخاص بها فارغ.
+      // نعتمد على تاريخ الحركة حتى تظهر الحركات التي
+      // لا تحتوي على week_id، مثل السحب، بشكل صحيح.
       transactionsQuery = transactionsQuery
         .gte(
           "created_at",

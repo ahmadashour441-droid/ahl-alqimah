@@ -10,7 +10,6 @@ import {
   ChevronLeft,
   Clock3,
   RefreshCw,
-  Wallet,
   BanknoteArrowDown,
   Package,
   CreditCard,
@@ -232,9 +231,6 @@ export default function NotificationsPage() {
     type: string
   ) {
     switch (type) {
-      case "topup":
-        return <Wallet size={21} />;
-
       case "withdrawal":
         return (
           <BanknoteArrowDown size={21} />
@@ -271,15 +267,6 @@ export default function NotificationsPage() {
           accent: "border-red-400",
         };
 
-      case "topup":
-        return {
-          wrapper:
-            "border-emerald-500/20 bg-emerald-500/10",
-          icon:
-            "bg-emerald-500/10 text-emerald-400",
-          accent: "border-emerald-400",
-        };
-
       case "withdrawal":
         return {
           wrapper:
@@ -310,9 +297,9 @@ export default function NotificationsPage() {
       default:
         return {
           wrapper:
-            "border-white/10 bg-white/5",
+            "border-[#292d33] bg-[#15191f]",
           icon:
-            "bg-white/5 text-white/50",
+            "bg-[#15191f] text-[#73777e]/50",
           accent: "border-white/30",
         };
     }
@@ -340,13 +327,13 @@ export default function NotificationsPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       <div className="mx-auto w-full max-w-[1100px] px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
 
         {/* HEADER */}
 
-        <header className="mb-6 overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+        <header className="mb-6 overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
           <div className="relative p-5 sm:p-7">
 
@@ -361,7 +348,7 @@ export default function NotificationsPage() {
                   <Bell size={27} />
 
                   {unreadCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-[#12151a] bg-[#d6a84f] px-1 text-[9px] font-black text-[#0b0d10]">
+                    <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-[#650016] bg-[#d6a84f] text-white px-1 text-[9px] font-black text-[#0b0d10]">
                       {unreadCount > 99
                         ? "99+"
                         : unreadCount}
@@ -376,11 +363,11 @@ export default function NotificationsPage() {
                     مركز التنبيهات
                   </p>
 
-                  <h1 className="mt-1 text-2xl font-black text-white sm:text-3xl">
+                  <h1 className="mt-1 text-2xl font-black text-[#f3f4f6] sm:text-3xl">
                     الإشعارات
                   </h1>
 
-                  <p className="mt-1 text-sm text-white/40">
+                  <p className="mt-1 text-sm text-[#73777e]/40">
                     جميع التنبيهات والإشعارات الخاصة بحسابك
                   </p>
 
@@ -397,7 +384,7 @@ export default function NotificationsPage() {
                       markAllAsRead
                     }
                     disabled={markingAll}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] px-5 py-3 text-sm font-black text-[#0b0d10] transition hover:bg-[#e2b962] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] text-white px-5 py-3 text-sm font-black text-[#0b0d10] transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <CheckCheck
                       size={17}
@@ -415,7 +402,7 @@ export default function NotificationsPage() {
                     loadNotifications
                   }
                   disabled={loading}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#181b20] px-5 py-3 text-sm font-bold text-white/70 transition hover:border-[#d6a84f]/30 hover:text-white disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-[#292d33] bg-[#11151a] px-5 py-3 text-sm font-bold text-[#73777e]/70 transition hover:border-[#d6a84f]/30 hover:text-[#f3f4f6] disabled:opacity-50"
                 >
                   <RefreshCw
                     size={17}
@@ -477,17 +464,17 @@ export default function NotificationsPage() {
 
         <div className="mb-6 grid grid-cols-2 gap-3">
 
-          <div className="rounded-[24px] border border-white/10 bg-[#12151a] p-4 shadow-xl sm:p-5">
+          <div className="rounded-[24px] border border-[#292d33] bg-white p-4 shadow-xl sm:p-5">
 
             <div className="flex items-start justify-between gap-3">
 
               <div>
 
-                <p className="text-xs font-bold text-white/35">
+                <p className="text-xs font-bold text-[#73777e]/35">
                   إجمالي الإشعارات
                 </p>
 
-                <p className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                <p className="mt-2 text-2xl font-black text-[#f3f4f6] sm:text-3xl">
                   {notifications.length}
                 </p>
 
@@ -505,7 +492,7 @@ export default function NotificationsPage() {
             className={`rounded-[24px] border p-4 shadow-xl sm:p-5 ${
               unreadCount > 0
                 ? "border-[#d6a84f]/20 bg-[#d6a84f]/5"
-                : "border-white/10 bg-[#12151a]"
+                : "border-[#292d33] bg-white"
             }`}
           >
 
@@ -513,7 +500,7 @@ export default function NotificationsPage() {
 
               <div>
 
-                <p className="text-xs font-bold text-white/35">
+                <p className="text-xs font-bold text-[#73777e]/35">
                   غير مقروء
                 </p>
 
@@ -521,7 +508,7 @@ export default function NotificationsPage() {
                   className={`mt-2 text-2xl font-black sm:text-3xl ${
                     unreadCount > 0
                       ? "text-[#d6a84f]"
-                      : "text-white"
+                      : "text-[#f3f4f6]"
                   }`}
                 >
                   {unreadCount}
@@ -533,7 +520,7 @@ export default function NotificationsPage() {
                 className={`flex h-10 w-10 items-center justify-center rounded-xl ${
                   unreadCount > 0
                     ? "bg-[#d6a84f]/10 text-[#d6a84f]"
-                    : "bg-white/5 text-white/30"
+                    : "bg-[#15191f] text-[#73777e]/30"
                 }`}
               >
                 <CheckCheck size={19} />
@@ -547,19 +534,19 @@ export default function NotificationsPage() {
 
         {/* NOTIFICATIONS */}
 
-        <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+        <section className="overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
-          <div className="border-b border-white/5 p-5 sm:p-6">
+          <div className="border-b border-[#eeeae4] p-5 sm:p-6">
 
             <div className="flex items-center justify-between">
 
               <div>
 
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-lg font-black text-[#f3f4f6]">
                   سجل الإشعارات
                 </h2>
 
-                <p className="mt-1 text-xs text-white/30">
+                <p className="mt-1 text-xs text-[#73777e]/30">
                   آخر التنبيهات المتعلقة بحسابك
                 </p>
 
@@ -585,7 +572,7 @@ export default function NotificationsPage() {
                 />
               </div>
 
-              <p className="mt-5 font-bold text-white/60">
+              <p className="mt-5 font-bold text-[#73777e]/60">
                 جاري تحميل الإشعارات...
               </p>
 
@@ -593,15 +580,15 @@ export default function NotificationsPage() {
           ) : notifications.length === 0 ? (
             <div className="p-12 text-center">
 
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-white/5 text-white/20">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-[#15191f] text-[#73777e]/20">
                 <Bell size={36} />
               </div>
 
-              <h3 className="mt-5 font-black text-white">
+              <h3 className="mt-5 font-black text-[#f3f4f6]">
                 لا توجد إشعارات
               </h3>
 
-              <p className="mt-2 text-sm text-white/30">
+              <p className="mt-2 text-sm text-[#73777e]/30">
                 عندما يصلك إشعار سيظهر هنا.
               </p>
 
@@ -657,21 +644,21 @@ export default function NotificationsPage() {
 
                               <div className="flex flex-wrap items-center gap-2">
 
-                                <h3 className="font-black text-white">
+                                <h3 className="font-black text-[#f3f4f6]">
                                   {
                                     notification.title
                                   }
                                 </h3>
 
                                 {!notification.is_read && (
-                                  <span className="rounded-full bg-[#d6a84f] px-2.5 py-1 text-[10px] font-black text-[#0b0d10]">
+                                  <span className="rounded-full bg-[#d6a84f] text-white px-2.5 py-1 text-[10px] font-black text-[#0b0d10]">
                                     جديد
                                   </span>
                                 )}
 
                               </div>
 
-                              <p className="mt-2 text-sm leading-7 text-white/55">
+                              <p className="mt-2 text-sm leading-7 text-[#73777e]/55">
                                 {
                                   notification.message
                                 }
@@ -679,7 +666,7 @@ export default function NotificationsPage() {
 
                             </div>
 
-                            <div className="flex shrink-0 items-center gap-1.5 text-[10px] text-white/25">
+                            <div className="flex shrink-0 items-center gap-1.5 text-[10px] text-[#73777e]/25">
 
                               <Clock3
                                 size={13}
@@ -705,7 +692,7 @@ export default function NotificationsPage() {
                                     notification.id
                                   )
                                 }
-                                className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#181b20] px-4 py-2.5 text-xs font-bold text-white/55 transition hover:border-[#d6a84f]/30 hover:bg-[#d6a84f]/5 hover:text-[#d6a84f]"
+                                className="flex items-center gap-2 rounded-xl border border-[#292d33] bg-[#11151a] px-4 py-2.5 text-xs font-bold text-[#73777e]/55 transition hover:border-[#d6a84f]/30 hover:bg-[#d6a84f]/5 hover:text-[#d6a84f]"
                               >
                                 <Check
                                   size={15}
@@ -736,7 +723,7 @@ export default function NotificationsPage() {
 
           <a
             href="/dashboard"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#12151a] py-4 text-sm font-bold text-white/50 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#292d33] bg-white py-4 text-sm font-bold text-[#73777e]/50 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <ArrowLeft size={17} />
             العودة إلى لوحة التحكم

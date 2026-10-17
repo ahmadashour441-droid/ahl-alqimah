@@ -508,13 +508,13 @@ export default function AdminUsersPage() {
     return (
       <main
         dir="rtl"
-        className="min-h-screen bg-[#0b0d10] text-white"
+        className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
       >
         <div className="flex min-h-screen items-center justify-center">
           <div className="text-center">
-            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-[#d6a84f]" />
+            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-[#292d33] border-t-[#d6a84f]" />
 
-            <p className="text-sm text-white/45">
+            <p className="text-sm text-[#a1a1aa]/45">
               جاري تحميل المستخدمين...
             </p>
           </div>
@@ -526,13 +526,13 @@ export default function AdminUsersPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       {/* OVERLAY */}
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -540,7 +540,7 @@ export default function AdminUsersPage() {
       {/* SIDE MENU */}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[84%] max-w-[350px] border-l border-white/10 bg-[#101317] shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-[84%] max-w-[350px] border-l border-[#292d33] bg-[#101820] shadow-2xl transition-transform duration-300 ${
           menuOpen
             ? "translate-x-0"
             : "translate-x-full"
@@ -548,7 +548,7 @@ export default function AdminUsersPage() {
       >
         <div className="flex h-full flex-col">
 
-          <div className="border-b border-white/10 p-5">
+          <div className="border-b border-[#292d33] p-5">
 
             <div className="flex items-center justify-between">
 
@@ -566,7 +566,7 @@ export default function AdminUsersPage() {
                     أهل القمة
                   </h2>
 
-                  <p className="mt-0.5 text-[10px] text-white/35">
+                  <p className="mt-0.5 text-[10px] text-[#a1a1aa]/35">
                     لوحة إدارة النظام
                   </p>
                 </div>
@@ -577,7 +577,7 @@ export default function AdminUsersPage() {
                 onClick={() =>
                   setMenuOpen(false)
                 }
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white/50"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#15191f] text-[#a1a1aa]/50"
               >
                 <X
                   size={18}
@@ -629,20 +629,13 @@ export default function AdminUsersPage() {
               }
             />
 
-            <MenuItem
-              icon={
-                <ArrowUpCircle
-                  size={18}
-                  strokeWidth={1.8}
-                />
-              }
-              title="طلبات الشحن"
-              onClick={() =>
-                goTo("/admin/topups")
-              }
-            />
+            
 
             <MenuItem
+              icon={<Wallet size={18} strokeWidth={1.8} />}
+              title="الأرصدة"
+              onClick={() => goTo("/admin/balances")}
+            /><MenuItem
               icon={
                 <ArrowDownCircle
                   size={18}
@@ -709,7 +702,7 @@ export default function AdminUsersPage() {
 
           </div>
 
-          <div className="border-t border-white/10 p-3">
+          <div className="border-t border-[#292d33] p-3">
 
             <button
               onClick={logout}
@@ -744,7 +737,7 @@ export default function AdminUsersPage() {
             onClick={() =>
               setMenuOpen(true)
             }
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <Menu
               size={20}
@@ -758,7 +751,7 @@ export default function AdminUsersPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-white/45">
+            <p className="mt-0.5 text-[11px] text-[#a1a1aa]/45">
               المستخدمون
             </p>
 
@@ -766,7 +759,7 @@ export default function AdminUsersPage() {
 
           <button
             onClick={loadUsers}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#a1a1aa]/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <RefreshCw
               size={18}
@@ -812,7 +805,7 @@ export default function AdminUsersPage() {
 
         {/* PAGE INTRO */}
 
-        <section className="mb-4 rounded-[26px] border border-white/10 bg-gradient-to-br from-[#171a20] to-[#101216] p-5">
+        <section className="mb-4 rounded-[26px] border border-[#292d33] bg-gradient-to-br from-[#fffaf0] to-[#11151a] p-5">
 
           <div className="flex items-center gap-4">
 
@@ -825,7 +818,7 @@ export default function AdminUsersPage() {
 
             <div className="min-w-0">
 
-              <p className="text-[11px] text-white/35">
+              <p className="text-[11px] text-[#a1a1aa]/35">
                 إدارة الحسابات
               </p>
 
@@ -833,7 +826,7 @@ export default function AdminUsersPage() {
                 المستخدمون
               </h2>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 {normalUsers.length} مستخدم
                 مسجل في النظام
               </p>
@@ -846,7 +839,7 @@ export default function AdminUsersPage() {
 
         {/* ADD USER */}
 
-        <section className="mb-5 rounded-[26px] border border-white/10 bg-[#12151a] p-5">
+        <section className="mb-5 rounded-[26px] border border-[#292d33] bg-white p-5">
 
           <div className="mb-5 flex items-center gap-3">
 
@@ -863,7 +856,7 @@ export default function AdminUsersPage() {
                 إضافة مستخدم جديد
               </h2>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 إنشاء حساب جديد للنظام
               </p>
 
@@ -917,7 +910,7 @@ export default function AdminUsersPage() {
 
             <div>
 
-              <label className="mb-2 block text-[11px] font-semibold text-white/55">
+              <label className="mb-2 block text-[11px] font-semibold text-[#a1a1aa]/55">
                 نوع الحساب
               </label>
 
@@ -938,7 +931,7 @@ export default function AdminUsersPage() {
                         | "admin"
                     )
                   }
-                  className="w-full appearance-none rounded-xl border border-white/10 bg-[#0e1115] px-10 py-3 text-sm text-white outline-none transition focus:border-[#d6a84f]/40"
+                  className="w-full appearance-none rounded-xl border border-[#292d33] bg-[#111923] px-10 py-3 text-sm text-[#f3f4f6] outline-none transition focus:border-[#d6a84f]/40"
                 >
                   <option value="user">
                     مستخدم
@@ -961,7 +954,7 @@ export default function AdminUsersPage() {
             <button
               onClick={addUser}
               disabled={saving}
-              className="flex items-center gap-2 rounded-xl bg-[#d6a84f] px-5 py-3 text-sm font-bold text-black transition hover:bg-[#e2b860] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-[#d6a84f] text-white px-5 py-3 text-sm font-bold text-[#650016] transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <UserPlus
                 size={17}
@@ -980,9 +973,9 @@ export default function AdminUsersPage() {
 
         {/* USERS */}
 
-        <section className="overflow-hidden rounded-[26px] border border-white/10 bg-[#12151a]">
+        <section className="overflow-hidden rounded-[26px] border border-[#292d33] bg-white">
 
-          <div className="border-b border-white/10 p-5">
+          <div className="border-b border-[#292d33] p-5">
 
             <div className="mb-4 flex items-center justify-between gap-3">
 
@@ -992,7 +985,7 @@ export default function AdminUsersPage() {
                   قائمة المستخدمين
                 </h2>
 
-                <p className="mt-1 text-[10px] text-white/30">
+                <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                   {filteredUsers.length} من {users.length} حساب
                 </p>
 
@@ -1024,13 +1017,13 @@ export default function AdminUsersPage() {
                   setSearch(e.target.value)
                 }
                 placeholder="بحث شامل: الاسم، الهاتف، ID، الرصيد، الصلاحية، الحالة..."
-                className="w-full rounded-2xl border border-white/10 bg-[#0e1115] py-3.5 pr-11 pl-11 text-sm text-white placeholder:text-white/20 outline-none transition focus:border-[#d6a84f]/40"
+                className="w-full rounded-2xl border border-[#292d33] bg-[#111923] py-3.5 pr-11 pl-11 text-sm text-[#f3f4f6] placeholder:text-[#a1a1aa]/20 outline-none transition focus:border-[#d6a84f]/40"
               />
 
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute left-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-white/5 text-white/40 transition hover:bg-white/10 hover:text-white"
+                  className="absolute left-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-[#15191f] text-[#a1a1aa]/40 transition hover:bg-white/10 hover:text-[#f3f4f6]"
                   aria-label="مسح البحث"
                 >
                   <X
@@ -1045,7 +1038,7 @@ export default function AdminUsersPage() {
             {/* SEARCH STATUS */}
 
             {search.trim() && (
-              <div className="mt-3 flex items-center gap-2 text-[10px] text-white/35">
+              <div className="mt-3 flex items-center gap-2 text-[10px] text-[#a1a1aa]/35">
 
                 <SlidersHorizontal
                   size={13}
@@ -1074,11 +1067,11 @@ export default function AdminUsersPage() {
 
                 <Search
                   size={24}
-                  className="mx-auto mb-3 text-white/15"
+                  className="mx-auto mb-3 text-[#a1a1aa]/15"
                   strokeWidth={1.5}
                 />
 
-                <p className="text-sm text-white/30">
+                <p className="text-sm text-[#a1a1aa]/30">
                   {search
                     ? "لا توجد نتائج مطابقة للبحث."
                     : "لا يوجد مستخدمون."}
@@ -1108,39 +1101,39 @@ export default function AdminUsersPage() {
 
             <table className="w-full text-sm">
 
-              <thead className="border-b border-white/10 bg-[#0f1216]">
+              <thead className="border-b border-[#292d33] bg-[#f8f5f0]">
 
                 <tr>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     المستخدم
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     الهاتف
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     كلمة المرور
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     الصلاحية
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     الرصيد
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     الحالة
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     تاريخ الإنشاء
                   </th>
 
-                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-white/45">
+                  <th className="px-5 py-4 text-right text-[11px] font-semibold text-[#a1a1aa]/45">
                     الإجراءات
                   </th>
 
@@ -1160,11 +1153,11 @@ export default function AdminUsersPage() {
 
                       <Search
                         size={25}
-                        className="mx-auto mb-3 text-white/15"
+                        className="mx-auto mb-3 text-[#a1a1aa]/15"
                         strokeWidth={1.5}
                       />
 
-                      <p className="text-sm text-white/30">
+                      <p className="text-sm text-[#a1a1aa]/30">
                         {search
                           ? "لا توجد نتائج مطابقة للبحث."
                           : "لا يوجد مستخدمون."}
@@ -1196,7 +1189,7 @@ export default function AdminUsersPage() {
                               {user.full_name}
                             </p>
 
-                            <p className="mt-1 text-[9px] text-white/25">
+                            <p className="mt-1 text-[9px] text-[#a1a1aa]/25">
                               ID: {user.id}
                             </p>
 
@@ -1207,7 +1200,7 @@ export default function AdminUsersPage() {
                       </td>
 
                       <td
-                        className="px-5 py-4 text-white/60"
+                        className="px-5 py-4 text-[#a1a1aa]/60"
                         dir="ltr"
                       >
                         {user.phone}
@@ -1236,7 +1229,7 @@ export default function AdminUsersPage() {
                                 user.balance
                               ) < 0
                             ? "text-red-400"
-                            : "text-white/40"
+                            : "text-[#a1a1aa]/40"
                         }`}
                       >
                         {Number(
@@ -1255,7 +1248,7 @@ export default function AdminUsersPage() {
 
                       </td>
 
-                      <td className="px-5 py-4 text-white/35">
+                      <td className="px-5 py-4 text-[#a1a1aa]/35">
                         {formatDate(
                           user.created_at
                         )}
@@ -1269,7 +1262,7 @@ export default function AdminUsersPage() {
                             onClick={() =>
                               openEdit(user)
                             }
-                            className="flex items-center gap-1.5 rounded-xl bg-white/5 px-3 py-2 text-xs font-semibold text-white/65 transition hover:bg-[#d6a84f]/10 hover:text-[#d6a84f]"
+                            className="flex items-center gap-1.5 rounded-xl bg-[#15191f] px-3 py-2 text-xs font-semibold text-[#a1a1aa]/65 transition hover:bg-[#d6a84f]/10 hover:text-[#d6a84f]"
                           >
                             <Pencil
                               size={14}
@@ -1321,13 +1314,13 @@ export default function AdminUsersPage() {
         >
 
           <div
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl"
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-[#292d33] bg-white shadow-2xl"
             onClick={(e) =>
               e.stopPropagation()
             }
           >
 
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-[#12151a] p-5">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#292d33] bg-white p-5">
 
               <div>
 
@@ -1335,7 +1328,7 @@ export default function AdminUsersPage() {
                   تعديل المستخدم
                 </h2>
 
-                <p className="mt-1 text-[10px] text-white/30">
+                <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                   تعديل بيانات الحساب والصلاحيات
                 </p>
 
@@ -1345,7 +1338,7 @@ export default function AdminUsersPage() {
                 onClick={() =>
                   setShowEdit(false)
                 }
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-white/50"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#15191f] text-[#a1a1aa]/50"
               >
                 <X
                   size={17}
@@ -1403,7 +1396,7 @@ export default function AdminUsersPage() {
 
                 <div>
 
-                  <label className="mb-2 block text-[11px] font-semibold text-white/55">
+                  <label className="mb-2 block text-[11px] font-semibold text-[#a1a1aa]/55">
                     الصلاحية
                   </label>
 
@@ -1424,7 +1417,7 @@ export default function AdminUsersPage() {
                             | "admin"
                         )
                       }
-                      className="w-full appearance-none rounded-xl border border-white/10 bg-[#0e1115] px-10 py-3 text-sm text-white outline-none focus:border-[#d6a84f]/40"
+                      className="w-full appearance-none rounded-xl border border-[#292d33] bg-[#111923] px-10 py-3 text-sm text-[#f3f4f6] outline-none focus:border-[#d6a84f]/40"
                     >
                       <option value="user">
                         مستخدم
@@ -1454,7 +1447,7 @@ export default function AdminUsersPage() {
                       حالة الحساب
                     </p>
 
-                    <p className="mt-1 text-[10px] text-white/30">
+                    <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                       المستخدم الموقوف لا يستطيع استخدام النظام.
                     </p>
 
@@ -1517,13 +1510,13 @@ export default function AdminUsersPage() {
 
               {/* BALANCE */}
 
-              <div className="rounded-2xl border border-white/8 bg-[#0e1115] p-4">
+              <div className="rounded-2xl border border-white/8 bg-[#111923] p-4">
 
                 <div className="flex items-center justify-between">
 
                   <div>
 
-                    <p className="text-[10px] text-white/30">
+                    <p className="text-[10px] text-[#a1a1aa]/30">
                       الرصيد الحالي
                     </p>
 
@@ -1537,7 +1530,7 @@ export default function AdminUsersPage() {
                               selectedUser.balance
                             ) < 0
                           ? "text-red-400"
-                          : "text-white/40"
+                          : "text-[#a1a1aa]/40"
                       }`}
                     >
                       {Number(
@@ -1557,7 +1550,7 @@ export default function AdminUsersPage() {
 
                 </div>
 
-                <p className="mt-2 text-[9px] text-white/25">
+                <p className="mt-2 text-[9px] text-[#a1a1aa]/25">
                   تعديل الرصيد يتم من خلال الحركات المالية حتى يبقى السجل المالي صحيحًا.
                 </p>
 
@@ -1565,13 +1558,13 @@ export default function AdminUsersPage() {
 
             </div>
 
-            <div className="flex items-center justify-end gap-2 border-t border-white/10 p-5">
+            <div className="flex items-center justify-end gap-2 border-t border-[#292d33] p-5">
 
               <button
                 onClick={() =>
                   setShowEdit(false)
                 }
-                className="rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold text-white/60 transition hover:bg-white/5"
+                className="rounded-xl border border-[#292d33] px-5 py-3 text-sm font-semibold text-[#a1a1aa]/60 transition hover:bg-[#15191f]"
               >
                 إلغاء
               </button>
@@ -1579,7 +1572,7 @@ export default function AdminUsersPage() {
               <button
                 onClick={saveEdit}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-xl bg-[#d6a84f] px-5 py-3 text-sm font-bold text-black transition hover:bg-[#e2b860] disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-[#d6a84f] text-white px-5 py-3 text-sm font-bold text-[#650016] transition hover:bg-[#d6a84f] disabled:opacity-50"
               >
 
                 <Save
@@ -1612,7 +1605,7 @@ export default function AdminUsersPage() {
         >
 
           <div
-            className="w-full max-w-md rounded-[28px] border border-white/10 bg-[#12151a] p-6 shadow-2xl"
+            className="w-full max-w-md rounded-[28px] border border-[#292d33] bg-white p-6 shadow-2xl"
             onClick={(e) =>
               e.stopPropagation()
             }
@@ -1631,7 +1624,7 @@ export default function AdminUsersPage() {
                 حذف المستخدم؟
               </h2>
 
-              <p className="mt-2 text-sm text-white/40">
+              <p className="mt-2 text-sm text-[#a1a1aa]/40">
                 هل أنت متأكد أنك تريد حذف:
               </p>
 
@@ -1640,7 +1633,7 @@ export default function AdminUsersPage() {
               </p>
 
               <p
-                className="mt-1 text-xs text-white/35"
+                className="mt-1 text-xs text-[#a1a1aa]/35"
                 dir="ltr"
               >
                 {selectedUser.phone}
@@ -1660,7 +1653,7 @@ export default function AdminUsersPage() {
                 onClick={() =>
                   setShowDelete(false)
                 }
-                className="flex-1 rounded-xl border border-white/10 px-4 py-3 text-sm font-semibold text-white/60"
+                className="flex-1 rounded-xl border border-[#292d33] px-4 py-3 text-sm font-semibold text-[#a1a1aa]/60"
               >
                 إلغاء
               </button>
@@ -1668,7 +1661,7 @@ export default function AdminUsersPage() {
               <button
                 onClick={deleteUser}
                 disabled={saving}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-700 disabled:opacity-50"
+                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-[#f3f4f6] transition hover:bg-red-700 disabled:opacity-50"
               >
                 {saving
                   ? "جاري الحذف..."
@@ -1709,7 +1702,7 @@ function InputField({
   return (
     <div>
 
-      <label className="mb-2 block text-[11px] font-semibold text-white/55">
+      <label className="mb-2 block text-[11px] font-semibold text-[#a1a1aa]/55">
         {label}
       </label>
 
@@ -1727,7 +1720,7 @@ function InputField({
           }
           placeholder={placeholder}
           dir={dir}
-          className="w-full rounded-xl border border-white/10 bg-[#0e1115] px-10 py-3 text-sm text-white placeholder:text-white/20 outline-none transition focus:border-[#d6a84f]/40"
+          className="w-full rounded-xl border border-[#292d33] bg-[#111923] px-10 py-3 text-sm text-[#f3f4f6] placeholder:text-[#a1a1aa]/20 outline-none transition focus:border-[#d6a84f]/40"
         />
 
       </div>
@@ -1817,7 +1810,7 @@ function MobileUserCard({
   onDelete: () => void;
 }) {
   return (
-    <div className="mb-3 rounded-2xl border border-white/7 bg-[#0f1216] p-4">
+    <div className="mb-3 rounded-2xl border border-white/7 bg-[#f8f5f0] p-4">
 
       <div className="flex items-start justify-between gap-3">
 
@@ -1836,7 +1829,7 @@ function MobileUserCard({
             </p>
 
             <p
-              className="mt-1 text-[10px] text-white/35"
+              className="mt-1 text-[10px] text-[#a1a1aa]/35"
               dir="ltr"
             >
               {user.phone}
@@ -1864,7 +1857,7 @@ function MobileUserCard({
               ? "text-emerald-400"
               : Number(user.balance) < 0
               ? "text-red-400"
-              : "text-white/40"
+              : "text-[#a1a1aa]/40"
           }
         />
 
@@ -1932,7 +1925,7 @@ function MobileUserCard({
 function InfoBox({
   title,
   value,
-  valueClass = "text-white/65",
+  valueClass = "text-[#a1a1aa]/65",
   dir,
   mono,
 }: {
@@ -1945,7 +1938,7 @@ function InfoBox({
   return (
     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
 
-      <p className="text-[9px] text-white/25">
+      <p className="text-[9px] text-[#a1a1aa]/25">
         {title}
       </p>
 
@@ -1983,7 +1976,7 @@ function MenuItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right transition ${
         active
           ? "bg-[#d6a84f]/10 text-[#d6a84f]"
-          : "text-white/55 hover:bg-white/5 hover:text-white"
+          : "text-[#a1a1aa]/55 hover:bg-[#15191f] hover:text-[#f3f4f6]"
       }`}
     >
 
@@ -2003,7 +1996,7 @@ function MenuItem({
 
       <ChevronLeft
         size={14}
-        className="text-white/20"
+        className="text-[#a1a1aa]/20"
       />
 
     </button>

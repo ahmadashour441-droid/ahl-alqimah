@@ -72,7 +72,7 @@ type Order = {
 
 export default function AdminOrdersPage() {
     const thClass =
-  "px-4 py-3 text-right text-xs font-bold text-white/50 whitespace-nowrap";
+  "px-4 py-3 text-right text-xs font-bold text-[#a1a1aa]/50 whitespace-nowrap";
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<User[]>([]);
 
@@ -823,7 +823,7 @@ export default function AdminOrdersPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       {/* =====================================================
           OVERLAY
@@ -831,7 +831,7 @@ export default function AdminOrdersPage() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm"
           onClick={() =>
             setMenuOpen(false)
           }
@@ -843,7 +843,7 @@ export default function AdminOrdersPage() {
       ===================================================== */}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[84%] max-w-[350px] border-l border-white/10 bg-[#101317] shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-[84%] max-w-[350px] border-l border-[#292d33] bg-[#101820] shadow-2xl transition-transform duration-300 ${
           menuOpen
             ? "translate-x-0"
             : "translate-x-full"
@@ -851,7 +851,7 @@ export default function AdminOrdersPage() {
       >
         <div className="flex h-full flex-col">
 
-          <div className="border-b border-white/10 p-5">
+          <div className="border-b border-[#292d33] p-5">
 
             <div className="flex items-center justify-between">
 
@@ -870,7 +870,7 @@ export default function AdminOrdersPage() {
                     أهل القمة
                   </h2>
 
-                  <p className="mt-0.5 text-[10px] text-white/35">
+                  <p className="mt-0.5 text-[10px] text-[#a1a1aa]/35">
                     لوحة إدارة النظام
                   </p>
 
@@ -882,7 +882,7 @@ export default function AdminOrdersPage() {
                 onClick={() =>
                   setMenuOpen(false)
                 }
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white/50"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#15191f] text-[#a1a1aa]/50"
               >
                 <X
                   size={18}
@@ -936,20 +936,13 @@ export default function AdminOrdersPage() {
               }
             />
 
-            <MenuItem
-              icon={
-                <ArrowUpCircle
-                  size={18}
-                  strokeWidth={1.8}
-                />
-              }
-              title="طلبات الشحن"
-              onClick={() =>
-                goTo("/admin/topups")
-              }
-            />
+            
 
             <MenuItem
+              icon={<Wallet size={18} strokeWidth={1.8} />}
+              title="الأرصدة"
+              onClick={() => goTo("/admin/balances")}
+            /><MenuItem
               icon={
                 <ArrowDownCircle
                   size={18}
@@ -1016,7 +1009,7 @@ export default function AdminOrdersPage() {
 
           </div>
 
-          <div className="border-t border-white/10 p-3">
+          <div className="border-t border-[#292d33] p-3">
 
             <button
               onClick={logout}
@@ -1053,7 +1046,7 @@ export default function AdminOrdersPage() {
             onClick={() =>
               setMenuOpen(true)
             }
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <Menu
               size={20}
@@ -1067,7 +1060,7 @@ export default function AdminOrdersPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-white/45">
+            <p className="mt-0.5 text-[11px] text-[#a1a1aa]/45">
               إدارة الطلبات
             </p>
 
@@ -1075,7 +1068,7 @@ export default function AdminOrdersPage() {
 
           <button
             onClick={loadData}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#a1a1aa]/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <RefreshCw
               size={18}
@@ -1121,7 +1114,7 @@ export default function AdminOrdersPage() {
 
         {/* PAGE INTRO */}
 
-        <section className="mb-4 rounded-[26px] border border-white/10 bg-gradient-to-br from-[#171a20] to-[#101216] p-5">
+        <section className="mb-4 rounded-[26px] border border-[#292d33] bg-gradient-to-br from-[#fffaf0] to-[#11151a] p-5">
 
           <div className="flex items-center gap-4">
 
@@ -1134,7 +1127,7 @@ export default function AdminOrdersPage() {
 
             <div className="min-w-0">
 
-              <p className="text-[11px] text-white/35">
+              <p className="text-[11px] text-[#a1a1aa]/35">
                 إدارة العمليات
               </p>
 
@@ -1142,7 +1135,7 @@ export default function AdminOrdersPage() {
                 الطلبات
               </h2>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 إنشاء ومتابعة وإدارة الطلبات والحسابات المرتبطة بها
               </p>
 
@@ -1226,7 +1219,7 @@ export default function AdminOrdersPage() {
 
         {/* CREATE ORDER */}
 
-        <section className="mb-5 rounded-[26px] border border-white/10 bg-[#12151a] p-5">
+        <section className="mb-5 rounded-[26px] border border-[#292d33] bg-white p-5">
 
           <div className="mb-5 flex items-center gap-3">
 
@@ -1243,7 +1236,7 @@ export default function AdminOrdersPage() {
                 إنشاء طلب جديد
               </h2>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 إضافة طلب وتحديد المنتج والكابتن
               </p>
 
@@ -1364,17 +1357,17 @@ export default function AdminOrdersPage() {
 
               <div className="mt-2 flex items-end gap-2">
 
-                <p className="text-2xl font-black text-white">
+                <p className="text-2xl font-black text-[#f3f4f6]">
                   {commissionPreview}
                 </p>
 
-                <span className="mb-1 text-[11px] text-white/35">
+                <span className="mb-1 text-[11px] text-[#a1a1aa]/35">
                   د.أ
                 </span>
 
               </div>
 
-              <p className="mt-1 text-[10px] text-white/30">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                 نسبة العمولة: {commissionRate}%
               </p>
 
@@ -1382,7 +1375,7 @@ export default function AdminOrdersPage() {
 
             <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
 
-              <div className="flex items-center gap-2 text-white/45">
+              <div className="flex items-center gap-2 text-[#a1a1aa]/45">
 
                 <Users
                   size={16}
@@ -1395,11 +1388,11 @@ export default function AdminOrdersPage() {
 
               </div>
 
-              <p className="mt-2 text-2xl font-black text-white">
+              <p className="mt-2 text-2xl font-black text-[#f3f4f6]">
                 {activeUsers.length}
               </p>
 
-              <p className="mt-1 text-[10px] text-white/25">
+              <p className="mt-1 text-[10px] text-[#a1a1aa]/25">
                 يمكن اختيارهم كمنتج أو كابتن
               </p>
 
@@ -1434,7 +1427,7 @@ export default function AdminOrdersPage() {
                 creating ||
                 loadingUsers
               }
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#d6a84f] px-5 py-3 text-sm font-bold text-black transition hover:bg-[#e2b860] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#d6a84f] text-white px-5 py-3 text-sm font-bold text-[#650016] transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
 
               <Plus
@@ -1454,9 +1447,9 @@ export default function AdminOrdersPage() {
 
         {/* ORDERS */}
 
-        <section className="overflow-hidden rounded-[26px] border border-white/10 bg-[#12151a]">
+        <section className="overflow-hidden rounded-[26px] border border-[#292d33] bg-white">
 
-          <div className="border-b border-white/10 p-5">
+          <div className="border-b border-[#292d33] p-5">
 
             <div className="flex items-center justify-between gap-3">
 
@@ -1466,7 +1459,7 @@ export default function AdminOrdersPage() {
                   جميع الطلبات
                 </h2>
 
-                <p className="mt-1 text-[10px] text-white/30">
+                <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                   {orders.length} طلب مسجل
                 </p>
 
@@ -1490,9 +1483,9 @@ export default function AdminOrdersPage() {
 
               <div className="text-center">
 
-                <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-[#d6a84f]" />
+                <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-[#292d33] border-t-[#d6a84f]" />
 
-                <p className="text-sm text-white/35">
+                <p className="text-sm text-[#a1a1aa]/35">
                   جاري تحميل الطلبات...
                 </p>
 
@@ -1504,11 +1497,11 @@ export default function AdminOrdersPage() {
 
               <ClipboardList
                 size={32}
-                className="mx-auto mb-4 text-white/10"
+                className="mx-auto mb-4 text-[#a1a1aa]/10"
                 strokeWidth={1.4}
               />
 
-              <p className="text-sm text-white/30">
+              <p className="text-sm text-[#a1a1aa]/30">
                 لا توجد طلبات حتى الآن
               </p>
 
@@ -1546,7 +1539,7 @@ export default function AdminOrdersPage() {
 
                 <table className="w-full text-sm">
 
-                  <thead className="border-b border-white/10 bg-[#0f1216]">
+                  <thead className="border-b border-[#292d33] bg-[#f8f5f0]">
 
                     <tr>
 
@@ -1643,14 +1636,14 @@ export default function AdminOrdersPage() {
             onClick={(e) =>
               e.stopPropagation()
             }
-            className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl"
+            className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-[#292d33] bg-white shadow-2xl"
           >
 
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-[#12151a] p-5">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#292d33] bg-white p-5">
 
               <div>
 
-                <p className="text-[10px] text-white/30">
+                <p className="text-[10px] text-[#a1a1aa]/30">
                   تعديل بيانات الطلب
                 </p>
 
@@ -1665,7 +1658,7 @@ export default function AdminOrdersPage() {
                   closeEditModal
                 }
                 disabled={updating}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white/50 transition hover:bg-white/10 hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#15191f] text-[#a1a1aa]/50 transition hover:bg-white/10 hover:text-[#f3f4f6]"
               >
                 <X
                   size={18}
@@ -1828,13 +1821,13 @@ export default function AdminOrdersPage() {
                     }
                   </p>
 
-                  <span className="mb-1 text-[11px] text-white/30">
+                  <span className="mb-1 text-[11px] text-[#a1a1aa]/30">
                     د.أ
                   </span>
 
                 </div>
 
-                <p className="mt-1 text-[10px] text-white/30">
+                <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
                   نسبة العمولة:{" "}
                   {editCommissionRate}%
                 </p>
@@ -1868,7 +1861,7 @@ export default function AdminOrdersPage() {
                     className="mt-0.5 shrink-0 text-[#d6a84f]"
                   />
 
-                  <p className="text-[11px] leading-6 text-white/45">
+                  <p className="text-[11px] leading-6 text-[#a1a1aa]/45">
                     عند حفظ التعديل سيتم عكس العمولة السابقة وتطبيق العمولة الجديدة على المنتج والكابتن المختارين.
                   </p>
 
@@ -1878,14 +1871,14 @@ export default function AdminOrdersPage() {
 
             </div>
 
-            <div className="flex flex-col-reverse gap-2 border-t border-white/10 p-5 sm:flex-row sm:justify-end">
+            <div className="flex flex-col-reverse gap-2 border-t border-[#292d33] p-5 sm:flex-row sm:justify-end">
 
               <button
                 onClick={
                   closeEditModal
                 }
                 disabled={updating}
-                className="rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold text-white/55 transition hover:bg-white/5 hover:text-white"
+                className="rounded-xl border border-[#292d33] px-5 py-3 text-sm font-semibold text-[#a1a1aa]/55 transition hover:bg-[#15191f] hover:text-[#f3f4f6]"
               >
                 إلغاء
               </button>
@@ -1897,7 +1890,7 @@ export default function AdminOrdersPage() {
                 disabled={
                   updating
                 }
-                className="flex items-center justify-center gap-2 rounded-xl bg-[#d6a84f] px-5 py-3 text-sm font-bold text-black transition hover:bg-[#e2b860] disabled:opacity-50"
+                className="flex items-center justify-center gap-2 rounded-xl bg-[#d6a84f] text-white px-5 py-3 text-sm font-bold text-[#650016] transition hover:bg-[#d6a84f] disabled:opacity-50"
               >
 
                 <Pencil
@@ -2022,7 +2015,7 @@ function SearchUserSelect({
   return (
     <div className="relative">
 
-      <label className="mb-2 block text-[11px] font-semibold text-white/50">
+      <label className="mb-2 block text-[11px] font-semibold text-[#a1a1aa]/50">
         {label}
       </label>
 
@@ -2058,7 +2051,7 @@ function SearchUserSelect({
             placeholder
           }
           disabled={disabled}
-          className="w-full rounded-xl border border-white/10 bg-[#0e1115] py-3 pr-10 pl-10 text-sm text-white placeholder:text-white/20 outline-none transition focus:border-[#d6a84f]/40"
+          className="w-full rounded-xl border border-[#292d33] bg-[#111923] py-3 pr-10 pl-10 text-sm text-[#f3f4f6] placeholder:text-[#a1a1aa]/20 outline-none transition focus:border-[#d6a84f]/40"
         />
 
         {value && (
@@ -2068,7 +2061,7 @@ function SearchUserSelect({
               clearSelection
             }
             disabled={disabled}
-            className="absolute left-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-white/5 text-white/35 transition hover:bg-white/10 hover:text-white"
+            className="absolute left-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-[#15191f] text-[#a1a1aa]/35 transition hover:bg-white/10 hover:text-[#f3f4f6]"
           >
             <X
               size={14}
@@ -2080,7 +2073,7 @@ function SearchUserSelect({
       </div>
 
       {open && !disabled && (
-        <div className="absolute right-0 left-0 top-[calc(100%+5px)] z-[80] max-h-[260px] overflow-y-auto rounded-2xl border border-white/10 bg-[#15191e] shadow-2xl">
+        <div className="absolute right-0 left-0 top-[calc(100%+5px)] z-[80] max-h-[260px] overflow-y-auto rounded-2xl border border-[#292d33] bg-[#15191e] shadow-2xl">
 
           {filteredUsers.length ===
           0 ? (
@@ -2088,10 +2081,10 @@ function SearchUserSelect({
 
               <Search
                 size={20}
-                className="mx-auto mb-2 text-white/15"
+                className="mx-auto mb-2 text-[#a1a1aa]/15"
               />
 
-              <p className="text-xs text-white/30">
+              <p className="text-xs text-[#a1a1aa]/30">
                 لا يوجد مستخدم مطابق
               </p>
 
@@ -2128,13 +2121,13 @@ function SearchUserSelect({
 
                   <div className="min-w-0">
 
-                    <p className="truncate text-xs font-bold text-white">
+                    <p className="truncate text-xs font-bold text-[#f3f4f6]">
                       {user.full_name ||
                         "بدون اسم"}
                     </p>
 
                     <p
-                      className="mt-1 text-[10px] text-white/35"
+                      className="mt-1 text-[10px] text-[#a1a1aa]/35"
                       dir="ltr"
                     >
                       {user.phone}
@@ -2188,7 +2181,7 @@ function MobileOrderCard({
     );
 
   return (
-    <div className="mb-3 rounded-2xl border border-white/7 bg-[#0f1216] p-4">
+    <div className="mb-3 rounded-2xl border border-white/7 bg-[#f8f5f0] p-4">
 
       <div className="flex items-start justify-between gap-3">
 
@@ -2208,7 +2201,7 @@ function MobileOrderCard({
 
           </div>
 
-          <p className="mt-1 text-[9px] text-white/25">
+          <p className="mt-1 text-[9px] text-[#a1a1aa]/25">
             {formatDateSimple(
               order.created_at
             )}
@@ -2229,7 +2222,7 @@ function MobileOrderCard({
           value={`${Number(
             order.amount || 0
           ).toFixed(2)} د.أ`}
-          valueClass="text-white"
+          valueClass="text-[#f3f4f6]"
         />
 
         <InfoBox
@@ -2264,11 +2257,11 @@ function MobileOrderCard({
       {order.notes && (
         <div className="mt-3 rounded-xl border border-white/5 bg-white/[0.02] p-3">
 
-          <p className="text-[9px] text-white/25">
+          <p className="text-[9px] text-[#a1a1aa]/25">
             ملاحظات
           </p>
 
-          <p className="mt-1 text-[11px] leading-5 text-white/50">
+          <p className="mt-1 text-[11px] leading-5 text-[#a1a1aa]/50">
             {order.notes}
           </p>
 
@@ -2358,13 +2351,13 @@ function DesktopOrderRow({
 
       <td className="px-4 py-4">
 
-        <span className="font-bold text-white">
+        <span className="font-bold text-[#f3f4f6]">
           {Number(
             order.amount || 0
           ).toFixed(2)}
         </span>
 
-        <span className="mr-1 text-[10px] text-white/30">
+        <span className="mr-1 text-[10px] text-[#a1a1aa]/30">
           د.أ
         </span>
 
@@ -2379,7 +2372,7 @@ function DesktopOrderRow({
           ).toFixed(2)}
         </span>
 
-        <span className="mr-1 text-[9px] text-white/25">
+        <span className="mr-1 text-[9px] text-[#a1a1aa]/25">
           ({order.commission_rate}%)
         </span>
 
@@ -2389,14 +2382,14 @@ function DesktopOrderRow({
 
         <div className="max-w-[150px]">
 
-          <p className="truncate text-xs font-bold text-white">
+          <p className="truncate text-xs font-bold text-[#f3f4f6]">
             {order.producer
               ?.full_name ||
               "—"}
           </p>
 
           <p
-            className="mt-1 text-[9px] text-white/30"
+            className="mt-1 text-[9px] text-[#a1a1aa]/30"
             dir="ltr"
           >
             {order.producer
@@ -2412,14 +2405,14 @@ function DesktopOrderRow({
 
         <div className="max-w-[150px]">
 
-          <p className="truncate text-xs font-bold text-white">
+          <p className="truncate text-xs font-bold text-[#f3f4f6]">
             {order.consumer
               ?.full_name ||
               "—"}
           </p>
 
           <p
-            className="mt-1 text-[9px] text-white/30"
+            className="mt-1 text-[9px] text-[#a1a1aa]/30"
             dir="ltr"
           >
             {order.consumer
@@ -2441,7 +2434,7 @@ function DesktopOrderRow({
 
       </td>
 
-      <td className="px-4 py-4 text-[10px] text-white/30">
+      <td className="px-4 py-4 text-[10px] text-[#a1a1aa]/30">
         {formatDate(
           order.created_at
         )}
@@ -2613,7 +2606,7 @@ function getStatusData(
   return {
     text: status,
     className:
-      "bg-white/5 text-white/45",
+      "bg-[#15191f] text-[#a1a1aa]/45",
   };
 }
 
@@ -2631,7 +2624,7 @@ function StatCard({
   value: number;
 }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#12151a] p-4">
+    <div className="rounded-2xl border border-white/8 bg-white p-4">
 
       <div className="flex items-center justify-between">
 
@@ -2639,17 +2632,17 @@ function StatCard({
           {icon}
         </div>
 
-        <span className="text-[9px] text-white/25">
+        <span className="text-[9px] text-[#a1a1aa]/25">
           إحصائية
         </span>
 
       </div>
 
-      <p className="mt-3 text-[10px] text-white/30">
+      <p className="mt-3 text-[10px] text-[#a1a1aa]/30">
         {title}
       </p>
 
-      <p className="mt-1 text-xl font-black text-white">
+      <p className="mt-1 text-xl font-black text-[#f3f4f6]">
         {value}
       </p>
 
@@ -2664,7 +2657,7 @@ function StatCard({
 function InfoBox({
   title,
   value,
-  valueClass = "text-white/65",
+  valueClass = "text-[#a1a1aa]/65",
 }: {
   title: string;
   value: string;
@@ -2673,7 +2666,7 @@ function InfoBox({
   return (
     <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
 
-      <p className="text-[9px] text-white/25">
+      <p className="text-[9px] text-[#a1a1aa]/25">
         {title}
       </p>
 
@@ -2715,7 +2708,7 @@ function DarkInput({
   return (
     <div>
 
-      <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-white/50">
+      <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-[#a1a1aa]/50">
         <span className="text-[#d6a84f]">
           {icon}
         </span>
@@ -2743,7 +2736,7 @@ function DarkInput({
         placeholder={placeholder}
         dir={dir}
         disabled={disabled}
-        className="w-full rounded-xl border border-white/10 bg-[#0e1115] px-3 py-3 text-sm text-white placeholder:text-white/20 outline-none transition focus:border-[#d6a84f]/40 disabled:opacity-50"
+        className="w-full rounded-xl border border-[#292d33] bg-[#111923] px-3 py-3 text-sm text-[#f3f4f6] placeholder:text-[#a1a1aa]/20 outline-none transition focus:border-[#d6a84f]/40 disabled:opacity-50"
       />
 
     </div>
@@ -2777,7 +2770,7 @@ function DarkSelect({
   return (
     <div>
 
-      <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-white/50">
+      <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-[#a1a1aa]/50">
 
         <span className="text-[#d6a84f]">
           {icon}
@@ -2795,7 +2788,7 @@ function DarkSelect({
           )
         }
         disabled={disabled}
-        className="w-full appearance-none rounded-xl border border-white/10 bg-[#0e1115] px-3 py-3 text-sm text-white outline-none transition focus:border-[#d6a84f]/40 disabled:opacity-50"
+        className="w-full appearance-none rounded-xl border border-[#292d33] bg-[#111923] px-3 py-3 text-sm text-[#f3f4f6] outline-none transition focus:border-[#d6a84f]/40 disabled:opacity-50"
       >
 
         {options.map(
@@ -2807,7 +2800,7 @@ function DarkSelect({
               value={
                 option.value
               }
-              className="bg-[#12151a] text-white"
+              className="bg-white text-[#f3f4f6]"
             >
               {option.label}
             </option>
@@ -2844,7 +2837,7 @@ function DarkTextarea({
   return (
     <div>
 
-      <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-white/50">
+      <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold text-[#a1a1aa]/50">
 
         <span className="text-[#d6a84f]">
           {icon}
@@ -2864,7 +2857,7 @@ function DarkTextarea({
         placeholder={placeholder}
         rows={3}
         disabled={disabled}
-        className="w-full resize-y rounded-xl border border-white/10 bg-[#0e1115] px-3 py-3 text-sm text-white placeholder:text-white/20 outline-none transition focus:border-[#d6a84f]/40 disabled:opacity-50"
+        className="w-full resize-y rounded-xl border border-[#292d33] bg-[#111923] px-3 py-3 text-sm text-[#f3f4f6] placeholder:text-[#a1a1aa]/20 outline-none transition focus:border-[#d6a84f]/40 disabled:opacity-50"
       />
 
     </div>
@@ -2892,7 +2885,7 @@ function MenuItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right transition ${
         active
           ? "bg-[#d6a84f]/10 text-[#d6a84f]"
-          : "text-white/55 hover:bg-white/5 hover:text-white"
+          : "text-[#a1a1aa]/55 hover:bg-[#15191f] hover:text-[#f3f4f6]"
       }`}
     >
 
@@ -2912,7 +2905,7 @@ function MenuItem({
 
       <ChevronLeft
         size={14}
-        className="text-white/20"
+        className="text-[#a1a1aa]/20"
       />
 
     </button>

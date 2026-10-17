@@ -111,7 +111,7 @@ export default function WithdrawPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       <div className="mx-auto w-full max-w-2xl px-4 pb-10 pt-5 sm:px-6">
 
@@ -121,7 +121,7 @@ export default function WithdrawPage() {
 
           <Link
             href="/finance"
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#12151a] text-white/55 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#292d33] bg-white text-[#73777e]/55 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
           >
             <ArrowRight
               size={19}
@@ -135,7 +135,7 @@ export default function WithdrawPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-white/35">
+            <p className="mt-0.5 text-[11px] text-[#73777e]/35">
               المالية
             </p>
 
@@ -147,7 +147,7 @@ export default function WithdrawPage() {
 
         {/* Page Header */}
 
-        <section className="mb-5 rounded-[26px] border border-white/10 bg-gradient-to-br from-[#171a20] to-[#101216] p-5">
+        <section className="mb-5 rounded-[26px] border border-[#292d33] bg-gradient-to-br from-[#fffaf0] to-[#11151a] p-5">
 
           <div className="flex items-center gap-4">
 
@@ -164,7 +164,7 @@ export default function WithdrawPage() {
                 طلب سحب الرصيد
               </h2>
 
-              <p className="mt-1 text-[11px] leading-5 text-white/35">
+              <p className="mt-1 text-[11px] leading-5 text-[#73777e]/35">
                 اطلب سحب المبلغ المستحق لك
                 وانتظر مراجعة الإدارة.
               </p>
@@ -177,7 +177,7 @@ export default function WithdrawPage() {
 
         {/* Form */}
 
-        <section className="rounded-[26px] border border-white/10 bg-[#12151a] p-4 sm:p-6">
+        <section className="rounded-[26px] border border-[#292d33] bg-white p-4 sm:p-6">
 
           <form
             onSubmit={handleSubmit}
@@ -222,7 +222,7 @@ export default function WithdrawPage() {
 
             <div>
 
-              <label className="mb-2 block text-xs font-bold text-white/60">
+              <label className="mb-2 block text-xs font-bold text-[#73777e]/60">
                 مبلغ السحب
               </label>
 
@@ -241,7 +241,7 @@ export default function WithdrawPage() {
                   placeholder="مثال: 25"
                   dir="ltr"
                   required
-                  className="w-full rounded-2xl border border-white/10 bg-[#181b20] px-4 py-4 pl-16 text-right text-lg font-bold text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
+                  className="w-full rounded-2xl border border-[#292d33] bg-[#11151a] px-4 py-4 pl-16 text-right text-lg font-bold text-[#f3f4f6] outline-none transition placeholder:text-[#73777e]/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
                 />
 
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-[#d6a84f]/10 px-2 py-1 text-xs font-bold text-[#d6a84f]">
@@ -256,11 +256,11 @@ export default function WithdrawPage() {
 
             <div>
 
-              <label className="mb-2 block text-xs font-bold text-white/60">
+              <label className="mb-2 block text-xs font-bold text-[#73777e]/60">
 
                 ملاحظات
 
-                <span className="mr-1 text-[10px] font-normal text-white/25">
+                <span className="mr-1 text-[10px] font-normal text-[#73777e]/25">
                   اختياري
                 </span>
 
@@ -277,12 +277,12 @@ export default function WithdrawPage() {
                   }
                   rows={5}
                   placeholder="أي ملاحظات إضافية..."
-                  className="w-full resize-none rounded-2xl border border-white/10 bg-[#181b20] px-4 py-3 pr-11 text-sm text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
+                  className="w-full resize-none rounded-2xl border border-[#292d33] bg-[#11151a] px-4 py-3 pr-11 text-sm text-[#f3f4f6] outline-none transition placeholder:text-[#73777e]/15 focus:border-[#d6a84f]/40 focus:ring-4 focus:ring-[#d6a84f]/5"
                 />
 
                 <FileText
                   size={16}
-                  className="absolute right-4 top-4 text-white/20"
+                  className="absolute right-4 top-4 text-[#73777e]/20"
                   strokeWidth={1.7}
                 />
 
@@ -295,7 +295,7 @@ export default function WithdrawPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] px-5 py-4 text-sm font-black text-[#0b0d10] shadow-lg shadow-[#d6a84f]/5 transition hover:bg-[#e1b65d] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] text-white px-5 py-4 text-sm font-black text-[#0b0d10] shadow-lg shadow-[#d6a84f]/5 transition hover:bg-[#d6a84f] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
 
               {loading ? (
@@ -344,7 +344,7 @@ export default function WithdrawPage() {
                 ملاحظة مهمة
               </p>
 
-              <p className="mt-1 text-[10px] leading-5 text-white/35">
+              <p className="mt-1 text-[10px] leading-5 text-[#73777e]/35">
                 يتم إرسال الطلب إلى الإدارة
                 للمراجعة. عند الموافقة يتم خصم
                 المبلغ من رصيدك وتسجيل الحركة
@@ -361,7 +361,7 @@ export default function WithdrawPage() {
 
         <Link
           href="/finance"
-          className="mt-5 flex items-center justify-center gap-2 text-[11px] text-white/25 transition hover:text-[#d6a84f]"
+          className="mt-5 flex items-center justify-center gap-2 text-[11px] text-[#73777e]/25 transition hover:text-[#d6a84f]"
         >
           <ArrowRight
             size={14}

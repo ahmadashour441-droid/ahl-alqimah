@@ -287,13 +287,13 @@ export default function SettingsPage() {
         dir="rtl"
         className="flex min-h-screen items-center justify-center bg-[#0b0d10] px-4"
       >
-        <div className="w-full max-w-sm rounded-[28px] border border-white/10 bg-[#12151a] p-8 text-center shadow-2xl">
+        <div className="w-full max-w-sm rounded-[28px] border border-[#292d33] bg-white p-8 text-center shadow-2xl">
 
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d6a84f]/10 text-[#d6a84f]">
             <ShieldCheck size={30} />
           </div>
 
-          <p className="mt-5 font-bold text-white">
+          <p className="mt-5 font-bold text-[#f3f4f6]">
             جاري تحميل الإعدادات...
           </p>
 
@@ -309,13 +309,13 @@ export default function SettingsPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-white"
+      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
     >
       <div className="mx-auto w-full max-w-[1300px] px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
 
         {/* HEADER */}
 
-        <header className="mb-6 overflow-hidden rounded-[28px] border border-white/10 bg-[#12151a] shadow-2xl">
+        <header className="mb-6 overflow-hidden rounded-[28px] border border-[#292d33] bg-white shadow-2xl">
 
           <div className="relative p-5 sm:p-7">
 
@@ -335,11 +335,11 @@ export default function SettingsPage() {
                     حسابي
                   </p>
 
-                  <h1 className="mt-1 text-2xl font-black text-white sm:text-3xl">
+                  <h1 className="mt-1 text-2xl font-black text-[#f3f4f6] sm:text-3xl">
                     الإعدادات
                   </h1>
 
-                  <p className="mt-1 text-sm text-white/40">
+                  <p className="mt-1 text-sm text-[#73777e]/40">
                     إدارة معلومات حسابك وإعداداتك الشخصية
                   </p>
 
@@ -349,7 +349,7 @@ export default function SettingsPage() {
 
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#181b20] px-5 py-3 text-sm font-bold text-white transition hover:border-[#d6a84f]/40 hover:bg-[#d6a84f]/10"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#292d33] bg-[#11151a] px-5 py-3 text-sm font-bold text-[#f3f4f6] transition hover:border-[#d6a84f]/40 hover:bg-[#d6a84f]/10"
               >
                 <ArrowLeft size={17} />
                 الرئيسية
@@ -405,7 +405,7 @@ export default function SettingsPage() {
 
         {/* ACCOUNT SUMMARY */}
 
-        <section className="mb-6 overflow-hidden rounded-[28px] border border-[#d6a84f]/20 bg-[#12151a] shadow-2xl">
+        <section className="mb-6 overflow-hidden rounded-[28px] border border-[#d6a84f]/20 bg-white shadow-2xl">
 
           <div className="relative p-5 sm:p-7">
 
@@ -421,12 +421,12 @@ export default function SettingsPage() {
 
                 <div className="min-w-0">
 
-                  <h2 className="truncate text-xl font-black text-white">
+                  <h2 className="truncate text-xl font-black text-[#f3f4f6]">
                     {userData?.full_name ||
                       "المستخدم"}
                   </h2>
 
-                  <div className="mt-1 flex items-center gap-2 text-sm text-white/40">
+                  <div className="mt-1 flex items-center gap-2 text-sm text-[#73777e]/40">
                     <Phone size={14} />
 
                     <span dir="ltr">
@@ -440,9 +440,9 @@ export default function SettingsPage() {
 
               <div className="grid grid-cols-2 gap-3">
 
-                <div className="rounded-2xl border border-white/10 bg-[#181b20] px-4 py-4 sm:min-w-[170px] sm:px-5">
+                <div className="rounded-2xl border border-[#292d33] bg-[#11151a] px-4 py-4 sm:min-w-[170px] sm:px-5">
 
-                  <p className="text-[11px] font-bold text-white/35">
+                  <p className="text-[11px] font-bold text-[#73777e]/35">
                     الرصيد الحالي
                   </p>
 
@@ -450,16 +450,16 @@ export default function SettingsPage() {
                     {Number(
                       userData?.balance || 0
                     ).toFixed(2)}{" "}
-                    <span className="text-xs text-white/40">
+                    <span className="text-xs text-[#73777e]/40">
                       د.أ
                     </span>
                   </p>
 
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#181b20] px-4 py-4 sm:min-w-[150px] sm:px-5">
+                <div className="rounded-2xl border border-[#292d33] bg-[#11151a] px-4 py-4 sm:min-w-[150px] sm:px-5">
 
-                  <p className="text-[11px] font-bold text-white/35">
+                  <p className="text-[11px] font-bold text-[#73777e]/35">
                     حالة الحساب
                   </p>
 
@@ -473,7 +473,7 @@ export default function SettingsPage() {
                       }`}
                     />
 
-                    <span className="text-sm font-black text-white">
+                    <span className="text-sm font-black text-[#f3f4f6]">
                       {userData?.is_active
                         ? "نشط"
                         : "غير نشط"}
@@ -497,7 +497,7 @@ export default function SettingsPage() {
 
           {/* PERSONAL INFORMATION */}
 
-          <section className="rounded-[28px] border border-white/10 bg-[#12151a] p-5 shadow-2xl sm:p-6">
+          <section className="rounded-[28px] border border-[#292d33] bg-white p-5 shadow-2xl sm:p-6">
 
             <div className="mb-6 flex items-center gap-3">
 
@@ -507,11 +507,11 @@ export default function SettingsPage() {
 
               <div>
 
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-lg font-black text-[#f3f4f6]">
                   المعلومات الشخصية
                 </h2>
 
-                <p className="text-xs text-white/35">
+                <p className="text-xs text-[#73777e]/35">
                   تعديل الاسم فقط
                 </p>
 
@@ -525,7 +525,7 @@ export default function SettingsPage() {
 
               <div>
 
-                <label className="mb-2 block text-sm font-bold text-white/70">
+                <label className="mb-2 block text-sm font-bold text-[#73777e]/70">
                   الاسم الكامل
                 </label>
 
@@ -533,7 +533,7 @@ export default function SettingsPage() {
 
                   <CircleUserRound
                     size={17}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/25"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#73777e]/25"
                   />
 
                   <input
@@ -543,7 +543,7 @@ export default function SettingsPage() {
                         e.target.value
                       )
                     }
-                    className="w-full rounded-2xl border border-white/10 bg-[#181b20] py-3.5 pr-11 pl-4 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#d6a84f]/50 focus:ring-2 focus:ring-[#d6a84f]/10"
+                    className="w-full rounded-2xl border border-[#292d33] bg-[#11151a] py-3.5 pr-11 pl-4 text-sm text-[#f3f4f6] outline-none transition placeholder:text-[#73777e]/20 focus:border-[#d6a84f]/50 focus:ring-2 focus:ring-[#d6a84f]/10"
                     placeholder="الاسم الكامل"
                   />
 
@@ -555,7 +555,7 @@ export default function SettingsPage() {
 
               <div>
 
-                <label className="mb-2 block text-sm font-bold text-white/70">
+                <label className="mb-2 block text-sm font-bold text-[#73777e]/70">
                   رقم الهاتف
                 </label>
 
@@ -563,20 +563,20 @@ export default function SettingsPage() {
 
                   <Phone
                     size={17}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#73777e]/20"
                   />
 
                   <input
                     value={userData?.phone || ""}
                     disabled
                     readOnly
-                    className="w-full cursor-not-allowed rounded-2xl border border-white/5 bg-[#181b20]/60 py-3.5 pr-11 pl-4 text-sm text-white/35 outline-none"
+                    className="w-full cursor-not-allowed rounded-2xl border border-[#eeeae4] bg-[#11151a]/60 py-3.5 pr-11 pl-4 text-sm text-[#73777e]/35 outline-none"
                     dir="ltr"
                   />
 
                 </div>
 
-                <p className="mt-2 text-[11px] leading-5 text-white/25">
+                <p className="mt-2 text-[11px] leading-5 text-[#73777e]/25">
                   رقم الهاتف تتم إدارته من قبل الإدارة ولا
                   يمكن تغييره من الحساب.
                 </p>
@@ -587,7 +587,7 @@ export default function SettingsPage() {
 
               <div>
 
-                <label className="mb-2 block text-sm font-bold text-white/70">
+                <label className="mb-2 block text-sm font-bold text-[#73777e]/70">
                   البريد التقني
                 </label>
 
@@ -595,20 +595,20 @@ export default function SettingsPage() {
 
                   <FileText
                     size={17}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#73777e]/20"
                   />
 
                   <input
                     value={userData?.email || ""}
                     disabled
                     readOnly
-                    className="w-full cursor-not-allowed rounded-2xl border border-white/5 bg-[#181b20]/60 py-3.5 pr-11 pl-4 text-sm text-white/35 outline-none"
+                    className="w-full cursor-not-allowed rounded-2xl border border-[#eeeae4] bg-[#11151a]/60 py-3.5 pr-11 pl-4 text-sm text-[#73777e]/35 outline-none"
                     dir="ltr"
                   />
 
                 </div>
 
-                <p className="mt-2 text-[11px] leading-5 text-white/25">
+                <p className="mt-2 text-[11px] leading-5 text-[#73777e]/25">
                   هذا البريد يستخدم داخليًا لتسجيل الدخول.
                 </p>
 
@@ -617,7 +617,7 @@ export default function SettingsPage() {
               <button
                 onClick={saveProfile}
                 disabled={savingProfile}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] py-3.5 text-sm font-black text-[#0b0d10] shadow-lg shadow-[#d6a84f]/10 transition hover:bg-[#e2b962] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] text-white py-3.5 text-sm font-black text-[#0b0d10] shadow-lg shadow-[#d6a84f]/10 transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-50"
               >
 
                 <Save size={18} />
@@ -634,7 +634,7 @@ export default function SettingsPage() {
 
           {/* PASSWORD */}
 
-          <section className="rounded-[28px] border border-white/10 bg-[#12151a] p-5 shadow-2xl sm:p-6">
+          <section className="rounded-[28px] border border-[#292d33] bg-white p-5 shadow-2xl sm:p-6">
 
             <div className="mb-6 flex items-center gap-3">
 
@@ -644,11 +644,11 @@ export default function SettingsPage() {
 
               <div>
 
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-lg font-black text-[#f3f4f6]">
                   تغيير كلمة المرور
                 </h2>
 
-                <p className="text-xs text-white/35">
+                <p className="text-xs text-[#73777e]/35">
                   تحديث كلمة مرور الحساب
                 </p>
 
@@ -700,7 +700,7 @@ export default function SettingsPage() {
                 }
               />
 
-              <div className="rounded-2xl border border-white/5 bg-[#181b20] p-4">
+              <div className="rounded-2xl border border-[#eeeae4] bg-[#11151a] p-4">
 
                 <div className="flex items-center gap-2">
 
@@ -709,13 +709,13 @@ export default function SettingsPage() {
                     className="text-[#d6a84f]"
                   />
 
-                  <p className="text-sm font-bold text-white">
+                  <p className="text-sm font-bold text-[#f3f4f6]">
                     متطلبات كلمة المرور
                   </p>
 
                 </div>
 
-                <ul className="mt-3 space-y-2 text-xs text-white/35">
+                <ul className="mt-3 space-y-2 text-xs text-[#73777e]/35">
 
                   <li>
                     • يجب أن تكون 6 أحرف على الأقل.
@@ -732,7 +732,7 @@ export default function SettingsPage() {
               <button
                 onClick={changePassword}
                 disabled={changingPassword}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] py-3.5 text-sm font-black text-[#0b0d10] shadow-lg shadow-[#d6a84f]/10 transition hover:bg-[#e2b962] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d6a84f] text-white py-3.5 text-sm font-black text-[#0b0d10] shadow-lg shadow-[#d6a84f]/10 transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-50"
               >
 
                 <KeyRound size={18} />
@@ -751,15 +751,15 @@ export default function SettingsPage() {
 
         {/* QUICK LINKS */}
 
-        <section className="mt-6 rounded-[28px] border border-white/10 bg-[#12151a] p-5 shadow-2xl sm:p-6">
+        <section className="mt-6 rounded-[28px] border border-[#292d33] bg-white p-5 shadow-2xl sm:p-6">
 
           <div className="mb-5">
 
-            <h2 className="text-lg font-black text-white">
+            <h2 className="text-lg font-black text-[#f3f4f6]">
               اختصارات الحساب
             </h2>
 
-            <p className="mt-1 text-xs text-white/35">
+            <p className="mt-1 text-xs text-[#73777e]/35">
               الوصول السريع إلى أهم أقسام حسابك
             </p>
 
@@ -788,7 +788,7 @@ export default function SettingsPage() {
               description="سجل الأسابيع السابقة"
             />
 
-            <div className="rounded-2xl border border-white/5 bg-[#181b20] p-4">
+            <div className="rounded-2xl border border-[#eeeae4] bg-[#11151a] p-4">
 
               <div className="flex items-center justify-between">
 
@@ -796,17 +796,17 @@ export default function SettingsPage() {
                   <ShieldCheck size={19} />
                 </div>
 
-                <span className="rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-white/30">
+                <span className="rounded-full border border-[#eeeae4] bg-[#15191f] px-2.5 py-1 text-[10px] font-bold text-[#73777e]/30">
                   الحساب
                 </span>
 
               </div>
 
-              <p className="mt-4 font-bold text-white">
+              <p className="mt-4 font-bold text-[#f3f4f6]">
                 نوع الحساب
               </p>
 
-              <p className="mt-1 text-xs text-white/35">
+              <p className="mt-1 text-xs text-[#73777e]/35">
                 {userData?.role === "admin"
                   ? "مدير النظام"
                   : "مستخدم"}
@@ -853,7 +853,7 @@ function PasswordInput({
   return (
     <div>
 
-      <label className="mb-2 block text-sm font-bold text-white/70">
+      <label className="mb-2 block text-sm font-bold text-[#73777e]/70">
         {label}
       </label>
 
@@ -861,7 +861,7 @@ function PasswordInput({
 
         <KeyRound
           size={17}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#73777e]/20"
         />
 
         <input
@@ -874,7 +874,7 @@ function PasswordInput({
           onChange={(e) =>
             onChange(e.target.value)
           }
-          className="w-full rounded-2xl border border-white/10 bg-[#181b20] py-3.5 pr-11 pl-12 text-sm text-white outline-none transition placeholder:text-white/15 focus:border-[#d6a84f]/50 focus:ring-2 focus:ring-[#d6a84f]/10"
+          className="w-full rounded-2xl border border-[#292d33] bg-[#11151a] py-3.5 pr-11 pl-12 text-sm text-[#f3f4f6] outline-none transition placeholder:text-[#73777e]/15 focus:border-[#d6a84f]/50 focus:ring-2 focus:ring-[#d6a84f]/10"
           placeholder="••••••••"
           dir="ltr"
         />
@@ -882,7 +882,7 @@ function PasswordInput({
         <button
           type="button"
           onClick={onToggle}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white/25 transition hover:text-[#d6a84f]"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#73777e]/25 transition hover:text-[#d6a84f]"
           aria-label={
             visible
               ? "إخفاء كلمة المرور"
@@ -916,7 +916,7 @@ function SettingsLink({
   return (
     <Link
       href={href}
-      className="group rounded-2xl border border-white/5 bg-[#181b20] p-4 transition hover:border-[#d6a84f]/25 hover:bg-[#1c1f24]"
+      className="group rounded-2xl border border-[#eeeae4] bg-[#11151a] p-4 transition hover:border-[#d6a84f]/25 hover:bg-[#f7f4ef]"
     >
 
       <div className="flex items-center justify-between">
@@ -927,16 +927,16 @@ function SettingsLink({
 
         <ChevronLeft
           size={18}
-          className="text-white/20 transition group-hover:text-[#d6a84f]"
+          className="text-[#73777e]/20 transition group-hover:text-[#d6a84f]"
         />
 
       </div>
 
-      <p className="mt-4 font-black text-white">
+      <p className="mt-4 font-black text-[#f3f4f6]">
         {title}
       </p>
 
-      <p className="mt-1 text-xs text-white/35">
+      <p className="mt-1 text-xs text-[#73777e]/35">
         {description}
       </p>
 
