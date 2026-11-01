@@ -215,7 +215,7 @@ export default function AdminSettingsPage() {
     return (
       <main
         dir="rtl"
-        className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
+        className="min-h-screen bg-[#050505] text-white"
       >
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-5">
           <div className="flex flex-col items-center">
@@ -226,7 +226,7 @@ export default function AdminSettingsPage() {
               />
             </div>
 
-            <p className="mt-4 text-xs font-bold text-[#a1a1aa]/40">
+            <p className="mt-4 text-xs font-bold text-white/40">
               جاري تحميل الإعدادات...
             </p>
           </div>
@@ -238,13 +238,13 @@ export default function AdminSettingsPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
+      className="min-h-screen bg-[#050505] text-white"
     >
       {/* OVERLAY */}
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -252,7 +252,7 @@ export default function AdminSettingsPage() {
       {/* SIDE MENU */}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-[#292d33] bg-[#11151a] shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-white/10 bg-[#090909] shadow-2xl transition-transform duration-300 ${
           menuOpen
             ? "translate-x-0"
             : "translate-x-full"
@@ -261,20 +261,20 @@ export default function AdminSettingsPage() {
         <div className="flex h-full flex-col">
           {/* MENU HEADER */}
 
-          <div className="flex items-center justify-between border-b border-[#292d33] px-5 py-5">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
             <div>
               <h2 className="text-lg font-black text-[#d6a84f]">
                 أهل القمة
               </h2>
 
-              <p className="mt-1 text-[11px] text-[#a1a1aa]/40">
+              <p className="mt-1 text-[11px] text-white/40">
                 لوحة تحكم الإدارة
               </p>
             </div>
 
             <button
               onClick={() => setMenuOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/60 transition hover:bg-white/10 hover:text-[#f3f4f6]"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition hover:bg-white/10 hover:text-white"
             >
               <X size={18} />
             </button>
@@ -283,7 +283,7 @@ export default function AdminSettingsPage() {
           {/* MENU */}
 
           <nav className="flex-1 overflow-y-auto p-4">
-            <div className="mb-2 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
+            <div className="mb-2 px-3 text-[10px] font-bold text-white/30">
               الرئيسية
             </div>
 
@@ -301,7 +301,7 @@ export default function AdminSettingsPage() {
               }
             />
 
-            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
+            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
               الإدارة
             </div>
 
@@ -321,13 +321,15 @@ export default function AdminSettingsPage() {
               }
             />
 
-            
+            <MenuItem
+              icon={<Wallet size={18} />}
+              label="طلبات الشحن"
+              onClick={() =>
+                goTo("/admin/topups")
+              }
+            />
 
             <MenuItem
-              icon={<Wallet size={18} strokeWidth={1.8} />}
-              label="الأرصدة"
-              onClick={() => goTo("/admin/balances")}
-            /><MenuItem
               icon={<CreditCard size={18} />}
               label="طلبات السحب"
               onClick={() =>
@@ -351,7 +353,7 @@ export default function AdminSettingsPage() {
               }
             />
 
-            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
+            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
               الحساب
             </div>
 
@@ -367,7 +369,7 @@ export default function AdminSettingsPage() {
 
           {/* LOGOUT */}
 
-          <div className="border-t border-[#292d33] p-4">
+          <div className="border-t border-white/10 p-4">
             <button
               onClick={logout}
               className="flex w-full items-center gap-3 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3 text-right text-sm font-bold text-red-300 transition hover:bg-red-500/10"
@@ -387,7 +389,7 @@ export default function AdminSettingsPage() {
         <header className="mb-6 flex items-center justify-between">
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#292d33] bg-[#0b1015] text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#0d0d0d] text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
             aria-label="فتح القائمة"
           >
             <Menu size={20} />
@@ -398,7 +400,7 @@ export default function AdminSettingsPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-[#a1a1aa]/40">
+            <p className="mt-0.5 text-[11px] text-white/40">
               الإعدادات
             </p>
           </div>
@@ -414,11 +416,11 @@ export default function AdminSettingsPage() {
         {/* PAGE TITLE */}
 
         <section className="mb-5">
-          <h2 className="text-2xl font-black tracking-tight text-[#f3f4f6]">
+          <h2 className="text-2xl font-black tracking-tight text-white">
             إعدادات الحساب
           </h2>
 
-          <p className="mt-1 text-xs text-[#a1a1aa]/40">
+          <p className="mt-1 text-xs text-white/40">
             إدارة بيانات حساب مدير النظام
           </p>
         </section>
@@ -453,23 +455,23 @@ export default function AdminSettingsPage() {
 
         {/* PROFILE HEADER */}
 
-        <section className="mb-5 overflow-hidden rounded-3xl border border-[#292d33] bg-[#11151a]">
+        <section className="mb-5 overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0a]">
           <div className="h-20 bg-gradient-to-l from-[#d6a84f]/15 via-[#d6a84f]/5 to-transparent" />
 
           <div className="px-5 pb-5">
             <div className="-mt-8 flex items-end justify-between gap-4">
               <div className="flex items-end gap-3">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-4 border-[#11151a] bg-[#d6a84f]/10 text-[#d6a84f] shadow-xl">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-4 border-[#0a0a0a] bg-[#d6a84f]/10 text-[#d6a84f] shadow-xl">
                   <UserCog size={25} />
                 </div>
 
                 <div className="pb-1">
-                  <h3 className="text-base font-black text-[#f3f4f6]">
+                  <h3 className="text-base font-black text-white">
                     {admin?.full_name ||
                       "مدير النظام"}
                   </h3>
 
-                  <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+                  <p className="mt-1 text-[10px] text-white/35">
                     مدير النظام
                   </p>
                 </div>
@@ -500,18 +502,18 @@ export default function AdminSettingsPage() {
 
         {/* ACCOUNT DATA */}
 
-        <section className="mb-5 rounded-3xl border border-[#292d33] bg-[#11151a] p-5 shadow-2xl shadow-black/10">
+        <section className="mb-5 rounded-3xl border border-white/10 bg-[#0a0a0a] p-5 shadow-2xl shadow-black/10">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
               <UserCog size={17} />
             </div>
 
             <div>
-              <h3 className="text-sm font-black text-[#f3f4f6]">
+              <h3 className="text-sm font-black text-white">
                 بيانات الحساب
               </h3>
 
-              <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+              <p className="mt-1 text-[10px] text-white/35">
                 البيانات الشخصية الخاصة بالأدمن
               </p>
             </div>
@@ -530,7 +532,7 @@ export default function AdminSettingsPage() {
             {/* PHONE */}
 
             <div>
-              <label className="mb-2 block text-[11px] font-bold text-[#a1a1aa]/55">
+              <label className="mb-2 block text-[11px] font-bold text-white/55">
                 رقم الهاتف
               </label>
 
@@ -539,16 +541,16 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={admin?.phone || ""}
                   disabled
-                  className="w-full cursor-not-allowed rounded-xl border border-[#292d33] bg-white/[0.03] px-4 py-3 text-sm text-[#a1a1aa]/35 outline-none"
+                  className="w-full cursor-not-allowed rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/35 outline-none"
                 />
 
                 <ShieldCheck
                   size={15}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a1a1aa]/20"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20"
                 />
               </div>
 
-              <p className="mt-1.5 text-[9px] text-[#a1a1aa]/25">
+              <p className="mt-1.5 text-[9px] text-white/25">
                 رقم الهاتف لا يمكن تغييره من هنا
               </p>
             </div>
@@ -567,21 +569,21 @@ export default function AdminSettingsPage() {
             {/* ROLE */}
 
             <div>
-              <label className="mb-2 block text-[11px] font-bold text-[#a1a1aa]/55">
+              <label className="mb-2 block text-[11px] font-bold text-white/55">
                 الصلاحية
               </label>
 
-              <div className="flex items-center gap-3 rounded-xl border border-[#292d33] bg-white/[0.03] px-4 py-3">
+              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#d6a84f]/10 text-[#d6a84f]">
                   <ShieldCheck size={15} />
                 </div>
 
                 <div>
-                  <p className="text-xs font-bold text-[#f3f4f6]">
+                  <p className="text-xs font-bold text-white">
                     مدير النظام
                   </p>
 
-                  <p className="mt-0.5 text-[9px] text-[#a1a1aa]/30">
+                  <p className="mt-0.5 text-[9px] text-white/30">
                     صلاحيات إدارية كاملة
                   </p>
                 </div>
@@ -595,7 +597,7 @@ export default function AdminSettingsPage() {
             <button
               onClick={saveSettings}
               disabled={saving}
-              className="flex items-center justify-center gap-2 rounded-xl bg-[#d6a84f] text-white px-6 py-3 text-xs font-black text-[#650016] transition hover:bg-[#d6a84f] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#d6a84f] px-6 py-3 text-xs font-black text-black transition hover:bg-[#e3bb68] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? (
                 <>
@@ -619,18 +621,18 @@ export default function AdminSettingsPage() {
 
         {/* ACCOUNT INFORMATION */}
 
-        <section className="mb-5 rounded-3xl border border-[#292d33] bg-[#11151a] p-5 shadow-2xl shadow-black/10">
+        <section className="mb-5 rounded-3xl border border-white/10 bg-[#0a0a0a] p-5 shadow-2xl shadow-black/10">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
               <ShieldCheck size={17} />
             </div>
 
             <div>
-              <h3 className="text-sm font-black text-[#f3f4f6]">
+              <h3 className="text-sm font-black text-white">
                 معلومات الحساب
               </h3>
 
-              <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+              <p className="mt-1 text-[10px] text-white/35">
                 معلومات النظام الخاصة بحساب الأدمن
               </p>
             </div>
@@ -673,42 +675,42 @@ export default function AdminSettingsPage() {
               value={formatDate(
                 admin?.created_at || null
               )}
-              valueClass="text-[#f3f4f6]"
+              valueClass="text-white"
             />
           </div>
         </section>
 
         {/* SECURITY */}
 
-        <section className="mb-5 rounded-3xl border border-[#292d33] bg-[#11151a] p-5 shadow-2xl shadow-black/10">
+        <section className="mb-5 rounded-3xl border border-white/10 bg-[#0a0a0a] p-5 shadow-2xl shadow-black/10">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
               <ShieldCheck size={17} />
             </div>
 
             <div>
-              <h3 className="text-sm font-black text-[#f3f4f6]">
+              <h3 className="text-sm font-black text-white">
                 الأمان
               </h3>
 
-              <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+              <p className="mt-1 text-[10px] text-white/35">
                 إعدادات أمان الحساب
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 rounded-2xl border border-[#292d33] bg-white/[0.02] p-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#15191f] text-[#a1a1aa]/50">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-white/50">
                 <ShieldCheck size={17} />
               </div>
 
               <div>
-                <h4 className="text-xs font-black text-[#f3f4f6]">
+                <h4 className="text-xs font-black text-white">
                   كلمة المرور
                 </h4>
 
-                <p className="mt-1 text-[10px] leading-5 text-[#a1a1aa]/35">
+                <p className="mt-1 text-[10px] leading-5 text-white/35">
                   تغيير كلمة المرور الخاصة بحساب الأدمن
                 </p>
               </div>
@@ -721,7 +723,7 @@ export default function AdminSettingsPage() {
                 );
                 setMessage("");
               }}
-              className="flex items-center justify-center gap-2 rounded-xl border border-[#292d33] bg-[#15191f] px-4 py-2.5 text-[10px] font-black text-[#a1a1aa]/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-[10px] font-black text-white/60 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
             >
               <ShieldCheck size={14} />
 
@@ -734,7 +736,7 @@ export default function AdminSettingsPage() {
 
         <button
           onClick={() => window.history.back()}
-          className="mx-auto flex items-center gap-2 rounded-xl border border-[#292d33] bg-[#15191f] px-4 py-2.5 text-[10px] font-bold text-[#a1a1aa]/40 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+          className="mx-auto flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-[10px] font-bold text-white/40 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
         >
           <ArrowRight size={14} />
 
@@ -743,7 +745,7 @@ export default function AdminSettingsPage() {
 
         {/* FOOTER */}
 
-        <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-[#a1a1aa]/20">
+        <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/20">
           <Settings size={11} />
 
           <span>
@@ -776,14 +778,14 @@ function MenuItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-right transition ${
         active
           ? "border border-[#d6a84f]/15 bg-[#d6a84f]/10 text-[#d6a84f]"
-          : "border border-transparent text-[#a1a1aa]/55 hover:bg-[#15191f] hover:text-[#f3f4f6]"
+          : "border border-transparent text-white/55 hover:bg-white/5 hover:text-white"
       }`}
     >
       <span
         className={
           active
             ? "text-[#d6a84f]"
-            : "text-[#a1a1aa]/45"
+            : "text-white/45"
         }
       >
         {icon}
@@ -813,7 +815,7 @@ function DarkInput({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-[11px] font-bold text-[#a1a1aa]/55">
+      <label className="mb-2 block text-[11px] font-bold text-white/55">
         {label}
       </label>
 
@@ -825,7 +827,7 @@ function DarkInput({
         }
         placeholder={placeholder}
         dir={dir}
-        className="w-full rounded-xl border border-[#292d33] bg-[#15191f] px-4 py-3 text-sm text-[#f3f4f6] outline-none transition placeholder:text-[#a1a1aa]/20 focus:border-[#d6a84f]/40 focus:ring-1 focus:ring-[#d6a84f]/10"
+        className="w-full rounded-xl border border-white/10 bg-[#0e0e0e] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#d6a84f]/40 focus:ring-1 focus:ring-[#d6a84f]/10"
       />
     </div>
   );
@@ -843,8 +845,8 @@ function InfoCard({
   valueClass: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-      <div className="flex items-center gap-2 text-[#a1a1aa]/35">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+      <div className="flex items-center gap-2 text-white/35">
         {icon}
 
         <span className="text-[10px] font-bold">

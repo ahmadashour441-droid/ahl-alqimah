@@ -25,6 +25,7 @@ import {
   Wallet,
   X,
   CircleDollarSign,
+  ArrowDownLeft,
   ArrowUpRight,
 } from "lucide-react";
 
@@ -77,6 +78,7 @@ const TYPE_OPTIONS = [
   ["production", "إنتاج"],
   ["consumption", "استهلاك"],
   ["floor", "أرضية"],
+  ["topup", "شحن"],
   ["withdrawal", "سحب"],
   ["withdrawal_reversal", "إرجاع سحب"],
   ["adjustment", "تعديل"],
@@ -109,6 +111,7 @@ function getTransactionLabel(type: string) {
     production: "إنتاج",
     consumption: "استهلاك",
     floor: "أرضية",
+    topup: "شحن",
     withdrawal: "سحب",
     withdrawal_reversal: "إرجاع سحب",
     adjustment: "تعديل",
@@ -127,6 +130,9 @@ function getTransactionIcon(type: string) {
 
     case "floor":
       return <CircleDollarSign size={15} />;
+
+    case "topup":
+      return <ArrowDownLeft size={15} />;
 
     case "withdrawal":
       return <ArrowUpRight size={15} />;
@@ -153,6 +159,9 @@ function getTransactionClass(type: string) {
     floor:
       "border-amber-400/20 bg-amber-500/10 text-amber-300",
 
+    topup:
+      "border-sky-400/20 bg-sky-500/10 text-sky-300",
+
     withdrawal:
       "border-purple-400/20 bg-purple-500/10 text-purple-300",
 
@@ -160,12 +169,12 @@ function getTransactionClass(type: string) {
       "border-cyan-400/20 bg-cyan-500/10 text-cyan-300",
 
     adjustment:
-      "border-[#292d33] bg-[#15191f] text-[#a1a1aa]/55",
+      "border-white/10 bg-white/5 text-white/55",
   };
 
   return (
     classes[type] ||
-    "border-[#292d33] bg-[#15191f] text-[#a1a1aa]/55"
+    "border-white/10 bg-white/5 text-white/55"
   );
 }
 
@@ -402,7 +411,7 @@ export default function AdminTransactionsPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#0b0d10] text-[#f3f4f6]"
+      className="min-h-screen bg-[#050505] text-white"
     >
       {/* =========================
           OVERLAY
@@ -410,7 +419,7 @@ export default function AdminTransactionsPage() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -420,20 +429,20 @@ export default function AdminTransactionsPage() {
       ========================== */}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-[#292d33] bg-[#11151a] shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-[285px] border-l border-white/10 bg-[#090909] shadow-2xl transition-transform duration-300 ${
           menuOpen
             ? "translate-x-0"
             : "translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-[#292d33] px-5 py-5">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
             <div>
               <h2 className="text-lg font-black text-[#d6a84f]">
                 أهل القمة
               </h2>
 
-              <p className="mt-1 text-[11px] text-[#a1a1aa]/40">
+              <p className="mt-1 text-[11px] text-white/40">
                 لوحة تحكم الإدارة
               </p>
             </div>
@@ -442,14 +451,14 @@ export default function AdminTransactionsPage() {
               onClick={() =>
                 setMenuOpen(false)
               }
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/60 transition hover:bg-white/10 hover:text-[#f3f4f6]"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition hover:bg-white/10 hover:text-white"
             >
               <X size={18} />
             </button>
           </div>
 
           <nav className="flex-1 overflow-y-auto p-4">
-            <div className="mb-2 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
+            <div className="mb-2 px-3 text-[10px] font-bold text-white/30">
               الرئيسية
             </div>
 
@@ -471,7 +480,7 @@ export default function AdminTransactionsPage() {
               }
             />
 
-            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
+            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
               الإدارة
             </div>
 
@@ -493,13 +502,15 @@ export default function AdminTransactionsPage() {
               }
             />
 
-            
+            <MenuItem
+              icon={<Wallet size={18} />}
+              label="طلبات الشحن"
+              onClick={() =>
+                goTo("/admin/topups")
+              }
+            />
 
             <MenuItem
-              icon={<Wallet size={18} strokeWidth={1.8} />}
-              label="الأرصدة"
-              onClick={() => goTo("/admin/balances")}
-            /><MenuItem
               icon={<CreditCard size={18} />}
               label="طلبات السحب"
               onClick={() =>
@@ -526,7 +537,7 @@ export default function AdminTransactionsPage() {
               }
             />
 
-            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-[#a1a1aa]/30">
+            <div className="mb-2 mt-6 px-3 text-[10px] font-bold text-white/30">
               الحساب
             </div>
 
@@ -539,7 +550,7 @@ export default function AdminTransactionsPage() {
             />
           </nav>
 
-          <div className="border-t border-[#292d33] p-4">
+          <div className="border-t border-white/10 p-4">
             <button
               onClick={logout}
               className="flex w-full items-center gap-3 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3 text-right text-sm font-bold text-red-300 transition hover:bg-red-500/10"
@@ -564,7 +575,7 @@ export default function AdminTransactionsPage() {
             onClick={() =>
               setMenuOpen(true)
             }
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#292d33] bg-[#0b1015] text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#0d0d0d] text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
             aria-label="فتح القائمة"
           >
             <Menu size={20} />
@@ -575,7 +586,7 @@ export default function AdminTransactionsPage() {
               أهل القمة
             </h1>
 
-            <p className="mt-0.5 text-[11px] text-[#a1a1aa]/40">
+            <p className="mt-0.5 text-[11px] text-white/40">
               الحركات المالية
             </p>
           </div>
@@ -593,11 +604,11 @@ export default function AdminTransactionsPage() {
         <section className="mb-5">
           <div className="flex items-end justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-[#f3f4f6]">
+              <h2 className="text-2xl font-black tracking-tight text-white">
                 الحركات المالية
               </h2>
 
-              <p className="mt-1 text-xs text-[#a1a1aa]/40">
+              <p className="mt-1 text-xs text-white/40">
                 سجل جميع الحركات المالية حسب الفترة
               </p>
             </div>
@@ -605,7 +616,7 @@ export default function AdminTransactionsPage() {
             <button
               onClick={loadTransactions}
               disabled={loading}
-              className="flex h-10 items-center gap-2 rounded-xl border border-[#292d33] bg-[#15191f] px-3 text-xs font-bold text-[#a1a1aa]/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f] disabled:opacity-50"
+              className="flex h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 text-xs font-bold text-white/70 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f] disabled:opacity-50"
             >
               <RefreshCw
                 size={15}
@@ -625,18 +636,18 @@ export default function AdminTransactionsPage() {
             FILTERS
         ========================== */}
 
-        <section className="mb-5 rounded-3xl border border-[#292d33] bg-[#11151a] p-4 shadow-2xl shadow-black/10 sm:p-5">
+        <section className="mb-5 rounded-3xl border border-white/10 bg-[#0a0a0a] p-4 shadow-2xl shadow-black/10 sm:p-5">
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
               <Filter size={17} />
             </div>
 
             <div>
-              <h3 className="text-sm font-black text-[#f3f4f6]">
+              <h3 className="text-sm font-black text-white">
                 تصفية الحركات
               </h3>
 
-              <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+              <p className="mt-1 text-[10px] text-white/35">
                 اختر الفترة ونوع الحركة والمستخدم
               </p>
             </div>
@@ -728,14 +739,14 @@ export default function AdminTransactionsPage() {
           {/* SEARCH */}
 
           <div className="mt-3">
-            <label className="mb-2 block text-[10px] font-bold text-[#a1a1aa]/45">
+            <label className="mb-2 block text-[10px] font-bold text-white/45">
               بحث
             </label>
 
             <div className="relative">
               <Search
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a1a1aa]/25"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25"
               />
 
               <input
@@ -744,7 +755,7 @@ export default function AdminTransactionsPage() {
                   setSearch(e.target.value)
                 }
                 placeholder="اسم المستخدم، الهاتف، الوصف، رقم الطلب..."
-                className="w-full rounded-xl border border-[#292d33] bg-[#15191f] py-3 pl-4 pr-10 text-xs text-[#f3f4f6] outline-none transition placeholder:text-[#a1a1aa]/20 focus:border-[#d6a84f]/40"
+                className="w-full rounded-xl border border-white/10 bg-[#0e0e0e] py-3 pl-4 pr-10 text-xs text-white outline-none transition placeholder:text-white/20 focus:border-[#d6a84f]/40"
               />
             </div>
           </div>
@@ -754,11 +765,11 @@ export default function AdminTransactionsPage() {
 
         <section className="mb-5 flex flex-col gap-3 rounded-2xl border border-[#d6a84f]/15 bg-[#d6a84f]/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[9px] font-bold text-[#a1a1aa]/30">
+            <p className="text-[9px] font-bold text-white/30">
               الفترة المعروضة
             </p>
 
-            <p className="mt-1 text-xs font-black text-[#f3f4f6]">
+            <p className="mt-1 text-xs font-black text-white">
               {weekLabel}
             </p>
           </div>
@@ -767,7 +778,7 @@ export default function AdminTransactionsPage() {
             <span
               className={`w-fit rounded-full px-2.5 py-1 text-[9px] font-black ${
                 selectedWeek.is_closed
-                  ? "bg-[#15191f] text-[#a1a1aa]/40"
+                  ? "bg-white/5 text-white/40"
                   : "bg-emerald-500/10 text-emerald-400"
               }`}
             >
@@ -831,7 +842,8 @@ export default function AdminTransactionsPage() {
               ["production", "إنتاج"],
               ["consumption", "استهلاك"],
               ["floor", "أرضية"],
-                          ["withdrawal", "سحب"],
+              ["topup", "شحن"],
+              ["withdrawal", "سحب"],
               [
                 "withdrawal_reversal",
                 "إرجاع سحب",
@@ -847,11 +859,11 @@ export default function AdminTransactionsPage() {
                   className={`rounded-xl border px-3 py-2 text-[10px] font-bold transition ${
                     selectedType === type
                       ? "border-[#d6a84f]/30 bg-[#d6a84f]/10 text-[#d6a84f]"
-                      : "border-[#292d33] bg-[#11151a] text-[#a1a1aa]/40 hover:text-[#f3f4f6]"
+                      : "border-white/10 bg-[#0a0a0a] text-white/40 hover:text-white"
                   }`}
                 >
                   {label}{" "}
-                  <span className="mr-1 text-[#a1a1aa]/60">
+                  <span className="mr-1 text-white/60">
                     {stats.typeStats[
                       type
                     ] || 0}
@@ -878,15 +890,15 @@ export default function AdminTransactionsPage() {
             TRANSACTIONS
         ========================== */}
 
-        <section className="overflow-hidden rounded-3xl border border-[#292d33] bg-[#11151a] shadow-2xl shadow-black/20">
-          <div className="border-b border-[#292d33] px-4 py-4 sm:px-5">
+        <section className="overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0a] shadow-2xl shadow-black/20">
+          <div className="border-b border-white/10 px-4 py-4 sm:px-5">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-black text-[#f3f4f6]">
+                <h3 className="text-sm font-black text-white">
                   سجل الحركات
                 </h3>
 
-                <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+                <p className="mt-1 text-[10px] text-white/35">
                   {transactions.length} حركة معروضة
                 </p>
               </div>
@@ -906,25 +918,25 @@ export default function AdminTransactionsPage() {
                 />
               </div>
 
-              <p className="text-xs font-bold text-[#a1a1aa]/40">
+              <p className="text-xs font-bold text-white/40">
                 جاري تحميل الحركات المالية...
               </p>
             </div>
           ) : transactions.length ===
             0 ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center px-5 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[#292d33] bg-[#15191f]">
+              <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/5">
                 <Receipt
                   size={25}
-                  className="text-[#a1a1aa]/25"
+                  className="text-white/25"
                 />
               </div>
 
-              <h3 className="mt-4 text-sm font-black text-[#a1a1aa]/60">
+              <h3 className="mt-4 text-sm font-black text-white/60">
                 لا توجد حركات مالية
               </h3>
 
-              <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
+              <p className="mt-1 text-[10px] text-white/30">
                 لا توجد حركات ضمن الفلاتر المحددة
               </p>
             </div>
@@ -967,14 +979,14 @@ export default function AdminTransactionsPage() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0">
-                                <p className="truncate text-xs font-black text-[#f3f4f6]">
+                                <p className="truncate text-xs font-black text-white">
                                   {transaction
                                     .user
                                     ?.full_name ||
                                     "مستخدم"}
                                 </p>
 
-                                <p className="mt-1 text-[9px] text-[#a1a1aa]/30">
+                                <p className="mt-1 text-[9px] text-white/30">
                                   {transaction
                                     .user
                                     ?.phone ||
@@ -1009,7 +1021,7 @@ export default function AdminTransactionsPage() {
                                 )}
                               </span>
 
-                              <span className="text-[9px] text-[#a1a1aa]/25">
+                              <span className="text-[9px] text-white/25">
                                 {formatDate(
                                   transaction.created_at
                                 )}
@@ -1017,7 +1029,7 @@ export default function AdminTransactionsPage() {
                             </div>
 
                             {transaction.description && (
-                              <p className="mt-2 truncate text-[9px] text-[#a1a1aa]/30">
+                              <p className="mt-2 truncate text-[9px] text-white/30">
                                 {
                                   transaction.description
                                 }
@@ -1036,36 +1048,36 @@ export default function AdminTransactionsPage() {
               <div className="hidden overflow-x-auto md:block">
                 <table className="w-full min-w-[1100px] text-right">
                   <thead>
-                    <tr className="border-b border-[#292d33] bg-white/[0.02]">
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                    <tr className="border-b border-white/10 bg-white/[0.02]">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         المستخدم
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         الحركة
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         المبلغ
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         قبل
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         بعد
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         الوصف
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         التاريخ
                       </th>
 
-                      <th className="px-5 py-4 text-[10px] font-black text-[#a1a1aa]/35">
+                      <th className="px-5 py-4 text-[10px] font-black text-white/35">
                         التفاصيل
                       </th>
                     </tr>
@@ -1096,14 +1108,14 @@ export default function AdminTransactionsPage() {
                                 </div>
 
                                 <div>
-                                  <p className="text-xs font-black text-[#f3f4f6]">
+                                  <p className="text-xs font-black text-white">
                                     {transaction
                                       .user
                                       ?.full_name ||
                                       "مستخدم"}
                                   </p>
 
-                                  <p className="mt-1 text-[9px] text-[#a1a1aa]/30">
+                                  <p className="mt-1 text-[9px] text-white/30">
                                     {transaction
                                       .user
                                       ?.phone ||
@@ -1146,7 +1158,7 @@ export default function AdminTransactionsPage() {
                               </span>
                             </td>
 
-                            <td className="px-5 py-4 text-xs text-[#a1a1aa]/45">
+                            <td className="px-5 py-4 text-xs text-white/45">
                               {formatMoney(
                                 Number(
                                   transaction.balance_before
@@ -1154,7 +1166,7 @@ export default function AdminTransactionsPage() {
                               )}
                             </td>
 
-                            <td className="px-5 py-4 text-xs font-black text-[#f3f4f6]">
+                            <td className="px-5 py-4 text-xs font-black text-white">
                               {formatMoney(
                                 Number(
                                   transaction.balance_after
@@ -1163,13 +1175,13 @@ export default function AdminTransactionsPage() {
                             </td>
 
                             <td className="max-w-[260px] px-5 py-4">
-                              <div className="truncate text-[10px] text-[#a1a1aa]/40">
+                              <div className="truncate text-[10px] text-white/40">
                                 {transaction.description ||
                                   "—"}
                               </div>
                             </td>
 
-                            <td className="px-5 py-4 text-[10px] text-[#a1a1aa]/30">
+                            <td className="px-5 py-4 text-[10px] text-white/30">
                               {formatDate(
                                 transaction.created_at
                               )}
@@ -1182,7 +1194,7 @@ export default function AdminTransactionsPage() {
                                     transaction
                                   )
                                 }
-                                className="flex items-center gap-1.5 rounded-lg border border-[#292d33] bg-[#15191f] px-3 py-2 text-[10px] font-bold text-[#a1a1aa]/55 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
+                                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-bold text-white/55 transition hover:border-[#d6a84f]/30 hover:text-[#d6a84f]"
                               >
                                 <FileText
                                   size={13}
@@ -1204,7 +1216,7 @@ export default function AdminTransactionsPage() {
 
         {/* FOOTER */}
 
-        <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-[#a1a1aa]/20">
+        <div className="mt-5 flex items-center justify-center gap-2 text-[10px] text-white/20">
           <Receipt size={11} />
 
           <span>
@@ -1225,21 +1237,21 @@ export default function AdminTransactionsPage() {
           }
         >
           <div
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-[#292d33] bg-[#11151a] shadow-2xl"
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/10 bg-[#0b0b0b] shadow-2xl"
             onClick={(e) =>
               e.stopPropagation()
             }
           >
             {/* MODAL HEADER */}
 
-            <div className="sticky top-0 z-10 border-b border-[#292d33] bg-[#11151a] px-5 py-4">
+            <div className="sticky top-0 z-10 border-b border-white/10 bg-[#0b0b0b] px-5 py-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-base font-black text-[#f3f4f6]">
+                  <h2 className="text-base font-black text-white">
                     تفاصيل الحركة المالية
                   </h2>
 
-                  <p className="mt-1 text-[10px] text-[#a1a1aa]/30">
+                  <p className="mt-1 text-[10px] text-white/30">
                     {formatDate(
                       selectedTransaction.created_at
                     )}
@@ -1250,7 +1262,7 @@ export default function AdminTransactionsPage() {
                   onClick={() =>
                     setSelectedTransaction(null)
                   }
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#292d33] bg-[#15191f] text-[#a1a1aa]/50 transition hover:text-[#f3f4f6]"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/50 transition hover:text-white"
                 >
                   <X size={17} />
                 </button>
@@ -1260,24 +1272,24 @@ export default function AdminTransactionsPage() {
             <div className="space-y-3 p-5">
               {/* USER */}
 
-              <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d6a84f]/10 text-[#d6a84f]">
                     <User size={17} />
                   </div>
 
                   <div>
-                    <p className="text-[9px] text-[#a1a1aa]/30">
+                    <p className="text-[9px] text-white/30">
                       المستخدم
                     </p>
 
-                    <p className="mt-1 text-sm font-black text-[#f3f4f6]">
+                    <p className="mt-1 text-sm font-black text-white">
                       {selectedTransaction
                         .user?.full_name ||
                         "مستخدم"}
                     </p>
 
-                    <p className="mt-1 text-[10px] text-[#a1a1aa]/35">
+                    <p className="mt-1 text-[10px] text-white/35">
                       {selectedTransaction
                         .user?.phone ||
                         "—"}
@@ -1289,8 +1301,8 @@ export default function AdminTransactionsPage() {
               {/* AMOUNT */}
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-                  <p className="text-[9px] text-[#a1a1aa]/30">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                  <p className="text-[9px] text-white/30">
                     نوع الحركة
                   </p>
 
@@ -1305,7 +1317,7 @@ export default function AdminTransactionsPage() {
                       )}
                     </span>
 
-                    <span className="text-xs font-black text-[#f3f4f6]">
+                    <span className="text-xs font-black text-white">
                       {getTransactionLabel(
                         selectedTransaction.transaction_type
                       )}
@@ -1313,8 +1325,8 @@ export default function AdminTransactionsPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-                  <p className="text-[9px] text-[#a1a1aa]/30">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                  <p className="text-[9px] text-white/30">
                     مبلغ الحركة
                   </p>
 
@@ -1366,12 +1378,12 @@ export default function AdminTransactionsPage() {
 
               {/* DESCRIPTION */}
 
-              <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-                <p className="text-[9px] text-[#a1a1aa]/30">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <p className="text-[9px] text-white/30">
                   الوصف
                 </p>
 
-                <p className="mt-2 text-xs leading-6 text-[#a1a1aa]/55">
+                <p className="mt-2 text-xs leading-6 text-white/55">
                   {selectedTransaction.description ||
                     "لا يوجد وصف"}
                 </p>
@@ -1380,12 +1392,12 @@ export default function AdminTransactionsPage() {
               {/* ORDER */}
 
               {selectedTransaction.order_id && (
-                <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-                  <p className="text-[9px] text-[#a1a1aa]/30">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                  <p className="text-[9px] text-white/30">
                     معرف الطلب
                   </p>
 
-                  <p className="mt-2 break-all font-mono text-[10px] text-[#a1a1aa]/45">
+                  <p className="mt-2 break-all font-mono text-[10px] text-white/45">
                     {
                       selectedTransaction.order_id
                     }
@@ -1396,12 +1408,12 @@ export default function AdminTransactionsPage() {
               {/* WEEK */}
 
               {selectedTransaction.week_id && (
-                <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-                  <p className="text-[9px] text-[#a1a1aa]/30">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                  <p className="text-[9px] text-white/30">
                     معرف الأسبوع
                   </p>
 
-                  <p className="mt-2 break-all font-mono text-[10px] text-[#a1a1aa]/45">
+                  <p className="mt-2 break-all font-mono text-[10px] text-white/45">
                     {
                       selectedTransaction.week_id
                     }
@@ -1411,12 +1423,12 @@ export default function AdminTransactionsPage() {
 
               {/* TRANSACTION ID */}
 
-              <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-                <p className="text-[9px] text-[#a1a1aa]/30">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <p className="text-[9px] text-white/30">
                   معرف الحركة
                 </p>
 
-                <p className="mt-2 break-all font-mono text-[10px] text-[#a1a1aa]/45">
+                <p className="mt-2 break-all font-mono text-[10px] text-white/45">
                   {selectedTransaction.id}
                 </p>
               </div>
@@ -1449,14 +1461,14 @@ function MenuItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-right transition ${
         active
           ? "border border-[#d6a84f]/15 bg-[#d6a84f]/10 text-[#d6a84f]"
-          : "border border-transparent text-[#a1a1aa]/55 hover:bg-[#15191f] hover:text-[#f3f4f6]"
+          : "border border-transparent text-white/55 hover:bg-white/5 hover:text-white"
       }`}
     >
       <span
         className={
           active
             ? "text-[#d6a84f]"
-            : "text-[#a1a1aa]/45"
+            : "text-white/45"
         }
       >
         {icon}
@@ -1484,7 +1496,7 @@ function DarkSelect({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-[10px] font-bold text-[#a1a1aa]/45">
+      <label className="mb-2 block text-[10px] font-bold text-white/45">
         {label}
       </label>
 
@@ -1498,14 +1510,14 @@ function DarkSelect({
           onChange={(e) =>
             onChange(e.target.value)
           }
-          className="w-full appearance-none rounded-xl border border-[#292d33] bg-[#15191f] py-3 pl-9 pr-10 text-xs text-[#f3f4f6] outline-none transition focus:border-[#d6a84f]/40"
+          className="w-full appearance-none rounded-xl border border-white/10 bg-[#0e0e0e] py-3 pl-9 pr-10 text-xs text-white outline-none transition focus:border-[#d6a84f]/40"
         >
           {children}
         </select>
 
         <ChevronDown
           size={14}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#a1a1aa]/25"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/25"
         />
       </div>
     </div>
@@ -1528,7 +1540,7 @@ function StatCard({
   gold?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-[#292d33] bg-[#11151a] p-3 shadow-xl shadow-black/10 sm:p-4">
+    <div className="rounded-2xl border border-white/10 bg-[#0b0b0b] p-3 shadow-xl shadow-black/10 sm:p-4">
       <div
         className={`flex h-8 w-8 items-center justify-center rounded-lg ${
           danger
@@ -1537,13 +1549,13 @@ function StatCard({
             ? "bg-emerald-500/10 text-emerald-400"
             : gold
             ? "bg-[#d6a84f]/10 text-[#d6a84f]"
-            : "bg-[#15191f] text-[#a1a1aa]/50"
+            : "bg-white/5 text-white/50"
         }`}
       >
         {icon}
       </div>
 
-      <p className="mt-3 text-[10px] font-bold text-[#a1a1aa]/35">
+      <p className="mt-3 text-[10px] font-bold text-white/35">
         {label}
       </p>
 
@@ -1555,7 +1567,7 @@ function StatCard({
             ? "text-emerald-400"
             : gold
             ? "text-[#d6a84f]"
-            : "text-[#f3f4f6]"
+            : "text-white"
         }`}
       >
         {value}
@@ -1574,8 +1586,8 @@ function DetailCard({
   gold?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-[#292d33] bg-white/[0.025] p-4">
-      <p className="text-[9px] text-[#a1a1aa]/30">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+      <p className="text-[9px] text-white/30">
         {label}
       </p>
 
@@ -1583,7 +1595,7 @@ function DetailCard({
         className={`mt-2 text-sm font-black ${
           gold
             ? "text-[#d6a84f]"
-            : "text-[#f3f4f6]"
+            : "text-white"
         }`}
       >
         {value}
